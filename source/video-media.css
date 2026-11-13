@@ -1,0 +1,34 @@
+html body .roam-app .rm-block__input :is(iframe, video) {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 14px 0 18px !important;
+  border: 7px solid var(--mag-paper) !important;
+  border-radius: 12px !important;
+  outline: 1px solid var(--mag-border) !important;
+  outline-offset: 0 !important;
+  background: var(--mag-shell) !important;
+}
+
+/* 视频时间戳：恢复金色小签 */
+html body .roam-app .rm-video-timestamp {
+  display: inline-block !important;
+  margin: 0 2px !important;
+  padding: 0 6px !important;
+  font-family: var(--mag-body) !important;
+  font-size: 0.8em !important;
+  font-weight: 600 !important;
+  font-variant-numeric: tabular-nums !important;
+  line-height: 1.6 !important;
+  letter-spacing: 0.3px !important;
+  color: var(--mag-gold-ink) !important;
+  background: var(--mag-yellow-soft) !important;
+  border-radius: 4px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+html body .roam-app .rm-video-timestamp:hover {
+  color: var(--mag-ink) !important;
+}

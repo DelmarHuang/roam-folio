@@ -1,0 +1,25 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const code = fs.readFileSync(new URL('./extension.js', import.meta.url), 'utf8');
+const sandbox = {console};
+vm.createContext(sandbox);
+vm.runInContext(code.replace(/export default[\s\S]*$/, '') + '\nglobalThis.makeRuntime=createRuntime;globalThis.runners=MAGAZINE_RUNNERS;globalThis.css=MAGAZINE_CSS;', sandbox);
+const rt = sandbox.makeRuntime({});
+rt.mottoLine1 = 'THINK. OWN. COMPOUND.';
+rt.mottoLine2 = 'FESTINA LENTE.';
+const style = rt.appearanceCss();
+assert.ok(style.includes('COMPOUND.\\A FESTINA'));
+assert.ok(!style.includes('COMPOUND.\\\\A'));
+rt.mottoLine1 = 'A "quote"';
+assert.ok(rt.appearanceCss().includes('A \\"quote\\"'));
+rt.themeEnabled = false;
+assert.equal(rt.appearanceCss(), '');
+assert.equal(typeof sandbox.runners.asides, "function");
+assert.ok(sandbox.css.asides.includes("data-mag-aside"));
+for (const name of ['--mag-toolbar-height:', '--mag-frame-bottom:', '--mag-shadow:']) assert.ok(sandbox.css['native-component-tokens'].includes(name));
+assert.ok(sandbox.css.base.includes('--mag-heading: "Fraunces"'));
+assert.ok(sandbox.css.base.includes('--mag-body: "Inter"'));
+
+assert.ok(sandbox.css["left-sidebar"].includes(".log-button.rm-left-sidebar__desk"), "native Desk and Review shared typography must survive packaging");
+console.log('Runtime regressions passed: motto escaping, theme-off appearance, restored child aside module, native sidebar dimensions, source font families.');

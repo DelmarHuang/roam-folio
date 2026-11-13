@@ -1,0 +1,18 @@
+{
+  "name": "folio-roam",
+  "version": "1.4.20",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "check": "node --check extension.js && node test.mjs && node regression.mjs && node behavior.mjs && node scheduling-check.mjs && node random-settings-check.mjs",
+    "check:layout": "node layout-regression.mjs",
+    "check:interaction": "node interaction-regression.mjs",
+    "check:small-screen": "node small-screen-regression.mjs",
+    "check:settings": "node random-settings-check.mjs",
+    "check:settings-browser": "node settings-browser-check.mjs",
+    "check:calendar-dom": "node calendar-dom-check.mjs",
+    "check:calendar-browser": "node calendar-browser-check.mjs",
+    "check:toolbar": "node toolbar-dom-check.mjs"
+  }
+}

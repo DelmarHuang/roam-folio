@@ -1,0 +1,69 @@
+.roam-app .rm-topbar > #folio-topbar-controls {
+ display:flex!important;align-items:center!important;flex:0 0 auto!important;min-width:0!important;overflow:visible!important;
+}
+/* Owned toolbar controls and settings dialog; never style a native dialog. */
+.roam-app .rm-topbar :is(#folio-settings-launcher,#folio-ai-launcher) {
+ position:static!important;display:inline-flex!important;flex:0 0 30px!important;align-items:center!important;justify-content:center!important;
+ width:30px!important;min-width:30px!important;height:30px!important;min-height:30px!important;padding:0!important;margin:0!important;
+ color:var(--mag-muted,var(--cl-secondary,GrayText))!important;background:transparent!important;border:0!important;box-shadow:none!important;
+}
+.roam-app .rm-topbar #folio-settings-launcher[aria-expanded="true"] {
+ color:var(--mag-gold-ink,var(--cl-accent,Highlight))!important;background:transparent!important;
+}
+.roam-app .rm-topbar :is(#folio-settings-launcher,#folio-ai-launcher) svg {width:16px!important;height:16px!important;pointer-events:none!important;}
+#folio-settings-dialog {
+ --set-paper:var(--mag-paper,Canvas);--set-shell:var(--mag-shell,Canvas);--set-ink:var(--mag-ink,CanvasText);--set-muted:var(--mag-muted,GrayText);--set-rule:var(--mag-border,ButtonBorder);--set-accent:var(--mag-gold-ink,Highlight);--set-selected:var(--mag-active,ButtonFace);
+ color:var(--mag-ink,var(--cl-primary,CanvasText));background:var(--mag-paper,var(--bc-main,Canvas));
+ width:min(560px,calc(100vw - 32px));max-width:calc(100vw - 32px);max-height:min(620px,76dvh);
+ position:fixed;inset:auto;margin:0;z-index:20000;
+ box-sizing:border-box;padding:0;border:1px solid var(--mag-border,var(--bc-hover,ButtonBorder));border-radius:10px;
+ box-shadow:0 12px 48px rgba(0,0,0,.22);font-family:var(--mag-body,inherit);font-size:14px;font-weight:400;overflow:hidden;
+}
+#folio-settings-dialog .folio-settings-dialog-header {
+ display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;cursor:grab;touch-action:none;user-select:none;border-bottom:1px solid var(--mag-border,var(--bc-hover,ButtonBorder));
+}
+#folio-settings-dialog .folio-settings-dialog-title {margin:0;font-size:15px;font-weight:600;}
+#folio-settings-dialog .folio-settings-dialog-close {color:inherit;background:transparent;border:0;font:inherit;font-size:22px;line-height:1;width:30px;height:30px;cursor:pointer;}
+#folio-settings-dialog .folio-settings-dialog-content {padding:0 14px 12px;overflow-y:auto;max-height:min(570px,calc(76dvh - 48px));box-sizing:border-box;}
+#folio-settings-dialog .folio-settings-row {padding:14px 0;}
+#folio-settings-dialog .folio-settings-global-control {display:flex;align-items:center;justify-content:space-between;gap:14px;}
+#folio-settings-dialog .rm-settings-panel__setting-content {flex:1;min-width:0;}
+#folio-settings-dialog .rm-settings-panel__setting-action {flex:0 0 auto;}
+#folio-settings-dialog :is(input,select,textarea,button) {accent-color:var(--mag-gold-ink,Highlight);}
+#folio-settings-dialog :is(input:not([type="checkbox"]),select,textarea) {color:inherit;background:var(--mag-paper,var(--bc-main,Canvas));border-color:var(--mag-border,var(--bc-hover,ButtonBorder));}
+#folio-settings-dialog :focus-visible {outline:2px solid var(--mag-gold-ink,Highlight);outline-offset:2px;}
+.roam-app .rm-agent-sidebar-chat-launcher[data-folio-ai-proxied="true"] {display:none!important;}
+
+/* AI status uses the glyph colour, never a filled button. */
+html body .roam-app .rm-topbar #folio-ai-launcher:is(:hover,:focus,:active,[aria-expanded="true"]) {background:transparent!important;box-shadow:none!important;}
+html body .roam-app .rm-topbar #folio-ai-launcher[aria-expanded="true"] {color:var(--mag-blue,#337eaa)!important;}
+
+/* Compact toolbar-only surface. Native Extension Settings are unaffected. */
+html body #folio-settings-dialog .folio-settings-row.rm-settings-panel__section {padding-block:7px!important;}
+#folio-settings-dialog .folio-settings-global-control h4 {margin:0!important;font-size:12px!important;line-height:1.4!important;}
+#folio-settings-dialog .folio-settings-global-control .rm-settings-panel__description {display:none;}
+#folio-settings-dialog [data-folio-settings-layout="functional"] > p {font-size:11px!important;margin:8px 0!important;}
+#folio-settings-dialog [data-folio-settings-layout="functional"] > div {display:block!important;}
+#folio-settings-dialog [data-folio-settings-layout="functional"] nav {display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-bottom:8px;}
+#folio-settings-dialog [data-folio-settings-layout="functional"] nav > button {padding:6px!important;font-size:11px!important;line-height:1.35!important;min-height:30px;}
+#folio-settings-dialog [data-folio-settings-layout="functional"] nav > div {display:none!important;}
+#folio-settings-dialog .folio-settings-group {border:0!important;border-radius:0!important;}
+#folio-settings-dialog .folio-settings-group > summary {padding:7px 0!important;font-size:12px!important;}
+#folio-settings-dialog .folio-settings-group > div {padding-inline:0!important;}
+@media(max-width:600px) {#folio-settings-dialog [data-folio-settings-layout="functional"] nav {grid-template-columns:repeat(2,minmax(0,1fr));}}
+
+#folio-settings-dialog[data-dragging="true"] .folio-settings-dialog-header {cursor:grabbing;}
+
+/* The floating panel is outside .roam-app, so native app-scoped dark tokens
+   must also be available on this owned surface when the Folio theme is off. */
+#folio-settings-dialog[data-folio-theme="native"] {
+ --mag-paper:var(--bc-main,#ffffff);--mag-shell:var(--bc-left-sidebar,#f5f6f8);--mag-ink:var(--cl-primary,#182026);--mag-muted:var(--cl-secondary,#5c7080);--mag-border:var(--border-color,rgba(127,127,127,.22));--mag-gold-ink:#806d2e;--mag-active:var(--bc-hover,rgba(127,127,127,.12));
+}
+:is(html.mag-dark,body.bp3-dark,body.bp4-dark) #folio-settings-dialog[data-folio-theme="native"],
+body:has(.roam-app.bp3-dark,.roam-app.bp4-dark) #folio-settings-dialog[data-folio-theme="native"] {
+ --mag-paper:var(--bc-main,#20242c);--mag-shell:var(--bc-left-sidebar,#171a20);--mag-ink:var(--cl-primary,#f0f1f3);--mag-muted:var(--cl-secondary,#b7bdc7);--mag-gold-ink:#d2b95d;--mag-active:var(--bc-hover,rgba(255,255,255,.1));
+}
+
+/* A hover affordance, never a persistent selected background. */
+html body .roam-app :is(#folio-ai-launcher,#folio-settings-launcher,[data-folio-sidebar-role]) {background:transparent!important;box-shadow:none!important;border-radius:6px!important;}
+html body .roam-app :is(#folio-ai-launcher,#folio-settings-launcher,[data-folio-sidebar-role]):hover:not([data-folio-hover-dismissed]) {background:var(--mag-yellow-soft,#f7edbd)!important;}

@@ -1,0 +1,4 @@
+html body .bp3-datepicker :is(.DayPicker,.DayPicker-Month,.DayPicker-Caption,.DayPicker-Weekdays,.DayPicker-Body,.bp3-datepicker-navbar,.bp3-datepicker-caption,.bp3-datepicker-shortcuts,.bp3-menu) { background: var(--mag-paper) !important; color: var(--mag-ink) !important; }
+html body .bp3-datepicker .bp3-datepicker-shortcuts .bp3-menu-item { color: var(--mag-ink) !important; }
+html body .bp3-datepicker .bp3-datepicker-shortcuts .bp3-menu-item:hover { background: var(--mag-yellow-soft) !important; }
+html body .bp3-datepicker .DayPicker-Day--today .bp3-datepicker-day-wrapper { background: var(--mag-ink) !important; color: var(--mag-paper) !important; box-shadow: 0 0 0 2px var(--mag-gold),0 0 0 4px var(--mag-paper) !important; font-weight: 800 !important; border-radius: 50% !important; }

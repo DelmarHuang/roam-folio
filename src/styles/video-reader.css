@@ -1,0 +1,39 @@
+/* Matching original video styles are loaded with the supplied implementation. */
+
+/* Preserve the timestamp bullet correction on compact viewports. */
+@media (max-width:1600px) {
+ html body .rm-video-timestamps > .rm-video-timestamps__entry > .rm-block > .rm-block-main {
+  margin-inline:0!important;padding-inline:0!important;min-width:0!important;
+ }
+ html body .rm-video-timestamps > .rm-video-timestamps__entry > .rm-block > .rm-block-main > .controls {
+  position:relative!important;inset:auto!important;transform:none!important;
+  flex:0 0 26px!important;width:26px!important;min-width:26px!important;max-width:26px!important;
+  margin-inline:0!important;padding-inline:0!important;
+ }
+ html body .rm-video-timestamps > .rm-video-timestamps__entry > .rm-block > .rm-block-main > .controls > :is(.block-expand,.rm-bullet) {
+  position:static!important;inset:auto!important;transform:none!important;margin-inline:0!important;
+ }
+ html body .rm-video-timestamps > .rm-video-timestamps__entry > .rm-block > .rm-block-main > .controls > .rm-bullet {
+  flex:0 0 14px!important;width:14px!important;min-width:14px!important;
+ }
+ html body .rm-video-timestamps > .rm-video-timestamps__entry > .rm-block > .rm-block-main > :is(.rm-block__input,.rm-autocomplete__wrapper) {
+  min-width:0!important;margin-inline:0!important;
+ }
+ html body .rm-video-theater {padding:8px!important;}
+}
+
+/* Laptop theater only: cap video height, let notes use the entire pane.
+   Use the browser viewport so opening sidebars cannot change this mode. */
+@media (max-width:1800px) and (max-height:1000px) {
+ html body .rm-video-theater {container-type:size;}
+ html body .rm-video-theater > .rm-video-player__spacing-wrapper--theater {
+  width:min(100%,1120px,max(160px,calc(min(56cqh,100cqh - 300px) * 16 / 9)))!important;
+  max-width:100%!important;
+ }
+ html body .rm-video-theater > .mag-video-theater-notes {
+  width:100%!important;max-width:100%!important;
+ }
+ html body .rm-video-theater > .mag-video-theater-notes > .mag-video-theater-notes__list {
+  align-content:start!important;
+ }
+}

@@ -1,0 +1,7 @@
+/* Native Desk only. Keep the current search size and move its glyph inward. */
+html body .roam-app .rm-desk-page__tools .bp3-input-group > .bp3-icon-search {
+ left:10px!important;right:auto!important;pointer-events:none!important;
+}
+html body .roam-app .rm-desk-page__tools .bp3-input-group:has(> .bp3-icon-search) > .bp3-input {
+ padding-left:34px!important;
+}

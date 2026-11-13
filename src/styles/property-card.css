@@ -1,0 +1,4 @@
+/* The global block decoration reset must not hide the property card plate. */
+html body .roam-app .roam-body-main .rm-block[data-mag-props]::before { display:block!important; }
+html body .roam-app .roam-body-main .rm-block[data-mag-props] > .rm-block-children > .rm-block[data-mag-attr] > .rm-block-main > .rm-block__input--view { padding-left:clamp(100px,30%,168px)!important; }
+html body .roam-app .roam-body-main .rm-block[data-mag-props] > .rm-block-children > .rm-block[data-mag-attr] > .rm-block-main > .rm-block__input--view .rm-attr-ref { width:clamp(88px,28%,156px)!important; font-size:12px!important; letter-spacing:.3px!important; text-transform:none!important; pointer-events:auto!important; }

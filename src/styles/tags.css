@@ -1,0 +1,43 @@
+/* Keep the native link target and handlers; enlarge only decorative stamp text. */
+html body .roam-app span.rm-page-ref--tag::before,
+html body .roam-app span.rm-page-ref--tag::after {pointer-events:none!important;}
+html body .roam-app span.rm-page-ref--tag:is([data-tag="Quadrant 1"],[data-tag="Quadrant 2"],[data-tag="Quadrant 3"],[data-tag="quick screening"],[data-tag="deep analysis"],[data-tag="professional research"],[data-tag="[[tags]]/checklist"],[data-tag="[[tags]]/antifragile"],[data-tag="[[tags]]/owing"],[data-tag="major"])::after {font-size:13px!important;line-height:1.5!important;}
+
+/* A common inline box prevents font-size:0 and mixed inline-block/flex
+   baselines from shifting the note glyph and namespace marker downward. */
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag:is([data-tag="Quadrant 1"],[data-tag="Quadrant 2"],[data-tag="Quadrant 3"],[data-tag="quick screening"],[data-tag="deep analysis"],[data-tag="professional research"],[data-tag="[[tags]]/checklist"],[data-tag="[[tags]]/antifragile"],[data-tag="[[tags]]/owing"],[data-tag="major"],[data-tag="Voicenotes"],[data-tag="LiteratureNotes"],[data-tag="PermanentNotes"],[data-tag="Footnotes"],[data-tag="DefinitionNotes"],[data-tag^="[[moc]]/"],[data-tag^="moc/"],[data-tag^="[[project]]/"],[data-tag^="project/"]) {display:inline-flex!important;align-items:center!important;vertical-align:middle!important;box-sizing:border-box!important;height:24px!important;min-height:24px!important;line-height:20px!important;margin-block:0!important;transform:none!important;}
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag:is([data-tag="Quadrant 1"],[data-tag="Quadrant 2"],[data-tag="Quadrant 3"],[data-tag="quick screening"],[data-tag="deep analysis"],[data-tag="professional research"],[data-tag="[[tags]]/checklist"],[data-tag="[[tags]]/antifragile"],[data-tag="[[tags]]/owing"],[data-tag="major"],[data-tag="Voicenotes"],[data-tag="LiteratureNotes"],[data-tag="PermanentNotes"],[data-tag="Footnotes"],[data-tag="DefinitionNotes"],[data-tag^="[[moc]]/"],[data-tag^="moc/"],[data-tag^="[[project]]/"],[data-tag^="project/"])::before,
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag:is([data-tag="Quadrant 1"],[data-tag="Quadrant 2"],[data-tag="Quadrant 3"],[data-tag="quick screening"],[data-tag="deep analysis"],[data-tag="professional research"],[data-tag="[[tags]]/checklist"],[data-tag="[[tags]]/antifragile"],[data-tag="[[tags]]/owing"],[data-tag="major"],[data-tag="Voicenotes"],[data-tag="LiteratureNotes"],[data-tag="PermanentNotes"],[data-tag="Footnotes"],[data-tag="DefinitionNotes"],[data-tag^="[[moc]]/"],[data-tag^="moc/"],[data-tag^="[[project]]/"],[data-tag^="project/"])::after {display:block!important;align-self:center!important;line-height:20px!important;margin-block:0!important;transform:none!important;}
+
+/* Centre the actual symbol, not a font glyph line box. */
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag:is([data-tag="DefinitionNotes"],[data-tag^="[[moc]]/"],[data-tag^="moc/"],[data-tag^="[[project]]/"],[data-tag^="project/"]) {gap:6px!important;}
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag[data-tag="DefinitionNotes"]::before {content:""!important;display:block!important;flex:0 0 13px!important;width:13px!important;height:13px!important;min-height:0!important;line-height:0!important;background:currentColor!important;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M10.5%203.5C10.5%201.5%204.2%201.6%204.2%204.2c0%202.5%207.2%202.6%207.2%205.5%200%202.7-6.9%202.9-6.9.5M10.4%207.4c2-2.4-.2-3.1-2.6-4M5.1%208.4C3%2010.6%205%2011.7%207.6%2012.6%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat!important;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M10.5%203.5C10.5%201.5%204.2%201.6%204.2%204.2c0%202.5%207.2%202.6%207.2%205.5%200%202.7-6.9%202.9-6.9.5M10.4%207.4c2-2.4-.2-3.1-2.6-4M5.1%208.4C3%2010.6%205%2011.7%207.6%2012.6%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat!important;}
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag:is([data-tag^="[[moc]]/"],[data-tag^="moc/"],[data-tag^="[[project]]/"],[data-tag^="project/"])::before {content:""!important;display:block!important;flex:0 0 13px!important;width:13px!important;height:13px!important;min-height:0!important;line-height:0!important;background:currentColor!important;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%204h10M3%208h10M3%2012h10%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat!important;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%204h10M3%208h10M3%2012h10%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat!important;}
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag[data-tag="[[tags]]/checklist"] {gap:6px!important;--stamp-label:"Checklist"!important;}
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag[data-tag="[[tags]]/checklist"]::before {content:""!important;display:block!important;box-sizing:border-box!important;flex:0 0 8px!important;width:8px!important;height:8px!important;border:1px solid currentColor!important;line-height:0!important;background:transparent!important;}
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag:is([data-tag="DefinitionNotes"],[data-tag="[[tags]]/checklist"],[data-tag^="[[moc]]/"],[data-tag^="moc/"],[data-tag^="[[project]]/"],[data-tag^="project/"])::after {line-height:1!important;align-self:center!important;}
+
+/* Give generated label text a real native-link hit box. */
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag[data-folio-entity] {
+ display:inline-flex!important;align-items:baseline!important;vertical-align:baseline!important;
+ height:auto!important;min-height:0!important;max-height:none!important;line-height:normal!important;
+ pointer-events:auto!important;cursor:pointer!important;
+}
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag[data-folio-entity]::after {
+ display:block!important;line-height:1.4!important;pointer-events:none!important;
+}
+html body .roam-app :is(.roam-body-main,#right-sidebar) span.rm-page-ref--tag:is([data-folio-entity="person"],[data-folio-entity="industry"]) {
+ --mag-label-size:var(--mag-w-size,16px);
+}
+/* Both page-link and hashtag note labels use the same 12px size as Q1 stamps. */
+html body .roam-app :is(.roam-body-main,#right-sidebar) :is(span.rm-page-ref--tag,span.rm-page-ref)[data-folio-note-label] {
+ display:inline-flex!important;align-items:center!important;vertical-align:baseline!important;
+ width:auto!important;max-width:none!important;height:auto!important;min-height:0!important;max-height:none!important;
+ gap:5px!important;padding:2px 7px!important;line-height:normal!important;white-space:nowrap!important;
+ pointer-events:auto!important;cursor:pointer!important;font-stretch:normal!important;
+}
+html body .roam-app :is(.roam-body-main,#right-sidebar) :is(span.rm-page-ref--tag,span.rm-page-ref)[data-folio-note-label]::before,
+html body .roam-app :is(.roam-body-main,#right-sidebar) :is(span.rm-page-ref--tag,span.rm-page-ref)[data-folio-note-label]::after {
+ font-size:12px!important;line-height:1.4!important;letter-spacing:normal!important;
+ font-stretch:normal!important;transform:none!important;pointer-events:none!important;
+}

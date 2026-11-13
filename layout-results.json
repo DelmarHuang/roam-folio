@@ -1,0 +1,55 @@
+{
+  "fixture": "user-supplied DOM",
+  "states": [
+    {
+      "name": "both open",
+      "textWidth": 358,
+      "separatorWidth": 8,
+      "unusedGap": 8,
+      "visibleToggles": 1,
+      "overlap": 0
+    },
+    {
+      "name": "left closed",
+      "textWidth": 590,
+      "separatorWidth": 8,
+      "unusedGap": 8,
+      "visibleToggles": 1,
+      "overlap": 0
+    },
+    {
+      "name": "both closed",
+      "textWidth": 616,
+      "separatorWidth": 8,
+      "unusedGap": 8,
+      "visibleToggles": 1,
+      "overlap": 0
+    },
+    {
+      "name": "dragged narrower",
+      "textWidth": 190,
+      "separatorWidth": 8,
+      "unusedGap": 8,
+      "visibleToggles": 1,
+      "overlap": 0
+    },
+    {
+      "name": "both closed again",
+      "textWidth": 616,
+      "separatorWidth": 8,
+      "unusedGap": 8,
+      "visibleToggles": 1,
+      "overlap": 0
+    }
+  ],
+  "menu": {
+    "padding": "5px 7px",
+    "lineHeight": "20px",
+    "margin": "0px"
+  },
+  "command": {
+    "padding": "5px 7px",
+    "lineHeight": "20px"
+  },
+  "editingWidth": 616
+}

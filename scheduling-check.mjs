@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const source=fs.readFileSync('extension.js','utf8').replace(/export default[\s\S]*$/,'');
+let observe,queue,panels;const listeners=new Map();
+class Element {constructor(kind=''){this.kind=kind;this.classList={contains:()=>false};}closest(selector){return this.kind==='pdf'&&selector==='.rm-pdf-container'?this:null}matches(selector){return this.kind==='picker'&&selector==='.bp3-datepicker'}querySelector(){return null}}
+const doc={body:{},activeElement:null,addEventListener(){},removeEventListener(){},getElementById:()=>null};
+const win={requestIdleCallback:cb=>{queue=cb;return 1},cancelIdleCallback(){},addEventListener(){},removeEventListener(){},__magModules:{}};
+const ctx=vm.createContext({window:win,document:doc,navigator:{language:'en'},location:{hash:'#/app/Graph/page/A'},MutationObserver:class{constructor(cb){observe=cb}observe(){}disconnect(){}},Element,HTMLTextAreaElement:class extends Element{},localStorage:{getItem:()=>null,setItem(){}},console,setTimeout,clearTimeout});
+vm.runInContext(source+'\nwindow.api={createCore,createRuntime,FEATURES};',ctx);
+const counts={heavy:0,pdf:0,exit:0,attach:0,calendar:0};
+win.__magModules={heavy:()=>({sync(){counts.heavy++}}),pdf:()=>({sync(){counts.pdf++}}),folioPdfExit:()=>({sync(){counts.exit++}})};
+const core=win.api.createCore();for(const name of Object.keys(win.__magModules))core.load(name);queue();
+const baseline={...counts};for(let i=0;i<500;i++)observe([{target:new Element('pdf'),addedNodes:[]}]);assert.deepEqual(counts,baseline);
+const popup=new Element();popup.id='folio-settings-dialog';queue=null;observe([{target:new Element(),addedNodes:[popup],removedNodes:[]}]);assert.equal(queue,null,'owned settings shell does not schedule graph modules');
+ctx.location.hash='#/app/Graph/pdf/A';core.scheduleSync();queue();assert.equal(counts.heavy,baseline.heavy);assert.equal(counts.pdf,baseline.pdf+1);
+win.__folioAttachCalendar=()=>counts.attach++;core.watch('runner:calendar-carry:1',records=>{if(records.length)counts.calendar++}).observe();observe([{target:new Element(),addedNodes:[new Element('picker')]}]);assert.equal(counts.attach,1);assert.equal(counts.calendar,1);core.destroy();
+win.React={useState:value=>[value,()=>{}],createElement:(type,props,...children)=>({type,props,children:children.flat(Infinity)})};
+const writes=[];const rt=win.api.createRuntime({settings:{set:(...args)=>writes.push(args),panel:{create:p=>panels=p}}});rt.rebuildCss=()=>{};rt.locale='zh';await rt.createPanel();const settings=panels.settings;
+assert.ok(!settings.some(s=>/preview-aging/.test(s.id)));
+const tree=settings.find(s=>s.id==='folio-functional-settings').action.component();
+const nodes=[];function visit(n){if(!n||typeof n!=='object')return;if(typeof n.type==='function'){visit(n.type(n.props));return;}if(n.type==='input')nodes.push(n);n.children?.forEach(visit)}visit(tree);const motto=nodes[2].props;assert.equal(motto.defaultValue,'THINK. OWN. COMPOUND.');assert.ok(rt.appearanceCss().includes('THINK. OWN. COMPOUND.'));assert.ok(rt.appearanceCss().includes('FESTINA LENTE.'));assert.equal(motto.maxLength,24);const target={value:'好'.repeat(65)};motto.onInput({target});assert.equal(target.value.length,12);motto.onChange({target});assert.equal(rt.mottoLine1.length,12);target.value='中'.repeat(65);motto.onCompositionEnd({target});assert.equal(target.value.length,12);assert.equal(writes.at(-1)[1].length,12);
+assert.ok(win.api.FEATURES.some(f=>f.id==='code-height'));assert.ok(!win.api.FEATURES.some(f=>['aging','quick-mark'].includes(f.id)));
+console.log('PASS PDF render storm: 500 canvas updates trigger zero unrelated module syncs.');console.log('PASS PDF route: expensive page module stays asleep; PDF chrome stays active.');console.log('PASS calendar insertion: panel and actions attach in observer before paint.');console.log('PASS actual motto panel handlers: input, oversized value, composition end, and persisted value cap at 12 Chinese characters (24 units).');

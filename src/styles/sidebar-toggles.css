@@ -1,0 +1,33 @@
+/* Visibility only: keep Roam's original nodes, icons and click handlers. */
+html body .roam-app .roam-sidebar-container .top-row {position:relative!important;}
+html body .roam-app .roam-sidebar-container .top-row > .bp3-icon-menu-closed {
+ display:inline-flex!important;opacity:1!important;visibility:visible!important;
+ position:absolute!important;top:calc((var(--mag-toolbar-height,48px) - 30px) / 2)!important;right:8px!important;
+ align-items:center!important;justify-content:center!important;width:30px!important;height:30px!important;
+ margin:0!important;padding:0!important;z-index:2!important;pointer-events:auto!important;
+}
+html body .roam-app .rm-topbar .rm-open-left-sidebar-btn,
+html body .roam-app .rm-topbar > .bp3-button:is(.bp3-icon-menu-closed,:has(> .bp3-icon-menu-closed)),
+html body .roam-app #right-sidebar > .flex-h-box .bp3-button:is(.bp3-icon-menu-open,:has(.bp3-icon-menu-open)) {
+ display:inline-flex!important;opacity:1!important;visibility:visible!important;
+ align-items:center!important;justify-content:center!important;pointer-events:auto!important;
+}
+
+/* One slot for both native states. JS sets mutually exclusive inline visibility
+   so unrelated component styles cannot force both states back on. */
+html body .roam-app [data-folio-sidebar-role="close"] {
+ position:fixed!important;left:var(--folio-native-toggle-x,calc(100vw - 38px))!important;
+ top:var(--folio-native-toggle-y,9px)!important;right:auto!important;bottom:auto!important;
+ width:30px!important;min-width:30px!important;height:30px!important;min-height:30px!important;
+ margin:0!important;padding:0!important;z-index:1000!important;transform:none!important;
+ align-items:center!important;justify-content:center!important;
+ color:var(--mag-muted)!important;background:transparent!important;border:0!important;box-shadow:none!important;
+}
+
+/* Closed state: the native open button keeps its own flex slot. Open state:
+   reserve a dedicated slot for the native close button over the main topbar. */
+html body .roam-app .rm-topbar [data-folio-sidebar-role="open"] {
+ position:static!important;inset:auto!important;flex:0 0 30px!important;
+ width:30px!important;min-width:30px!important;margin:0!important;transform:none!important;
+}
+html[data-folio-right-sidebar="open"] body .roam-app .rm-topbar {box-sizing:border-box!important;padding-right:44px!important;}

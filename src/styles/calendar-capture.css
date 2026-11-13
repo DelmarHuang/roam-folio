@@ -1,0 +1,6 @@
+/* Every action uses the same capsule dimensions and colour. */
+html body .bp3-datepicker :is(.delmar-calendar-capture-bar,.delmar-calendar-tools) {gap:6px!important;background:var(--mag-paper)!important;}
+html body .bp3-datepicker :is(.delmar-calendar-capture-bar,.delmar-calendar-tools) button {box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;height:24px!important;min-height:24px!important;margin:0!important;padding:0 9px!important;border:1px solid var(--mag-border)!important;border-radius:12px!important;background:var(--mag-shell)!important;color:var(--mag-ink)!important;font:600 10px/1 var(--mag-body)!important;white-space:nowrap!important;}
+html body .bp3-datepicker :is(.delmar-calendar-capture-bar,.delmar-calendar-tools) button:hover {background:var(--mag-blue-soft)!important;}
+html body .delmar-calendar-capture-bar {grid-template-columns:minmax(80px,1fr) auto auto!important;}
+html body .delmar-calendar-tools {display:flex!important;align-items:center!important;justify-content:flex-end!important;padding:6px!important;}

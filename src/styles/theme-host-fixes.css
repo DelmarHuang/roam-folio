@@ -1,0 +1,61 @@
+/* Leave Roam's saved sizes and native drag handles in charge. Header padding
+   must be inside the measured width, including the final action column. */
+html body .roam-app .rm-data-table {width:max-content!important;max-width:100%!important;min-width:0!important;}
+html body .roam-app .rm-data-table__table {max-width:100%!important;overflow-x:auto!important;}
+html body .roam-app .rm-data-table__table > table {table-layout:fixed!important;min-width:0!important;max-width:none!important;}
+html body .roam-app .rm-data-table__table > table > thead > tr > th {box-sizing:border-box!important;padding:0!important;position:relative!important;overflow:visible!important;}
+html body .roam-app .rm-data-table .rm-column-header {box-sizing:border-box!important;padding:8px 12px!important;min-width:0!important;}
+html body .roam-app .rm-data-table .rm-column-header--fake {padding:8px!important;min-width:0!important;}
+html body .roam-app .rm-data-table__table > table > tbody > tr > td {box-sizing:border-box!important;overflow-wrap:anywhere!important;}
+html body .roam-app .rm-block:is(.list-query,[data-page-links*='".list-query"']) .rm-ref-page-view-title {display:none!important;}
+html body .roam-app .rm-block:is(.list-query,[data-page-links*='".list-query"']) :is(.rm-query-content,.rm-ref-page-view) {padding:0!important;margin:0!important;border:0!important;background:transparent!important;}
+
+/* Highlight rows only. Descendants and the results wrapper keep paper colour. */
+html body :is(.rm-autocomplete__results,.rm-block-ref-selector) {background:var(--mag-paper)!important;color:var(--mag-ink)!important;}
+html body .rm-autocomplete__results {border:1px solid var(--mag-border)!important;border-radius:6px!important;overflow:hidden!important;}
+html body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role="option"]) {background:transparent!important;outline:0!important;border:0!important;box-shadow:none!important;}
+html body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role="option"]):hover {background:var(--mag-blue-soft,#d8e1e8)!important;box-shadow:none!important;}
+html body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result--selected,.rm-autocomplete-result.rm-menu-item--active,.rm-autocomplete-result.bp3-active,.rm-autocomplete-result.selected,.rm-autocomplete-result:focus-visible,[role="option"][aria-selected="true"]) {background:var(--mag-blue-soft,#d8e1e8)!important;border-color:transparent!important;outline:0!important;box-shadow:none!important;}
+html body :is(.rm-autocomplete__preview,.rm-autocomplete-footer,.rm-find-or-create-modal-preview) {background:var(--mag-paper)!important;color:var(--mag-ink)!important;border-color:var(--mag-border)!important;}
+html body .rm-find-or-create-modal--with-preview .rm-find-or-create-modal-body-col,
+html body .rm-find-or-create-modal .rm-find-or-create-modal-preview {flex:1 1 0!important;min-width:0!important;width:50%!important;max-width:50%!important;}
+
+/* A custom settings component occupies the entire row, not the action column. */
+html body .rm-settings :is(.rm-settings-panel__setting,.rm-settings-panel__setting-container):has(.folio-settings-group) {display:block!important;width:100%!important;}
+html body .rm-settings :is(.rm-settings-panel__setting,.rm-settings-panel__setting-container):has(.folio-settings-group) > :has(.folio-settings-group) {width:100%!important;max-width:none!important;flex:1 1 100%!important;margin:0!important;padding-inline:0!important;}
+html body .rm-settings .folio-settings-group {box-sizing:border-box!important;margin-inline:0!important;text-align:left!important;}
+html body .rm-settings :is(.flex-h-box,.flex-v-box):has(> .folio-settings-group) {width:100%!important;max-width:none!important;flex-basis:100%!important;margin-inline:0!important;}
+
+html body .rm-settings .rm-settings-panel__setting:has(.folio-settings-group) {display:grid!important;grid-template-columns:minmax(0,1fr)!important;}
+html body .rm-settings .rm-settings-panel__setting:has(.folio-settings-group) > * {grid-column:1/-1!important;min-width:0!important;}
+html body .bp3-menu :is(.bp3-button-group,.rm-block-context-menu) .bp3-button {
+ color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;
+}
+html body .bp3-menu :is(.bp3-button-group,.rm-block-context-menu) .bp3-button:is(:hover,.bp3-active) {background:var(--mag-blue-soft)!important;color:var(--mag-ink)!important;}
+html body .bp3-menu :is(hr,.bp3-menu-divider) {border-color:var(--mag-border)!important;}
+/* Colours only for native H1/H2/H3 and alignment controls; keep their sizing. */
+html body .bp3-menu button.bp3-button {color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;}
+html body .bp3-menu button.bp3-button:is(:hover,.bp3-active) {background:var(--mag-blue-soft)!important;color:var(--mag-ink)!important;}
+html body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role="option"]):is(:hover,.rm-autocomplete-result--selected,.rm-menu-item--active,.bp3-active,.selected,[aria-selected="true"]) {background:#d5dce2!important;color:var(--mag-ink)!important;outline:0!important;box-shadow:none!important;}
+html body .roam-app :is(.roam-main,#right-sidebar,.roam-sidebar-container) > .rm-resize-handle {width:6px!important;min-width:6px!important;cursor:col-resize!important;pointer-events:auto!important;z-index:20!important;}
+html body .roam-app :is(.roam-main,#right-sidebar,.roam-sidebar-container) > .rm-resize-handle:hover {background:var(--mag-border)!important;}
+/* Main-page width and horizontal spacing belong to Roam. */
+html body .bp3-menu :is(button.bp3-button,.bp3-button-group > .bp3-button) {color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;}
+html body .bp3-menu :is(button.bp3-button,.bp3-button-group > .bp3-button):is(:hover,.bp3-active) {color:var(--mag-ink)!important;background:var(--mag-blue-soft)!important;}
+html body .bp3-menu :is(hr,.bp3-menu-divider) {border-color:var(--mag-border)!important;}
+
+/* Sidebar spacing classes must not reserve a percentage of each block row.
+   Keep the real reference counter and its 24px native slot; reclaim only the
+   separator. The same constraints apply while editing and in wide layouts. */
+html body .roam-app .roam-main .roam-article .rm-block-main > .rm-block-separator {
+ flex:0 0 8px!important;width:8px!important;min-width:0!important;max-width:8px!important;
+}
+html body .roam-app .roam-main .roam-article .rm-block-main > :is(.rm-block__input,.rm-autocomplete__wrapper) {
+ flex:1 1 0%!important;min-width:0!important;max-width:100%!important;
+}
+
+/* The native daily separator is redundant only while this day's masthead exists.
+   Keep its space; removing the marker restores Roam's own border colour. */
+html body .roam-app .roam-body-main .roam-log-container > .roam-log-page:has(> .rm-title-display-container > .rm-title-display[data-mag-masthead]) {
+ border-top-color:transparent!important;
+}

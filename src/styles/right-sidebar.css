@@ -1,0 +1,48 @@
+/* One 48px toolbar band. The native global toggle overlays that band; it does
+   not take a separate flex row above the card controls. */
+html body .roam-app #right-sidebar {
+ --mag-frame-bottom:10px;
+ --rs-header-height:var(--mag-toolbar-height,48px);
+ --rs-control-size:30px;
+ --rs-glyph-size:16px;
+ --rs-toolbar-top:calc((var(--rs-header-height) - var(--rs-control-size)) / 2);
+ --rs-window-max-height:calc(var(--rs-viewport-height) - var(--mag-frame-bottom));
+ --rs-wrapper-max-height:calc(var(--rs-window-max-height) - var(--rs-header-height));
+}
+/* The native toggle is visually fixed in the main topbar. Its original
+   sidebar wrapper occupies no toolbar space and cannot cover card controls. */
+html body .roam-app #right-sidebar > .flex-h-box {
+ display:contents!important;background:transparent!important;pointer-events:none!important;
+}
+html body .roam-app #right-sidebar > .flex-h-box > div {display:none!important;}
+html body .roam-app #right-sidebar > .flex-h-box [data-folio-sidebar-role="close"] {
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ position:fixed!important;left:var(--folio-native-toggle-x,calc(100vw - 38px))!important;
+ top:var(--folio-native-toggle-y,9px)!important;right:auto!important;bottom:auto!important;
+ width:30px!important;min-width:30px!important;height:30px!important;min-height:30px!important;
+ padding:0!important;margin:0!important;z-index:1000!important;pointer-events:auto!important;
+}
+html body .roam-app #right-sidebar .sidebar-content {
+ height:var(--rs-viewport-height)!important;max-height:var(--rs-viewport-height)!important;
+ padding-top:0!important;scrollbar-gutter:auto!important;
+}
+html body .roam-app #right-sidebar .rm-sidebar-window:not([data-mag-folded]) {height:var(--rs-window-max-height)!important;}
+/* Controls live inside this native wrapper at negative top; it must not clip.
+   Scrolling belongs to its outline child, leaving PIN/filter clickable. */
+html body .roam-app #right-sidebar .rm-sidebar-window:not([data-mag-folded]) > .rm-sidebar-outline-wrapper {
+ height:var(--rs-wrapper-max-height)!important;max-height:var(--rs-wrapper-max-height)!important;
+ flex:1 1 auto!important;overflow:visible!important;
+}
+html body .roam-app #right-sidebar .rm-sidebar-window:not([data-mag-folded]) > .rm-sidebar-outline-wrapper > .rm-sidebar-outline {
+ height:var(--rs-outline-max-height)!important;max-height:var(--rs-outline-max-height)!important;
+ overflow-x:hidden!important;overflow-y:auto!important;min-height:0!important;
+}
+/* The card close control owns the rightmost slot of its own card. */
+html body .roam-app #right-sidebar .rm-sidebar-window:not([data-mag-folded]) .window-headers > .bp3-button.bp3-icon-cross {right:8px!important;}
+
+html body .roam-app #right-sidebar .rm-sidebar-window .bp3-icon-cross::before {
+ transform:none!important;font-size:16px!important;line-height:16px!important;
+}
+/* Adjacent cards use one compact gap, without page-sized empty snap slots. */
+html body .roam-app #right-sidebar .sidebar-content {--rs-page-spacer:0px!important;--rs-gap:12px!important;}
+html body .roam-app #right-sidebar .rm-sidebar-window:not([data-mag-folded]) {margin-right:0!important;}

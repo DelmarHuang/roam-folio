@@ -1,0 +1,23 @@
+/* Same compact die in Folio and native themes; keep the real button handler. */
+html body #delmar-random-todo-3-button {
+  position: relative !important;
+  width: 30px !important;
+  margin: 0 1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  filter: none !important;
+}
+
+html body #delmar-random-todo-3-button::before {
+  content: "" !important;
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  background-color: currentColor !important;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M3 1h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zM3.1 4.5a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0zM6.6 8a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0zM10.1 11.5a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0z'/></svg>") center / 16px 16px no-repeat !important;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill-rule='evenodd' d='M3 1h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zM3.1 4.5a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0zM6.6 8a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0zM10.1 11.5a1.4 1.4 0 1 0 2.8 0a1.4 1.4 0 1 0-2.8 0z'/></svg>") center / 16px 16px no-repeat !important;
+}
+
+

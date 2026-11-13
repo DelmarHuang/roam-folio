@@ -1,0 +1,6 @@
+html body .rm-pdf-container.rm-pdf-container--fullscreen > .rm-pdf-toolbar { pointer-events:none!important; }
+html body > .folio-pdf-exit { position:fixed!important;top:10px!important;left:12px!important;z-index:10003!important;display:inline-flex!important;align-items:center!important;height:28px!important;padding:0 9px!important;border:1px solid var(--mag-border)!important;border-radius:5px!important;background:var(--mag-paper)!important;color:var(--mag-ink)!important;font:12px/1 var(--mag-body)!important;text-decoration:none!important;pointer-events:auto!important;cursor:pointer!important; }
+html body > .folio-pdf-exit:hover {background:var(--mag-yellow-soft)!important;}
+html body .rm-pdf-container .rm-pdf-toolbar__navigation {gap:3px!important;padding:2px 6px!important;min-height:30px!important;font-size:12px!important;white-space:nowrap!important;}
+html body .rm-pdf-container .rm-pdf-toolbar__navigation .bp3-numeric-input {width:32px!important;min-width:32px!important;}
+html body .rm-pdf-container .rm-pdf-toolbar__navigation .bp3-input {width:32px!important;min-width:0!important;height:24px!important;font-size:12px!important;}

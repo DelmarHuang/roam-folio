@@ -1,0 +1,78 @@
+/* With display:contents on the native nav, its empty popover wrapper would
+   become a separate flex item in the sidebar column. Hide the wrapper too. */
+html body .roam-app #right-sidebar > .rm-sidebar-nav > .bp3-popover-wrapper:has(.rm-agent-sidebar-chat-launcher[data-folio-ai-proxied="true"]) {display:none!important;}
+/* AI owns one card's toolbar; no extra global row or viewport-height override. */
+html body .roam-app #right-sidebar > .rm-sidebar-nav > .rm-agent-chat-header:not([data-folio-ai-card-header]) {display:none!important;}
+html body .roam-app #right-sidebar > .rm-sidebar-nav > .rm-agent-chat-header[data-folio-ai-card-header] {
+ position:absolute!important;top:var(--folio-ai-header-top)!important;left:var(--folio-ai-header-left)!important;
+ width:var(--folio-ai-header-width)!important;max-width:var(--folio-ai-header-width)!important;
+ box-sizing:border-box!important;padding:0 6px!important;margin:0!important;z-index:305!important;
+}
+html body .roam-app #right-sidebar > .rm-sidebar-nav > .rm-agent-chat-header {
+ display:flex!important;align-items:center!important;flex:1 1 0!important;min-width:0!important;
+ height:var(--mag-toolbar-height,48px)!important;gap:6px!important;justify-content:flex-start!important;pointer-events:auto!important;color:var(--mag-muted)!important;
+}
+html body .roam-app .rm-agent-chat-header .rm-agent-chat-tab-actions {
+ display:flex!important;align-items:center!important;flex:0 0 auto!important;pointer-events:auto!important;margin:0!important;padding:0!important;
+}
+html body .roam-app .rm-agent-chat-header .rm-agent-chat-tabs {
+ display:flex!important;align-items:center!important;flex:0 1 auto!important;min-width:0!important;overflow-x:auto!important;gap:4px!important;
+}
+html body .roam-app .rm-agent-chat-header .rm-agent-chat-tab {
+ display:flex!important;align-items:center!important;min-width:80px!important;max-width:240px!important;flex:0 1 240px!important;
+ border:1px solid transparent!important;border-radius:6px!important;background:transparent!important;
+}
+html body .roam-app .rm-agent-chat-header .rm-agent-chat-tab.is-selected {
+ color:var(--mag-ink)!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important;
+}
+html body .roam-app .rm-agent-chat-header .rm-agent-chat-tab-button {
+ flex:1 1 0!important;min-width:0!important;color:inherit!important;background:transparent!important;
+}
+html body .roam-app .rm-agent-chat-header .rm-agent-chat-tab-title {
+ display:block!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+}
+html body .roam-app .rm-agent-chat-header :is(.rm-agent-chat-history-toggle,.rm-agent-chat-new-tab,.rm-agent-chat-tab-close) {
+ position:static!important;flex:0 0 28px!important;width:28px!important;min-width:28px!important;height:28px!important;
+ padding:0!important;margin:0!important;color:var(--mag-muted)!important;background:transparent!important;border:0!important;
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;pointer-events:auto!important;
+}
+html body .roam-app .rm-agent-sidebar-chat-launcher {pointer-events:auto!important;}
+html body .roam-app .rm-agent-sidebar-chat-launcher[data-folio-ai-proxied="true"] {display:none!important;}
+html body .roam-app .rm-agent-chat-composer-shell {
+ color:var(--mag-ink)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;
+}
+html body .roam-app .rm-agent-chat-controls {color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-bottom-left-radius:inherit!important;border-bottom-right-radius:inherit!important;}
+html body .roam-app .rm-agent-chat-panel :is(.rm-agent-picker-button,.rm-agent-chat-thinking-toggle,.rm-agent-chat-copy,.rm-agent-chat-reply,.rm-agent-chat-edit) {
+ color:var(--mag-muted)!important;
+}
+html body .roam-app .rm-agent-chat-panel .rm-agent-chat-send {
+ color:var(--mag-paper)!important;background:var(--mag-gold-ink)!important;border-color:var(--mag-gold-ink)!important;
+}
+html body .roam-app .rm-agent-chat-panel .rm-agent-chat-send:disabled {opacity:.45!important;}
+html body .roam-app .rm-agent-chat-panel :is(.rm-agent-chat-send,.rm-agent-picker-button):focus-visible,
+html body .roam-app .rm-agent-chat-header button:focus-visible {
+ outline:2px solid var(--mag-gold)!important;outline-offset:2px!important;
+}
+html body .rm-agent-picker-menu {
+ color:var(--mag-ink)!important;background:var(--mag-paper)!important;
+}
+html body .rm-agent-picker-menu .rm-agent-picker-option {color:var(--mag-ink)!important;background:transparent!important;}
+html body .rm-agent-picker-menu .rm-agent-picker-option:is(:hover,:focus-visible) {background:var(--mag-active,var(--mag-yellow-soft))!important;}
+html body .rm-agent-picker-menu .rm-agent-picker-option[aria-checked="true"] {
+ color:var(--mag-ink)!important;background:var(--mag-yellow-soft)!important;box-shadow:inset 2px 0 var(--mag-gold-ink)!important;
+}
+html body .rm-agent-picker-menu .rm-agent-picker-option-description {display:block!important;color:var(--mag-muted)!important;white-space:normal!important;}
+
+/* Allow horizontal input to reach the card track after the transcript fills. */
+html body .roam-app .rm-agent-chat-panel :is(.rm-agent-chat-transcript-wrap,.rm-agent-chat-transcript),
+html body .roam-app .rm-agent-chat-panel {overscroll-behavior-x:auto!important;}
+/* Exact native history selectors observed in Roam, including row action menus. */
+html body :is(.rm-agent-chat-history,.rm-agent-chat-history-row-menu) {background:var(--mag-shell)!important;color:var(--mag-ink)!important;border-color:var(--mag-border)!important;}
+html body :is(.rm-agent-chat-history-popover,.rm-agent-chat-history-row-menu-popover) > .bp3-popover-content {background:transparent!important;}
+html body .rm-agent-chat-history-search {color:var(--mag-ink)!important;background:transparent!important;border-color:var(--mag-border)!important;}
+html body .rm-agent-chat-history :is(.rm-agent-chat-history-date,.rm-agent-chat-history-excerpt,.rm-agent-chat-history-group-label,.rm-agent-chat-history-empty) {color:var(--mag-muted)!important;}
+html body .rm-agent-chat-history :is(.rm-agent-chat-history-row:hover > .rm-agent-chat-history-item,.rm-agent-chat-history-item:focus-visible) {background:var(--mag-blue-soft)!important;}
+
+/* Keep the native bullet and placeholder aligned with the Read shield.
+   The sidebar pin plugin's extra text gutter is not part of the AI composer. */
+html body .roam-app .rm-agent-native-composer > .roam-block-container > .roamjs-outline-pin-host {padding-left:0!important;}
