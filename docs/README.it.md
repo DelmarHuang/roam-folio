@@ -2,7 +2,9 @@
 
 [简体中文](../README.md) | [English](README.en.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Italiano](README.it.md)
 
-# Folio · 1.4.20
+# Folio · 1.4.21
+
+Gli strumenti compaiono automaticamente nelle note appena aperte. La ricerca conserva testo e posizione per blocco. Sostituisci il risultato corrente o tutti quelli del blocco di codice con transazioni native dell’editor e supporto per annullare. La ricerca è letterale e non distingue maiuscole e minuscole.
 
 Trascina il pannello dalla barra del titolo e continua a usare la pagina per osservare i cambiamenti mentre attivi o disattivi le opzioni.
 

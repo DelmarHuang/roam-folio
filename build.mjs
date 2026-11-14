@@ -426,6 +426,7 @@ const jsBlocks = {
 function configureRunner(key, source) {
   // The supplied video implementation is intentionally copied verbatim.
   if (key === "video-reader") return source;
+  if (key === "code-tools") source = fs.readFileSync(path.join(root, "src/runners/code-tools.js"), "utf8");
   if (key === "calendar-keyboard" || key === "calendar-preview") source = fs.readFileSync(path.join(root, "src/runners", key + ".js"), "utf8");
   if (key === "calendar-carry" || key === "calendar-capture") {
     const name = key === "calendar-carry" ? "syncCalendarTools" : "syncBar";

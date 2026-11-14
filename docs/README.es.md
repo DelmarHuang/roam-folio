@@ -2,7 +2,9 @@
 
 [简体中文](../README.md) | [English](README.en.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Italiano](README.it.md)
 
-# Folio · 1.4.20
+# Folio · 1.4.21
+
+Las herramientas aparecen automáticamente en las notas recién abiertas. La búsqueda conserva el texto y la posición por bloque. Reemplace la coincidencia actual o todas las del bloque de código mediante transacciones nativas del editor que permiten deshacer. La búsqueda es literal y no distingue mayúsculas de minúsculas.
 
 Arrastre el panel por la barra de título y siga usando la página para observar los cambios mientras activa o desactiva opciones.
 

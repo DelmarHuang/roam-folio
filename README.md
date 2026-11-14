@@ -2,7 +2,9 @@
 
 [简体中文](README.md) | [English](docs/README.en.md) | [Français](docs/README.fr.md) | [Deutsch](docs/README.de.md) | [Español](docs/README.es.md) | [Italiano](docs/README.it.md)
 
-# Folio · 书页集 · 1.4.20
+# Folio · 书页集 · 1.4.21
+
+代码块工具会随新展开的笔记自动出现。搜索会保留当前块的查询词与匹配位置；支持替换当前项或一次替换当前代码块中的全部匹配，使用编辑器原生事务并保留撤销能力。搜索为不区分大小写的字面匹配。
 
 顶栏设置面板可拖动标题栏移动，打开时仍能操作页面，便于边切换设置边观察变化。
 

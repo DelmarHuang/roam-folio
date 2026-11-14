@@ -2,7 +2,9 @@
 
 [简体中文](../README.md) | [English](README.en.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Italiano](README.it.md)
 
-# Folio · 1.4.20
+# Folio · 1.4.21
+
+Code tools appear automatically in newly opened notes. Search retains its query and match position per block. Replace the current match or all matches in the current code block through native editor transactions with undo support. Search is literal and case-insensitive.
 
 Drag the settings panel by its title bar and keep using the page while it stays open, so you can preview changes as you toggle settings.
 

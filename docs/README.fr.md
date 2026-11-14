@@ -2,7 +2,9 @@
 
 [简体中文](../README.md) | [English](README.en.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Italiano](README.it.md)
 
-# Folio · 1.4.20
+# Folio · 1.4.21
+
+Les outils apparaissent automatiquement dans les nouvelles notes ouvertes. La recherche conserve le texte et la position par bloc. Remplacez le résultat courant ou tous les résultats du bloc de code avec les transactions natives de l’éditeur et la possibilité d’annuler. La recherche est littérale et insensible à la casse.
 
 Déplacez le panneau par sa barre de titre et continuez à utiliser la page pour observer les changements en activant ou désactivant les options.
 

@@ -1385,6 +1385,19 @@ window.__magCore && window.__magCore.load("masthead");
 (() => {
   const KEY = "__magCodeBottom";
   const STYLE_ID = "mag-code-tools-style";
+  const messages = {
+    en: ['Search this code block…','Search this code block','Previous · Shift + Enter','Next · Enter','Close search · Esc','No matches','Unable to read document','Replace with…','Replace current','Replace all','Read-only document','Code-block tools','Scroll to code start','Scroll to code end','Copy all code','Copied all code'],
+    zh: ['搜索当前代码块…','搜索当前代码块','上一个 · Shift + Enter','下一个 · Enter','关闭搜索 · Esc','无结果','无法读取文档','替换为…','替换当前项','全部替换','文档为只读','代码块操作','滚动到代码块顶部','滚动到代码块底部','复制全部代码','已复制全部代码'],
+    fr: ['Rechercher dans ce bloc…','Rechercher dans ce bloc','Précédent · Maj + Entrée','Suivant · Entrée','Fermer · Échap','Aucun résultat','Lecture impossible','Remplacer par…','Remplacer','Tout remplacer','Document en lecture seule','Outils du bloc de code','Début du code','Fin du code','Copier tout le code','Code copié'],
+    de: ['Diesen Codeblock durchsuchen…','Codeblock durchsuchen','Zurück · Umschalt + Eingabe','Weiter · Eingabe','Schließen · Esc','Keine Treffer','Dokument nicht lesbar','Ersetzen durch…','Treffer ersetzen','Alle ersetzen','Dokument schreibgeschützt','Codeblock-Werkzeuge','Zum Codeanfang','Zum Codeende','Gesamten Code kopieren','Code kopiert'],
+    es: ['Buscar en este bloque…','Buscar en este bloque','Anterior · Mayús + Intro','Siguiente · Intro','Cerrar · Esc','Sin resultados','No se puede leer el documento','Reemplazar por…','Reemplazar actual','Reemplazar todo','Documento de solo lectura','Herramientas de código','Inicio del código','Final del código','Copiar todo el código','Código copiado'],
+    it: ['Cerca in questo blocco…','Cerca in questo blocco','Precedente · Maiusc + Invio','Successivo · Invio','Chiudi · Esc','Nessun risultato','Impossibile leggere il documento','Sostituisci con…','Sostituisci corrente','Sostituisci tutto','Documento di sola lettura','Strumenti del codice','Inizio del codice','Fine del codice','Copia tutto il codice','Codice copiato']
+  };
+  const labels = messages[window.__magLocale] || messages.en;
+  const titleKeys = new Map(messages.zh.map((value, index) => [value, index]));
+  const text = value => titleKeys.has(value) ? labels[titleKeys.get(value)] : value;
+  const searchStates = new Map();
+
 
   window[KEY]?.stop();
   document.getElementById(STYLE_ID)?.remove();
@@ -1479,6 +1492,12 @@ window.__magCore && window.__magCore.load("masthead");
       font-family: var(--mag-body, sans-serif);
     }
 
+    html body .mag-code-search button[data-replace] {
+      width: auto !important;
+      padding-inline: 7px !important;
+      font: 12px/1.5 var(--mag-body, sans-serif);
+    }
+    html body .mag-code-search button:disabled {opacity:.45;cursor:default;}
     html body .mag-code-search[hidden] {
       display: none !important;
     }
@@ -1586,8 +1605,8 @@ window.__magCore && window.__magCore.load("masthead");
   function button(name, title, action) {
     const el = document.createElement("button");
     el.type = "button";
-    el.title = title;
-    el.setAttribute("aria-label", title);
+    el.title = text(title);
+    el.setAttribute("aria-label", text(title));
     el.innerHTML = icon(name);
 
     el.addEventListener("click", event => {
@@ -1652,154 +1671,121 @@ window.__magCore && window.__magCore.load("masthead");
 
     el.dataset.state = ok ? "success" : "error";
     el.innerHTML = icon(ok ? "done" : "error");
-    el.title = message;
+    el.title = text(message);
 
     later(() => {
       if (!el.isConnected) return;
       delete el.dataset.state;
       el.innerHTML = icon("copy");
-      el.title = "复制全部代码";
+      el.title = text("复制全部代码");
     }, 1600);
   }
 
   function createSearch(block, searchButton) {
-    const panel = document.createElement("div");
-    panel.className = "mag-code-search";
-    panel.hidden = true;
-
-    const input = document.createElement("input");
-    input.type = "search";
-    input.placeholder = "搜索当前代码块…";
-    input.autocomplete = "off";
-    input.spellcheck = false;
-    input.setAttribute("aria-label", "搜索当前代码块");
-
-    const count = document.createElement("span");
-    count.className = "mag-code-search-count";
-    count.setAttribute("role", "status");
-    count.textContent = "0 / 0";
-
-    let hits = [];
-    let current = -1;
-    let lastDoc = null;
-    let lastQuery = null;
-    let debounce = null;
-
+    const key = block.closest('[data-block-uid]')?.getAttribute('data-block-uid') || block;
+    const saved = searchStates.get(key) || {query:'', replacement:'', from:null, open:false, count:'0 / 0'};
+    searchStates.set(key, saved);
+    const panel = document.createElement('div');
+    panel.className = 'mag-code-search';
+    panel.hidden = !saved.open;
+    searchButton.setAttribute('aria-expanded', String(saved.open));
+    const input = document.createElement('input');
+    input.type = 'search'; input.value = saved.query;
+    input.placeholder = labels[0]; input.setAttribute('aria-label', labels[1]);
+    input.autocomplete = 'off'; input.spellcheck = false;
+    const replacement = document.createElement('input');
+    replacement.type = 'text'; replacement.value = saved.replacement;
+    replacement.placeholder = labels[7]; replacement.setAttribute('aria-label', labels[7]);
+    replacement.autocomplete = 'off'; replacement.spellcheck = false;
+    const count = document.createElement('span');
+    count.className = 'mag-code-search-count'; count.setAttribute('role','status');
+    count.textContent = saved.count;
+    let hits = [], current = -1, lastText = null, lastQuery = null, lastViewDoc = null, debounce = null;
+    const status = value => { if(count.textContent !== value) count.textContent = value; saved.count = value; };
+    function collect(view) {
+      lastViewDoc = view.state.doc;
+      const value = view.state.doc.toString(), query = input.value;
+      const queryChanged = query !== saved.query;
+      if (value !== lastText || query !== lastQuery) {
+        lastText = value; lastQuery = query; hits = []; current = -1;
+        if (query) {
+          const pattern = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+          let match;
+          while ((match = pattern.exec(value))) hits.push({from:match.index,to:match.index+match[0].length});
+        }
+        const anchor = queryChanged ? 0 : (saved.from ?? view.state.selection?.main?.from ?? 0);
+        if (hits.length) {
+          current = hits.findIndex(hit => hit.from >= anchor);
+          if (current < 0) current = 0;
+        }
+      }
+      saved.query = query;
+      replaceOne.disabled = replaceAll.disabled = !hits.length || Boolean(view.state.readOnly);
+      if (!hits.length) { saved.from = null; status(query ? labels[5] : '0 / 0'); }
+      return queryChanged;
+    }
     function search(direction = 0) {
       try {
+        const view = requireView(block), hadPosition = saved.from !== null;
+        const queryChanged = collect(view);
+        if (!hits.length) return;
+        if (direction && hadPosition && !queryChanged) current = (current + direction + hits.length) % hits.length;
+        else if (direction < 0 && !hadPosition) current = hits.length - 1;
+        const hit = hits[current]; saved.from = hit.from;
+        view.dispatch({selection:{anchor:hit.from,head:hit.to},scrollIntoView:true});
+        status(`${current+1} / ${hits.length}`);
+      } catch(error) {status(labels[6]);console.warn('[Folio code tools]',error);}
+    }
+    function refresh() {
+      if (panel.hidden) return;
+      try {
         const view = requireView(block);
-        const doc = view.state.doc;
-        const query = input.value;
-        const changed = doc !== lastDoc || query !== lastQuery;
-
-        if (changed) {
-          lastDoc = doc;
-          lastQuery = query;
-          hits = [];
-          current = -1;
-
-          if (query) {
-            const escaped = query.replace(
-              /[.*+?^${}()|[\]\\]/g, "\\$&"
-            );
-            const pattern = new RegExp(escaped, "gi");
-            const text = doc.toString();
-            let match;
-
-            while ((match = pattern.exec(text))) {
-              hits.push({
-                from: match.index,
-                to: match.index + match[0].length
-              });
-            }
-          }
-        }
-
-        if (!hits.length) {
-          count.textContent = query ? "无结果" : "0 / 0";
-          return;
-        }
-
-        if (changed || current < 0) {
-          current = direction < 0 ? hits.length - 1 : 0;
-        } else if (direction) {
-          current =
-            (current + direction + hits.length) % hits.length;
-        }
-
-        const hit = hits[current];
-
-        // 选中匹配文字并滚动到它，不修改文档。
-        view.dispatch({
-          selection: { anchor: hit.from, head: hit.to },
-          scrollIntoView: true
-        });
-
-        count.textContent = `${current + 1} / ${hits.length}`;
-      } catch (error) {
-        count.textContent = "无法读取文档";
-        console.warn("[Magazine code tools]", error);
-      }
+        if (view.state.doc === lastViewDoc && input.value === lastQuery) return;
+        collect(view);
+        if (hits.length) {saved.from = hits[current].from;status(`${current+1} / ${hits.length}`);}
+      } catch (_) {}
     }
-
-    function close() {
+    function replace(all) {
       cancel(debounce);
-      panel.hidden = true;
-      searchButton.setAttribute("aria-expanded", "false");
-      searchButton.focus({ preventScroll: true });
-    }
-
-    panel.append(
-      input,
-      count,
-      button("prev", "上一个 · Shift + Enter", () => search(-1)),
-      button("next", "下一个 · Enter", () => search(1)),
-      button("close", "关闭搜索 · Esc", close)
-    );
-
-    // 搜索栏位于编辑器外，避免覆盖代码。
-    block.prepend(panel);
-    panel.addEventListener("click", event => event.stopPropagation());
-
-    input.addEventListener("input", () => {
-      cancel(debounce);
-      debounce = later(() => search(), 150);
-    });
-
-    input.addEventListener("keydown", event => {
-      event.stopPropagation();
-
-      if (event.key === "Enter") {
-        event.preventDefault();
-        cancel(debounce);
-        search(event.shiftKey ? -1 : 1);
-      } else if (event.key === "Escape") {
-        event.preventDefault();
-        close();
-      }
-    });
-
-    return {
-      panel,
-
-      toggle() {
-        if (!panel.hidden) {
-          close();
-          return;
-        }
-
-        panel.hidden = false;
-        searchButton.setAttribute("aria-expanded", "true");
-        input.focus({ preventScroll: true });
-        input.select();
+      try {
+        const view = requireView(block);
+        collect(view);
+        if (view.state.readOnly) {status(labels[10]);return;}
+        if (!hits.length) return;
+        const selected = all ? hits : [hits[current]];
+        const end = selected[0].from + replacement.value.length;
+        // One native transaction: literal replacement, with the editor's undo history.
+        view.dispatch({changes:selected.map(hit=>({...hit,insert:replacement.value})),selection:{anchor:end},scrollIntoView:true});
+        saved.replacement = replacement.value;
+        saved.from = all ? 0 : end;
         search();
-      },
-
-      dispose() {
-        cancel(debounce);
-        panel.remove();
-      }
-    };
+      } catch(error) {status(labels[6]);console.warn('[Folio code tools]',error);}
+    }
+    function close() {
+      cancel(debounce); saved.open = false; panel.hidden = true;
+      searchButton.setAttribute('aria-expanded','false');
+      searchButton.focus({preventScroll:true});
+    }
+    const replaceOne = button('next', labels[8], ()=>replace(false));
+    const replaceAll = button('next', labels[9], ()=>replace(true));
+    for (const [control,label,kind] of [[replaceOne,labels[8],'one'],[replaceAll,labels[9],'all']]) {
+      control.textContent = label; control.dataset.replace = kind; control.disabled = true;
+    }
+    panel.append(input,count,button('prev','上一个 · Shift + Enter',()=>search(-1)),button('next','下一个 · Enter',()=>search(1)),button('close','关闭搜索 · Esc',close),replacement,replaceOne,replaceAll);
+    block.prepend(panel);
+    panel.addEventListener('click',event=>event.stopPropagation());
+    panel.addEventListener('keydown',event=>event.stopPropagation());
+    input.addEventListener('input',()=>{cancel(debounce);debounce=later(()=>search(),150);});
+    replacement.addEventListener('input',()=>{saved.replacement=replacement.value;});
+    for (const field of [input,replacement]) field.addEventListener('keydown',event=>{
+      if(event.key==='Enter') {event.preventDefault();cancel(debounce);if(field===input)search(event.shiftKey?-1:1);else replace(false);}
+      else if(event.key==='Escape') {event.preventDefault();close();}
+    });
+    return {panel,refresh,toggle(){
+      if(!panel.hidden){close();return;}
+      saved.open=true;panel.hidden=false;searchButton.setAttribute('aria-expanded','true');
+      input.focus({preventScroll:true});input.select();search();
+    },dispose(){cancel(debounce);panel.remove();}};
   }
 
   function remove(entry) {
@@ -1820,6 +1806,10 @@ window.__magCore && window.__magCore.load("masthead");
       previous.search.panel.isConnected
     ) return;
 
+    if (previous?.search.panel.isConnected) {
+      bar.insertBefore(previous.group, bar.firstChild);
+      return;
+    }
     if (previous) {
       remove(previous);
       installed.delete(block);
@@ -1828,7 +1818,7 @@ window.__magCore && window.__magCore.load("masthead");
     const group = document.createElement("span");
     group.className = "mag-code-tools";
     group.setAttribute("role", "group");
-    group.setAttribute("aria-label", "代码块操作");
+    group.setAttribute("aria-label", labels[11]);
 
     const searchButton = button(
       "search", "搜索当前代码块", () => search.toggle()
@@ -1867,9 +1857,9 @@ window.__magCore && window.__magCore.load("masthead");
 
     const entry = installed.get(block);
     if (
-      entry?.group.isConnected &&
-      entry.search.panel.isConnected
-    ) return;
+      entry?.group.parentElement === block.querySelector(".rm-code-block__settings-bar") &&
+      entry.group.isConnected && entry.search.panel.isConnected
+    ) {entry.search.refresh();return;}
 
     pending.add(block);
     if (frame) return;
@@ -1919,10 +1909,12 @@ window.__magCore && window.__magCore.load("masthead");
       pending.clear();
       installed.forEach(remove);
       installed.clear();
+      searchStates.clear();
       style.remove();
     }
   };
 })();
+
 },
 
 "weight": () => {
@@ -5622,8 +5614,8 @@ function refreshCalendarLanguage(runtime) {
 }
 
 
-const VERSION = "1.4.20";
-const BUILD_DATE = "2026-11-13";
+const VERSION = "1.4.21";
+const BUILD_DATE = "2026-11-14";
 const STYLE_ID = "folio-plugin-style";
 const SETTING_PREFIX = "folio-";
 const LEGACY_SETTING_PREFIX = "imprint-";
@@ -5975,6 +5967,7 @@ function createCore() {
   const cancelIdle = window.cancelIdleCallback || window.clearTimeout;
   let handle = 0;
   let deferred = false;
+  const pendingMutations = [];
 
   const isBlockInput = (element) =>
     element instanceof HTMLTextAreaElement && element.classList.contains("rm-block-input");
@@ -6005,6 +5998,7 @@ function createCore() {
   };
   const runSync = () => {
     handle = 0;
+    const mutations = pendingMutations.splice(0);
     const pdfRoute = /\/pdf\//.test(location.hash);
     for (const [name, module] of modules) {
       if (pdfRoute && !["pdf", "folioPdfExit", "folioNativeSidebarChrome"].includes(name)) continue;
@@ -6012,7 +6006,7 @@ function createCore() {
     }
     for (const [name, callback] of watchers) {
       if (pdfRoute) continue;
-      try { callback([]); } catch (error) { console.warn(`[Folio] ${name}`, error); }
+      try { callback(mutations); } catch (error) { console.warn(`[Folio] ${name}`, error); }
     }
   };
   const scheduleSync = () => {
@@ -6033,6 +6027,7 @@ function createCore() {
       window.__folioAttachCalendar?.();
       for (const [name, callback] of watchers) if (name.startsWith("runner:calendar-")) callback(records);
     }
+    pendingMutations.push(...records);
     if (isBlockInput(doc.activeElement)) {
       deferred = true;
       return;
@@ -6090,6 +6085,7 @@ function createCore() {
       if (handle) cancelIdle(handle);
       [...modules.keys()].forEach(unload);
       watchers.clear();
+      pendingMutations.length = 0;
       if (window.__magCore === core) delete window.__magCore;
     },
   };

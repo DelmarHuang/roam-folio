@@ -2,7 +2,9 @@
 
 [简体中文](../README.md) | [English](README.en.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [Español](README.es.md) | [Italiano](README.it.md)
 
-# Folio · 1.4.20
+# Folio · 1.4.21
+
+Code-Werkzeuge erscheinen automatisch in neu geöffneten Notizen. Suchtext und Trefferposition bleiben pro Block erhalten. Ersetzen Sie den aktuellen Treffer oder alle Treffer im aktuellen Codeblock über native Editor-Transaktionen mit Rückgängig-Unterstützung. Die Suche ist wörtlich und beachtet Groß- und Kleinschreibung nicht.
 
 Das Einstellungsfenster lässt sich an der Titelleiste verschieben. Die Seite bleibt bedienbar, sodass Änderungen beim Umschalten sofort sichtbar sind.
 

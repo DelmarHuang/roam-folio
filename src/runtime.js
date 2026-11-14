@@ -8,8 +8,8 @@
 /*__TOOLBAR__*/
 /*__CALENDAR_SUPPORT__*/
 
-const VERSION = "1.4.20";
-const BUILD_DATE = "2026-11-13";
+const VERSION = "1.4.21";
+const BUILD_DATE = "2026-11-14";
 const STYLE_ID = "folio-plugin-style";
 const SETTING_PREFIX = "folio-";
 const LEGACY_SETTING_PREFIX = "imprint-";
@@ -361,6 +361,7 @@ function createCore() {
   const cancelIdle = window.cancelIdleCallback || window.clearTimeout;
   let handle = 0;
   let deferred = false;
+  const pendingMutations = [];
 
   const isBlockInput = (element) =>
     element instanceof HTMLTextAreaElement && element.classList.contains("rm-block-input");
@@ -391,6 +392,7 @@ function createCore() {
   };
   const runSync = () => {
     handle = 0;
+    const mutations = pendingMutations.splice(0);
     const pdfRoute = /\/pdf\//.test(location.hash);
     for (const [name, module] of modules) {
       if (pdfRoute && !["pdf", "folioPdfExit", "folioNativeSidebarChrome"].includes(name)) continue;
@@ -398,7 +400,7 @@ function createCore() {
     }
     for (const [name, callback] of watchers) {
       if (pdfRoute) continue;
-      try { callback([]); } catch (error) { console.warn(`[Folio] ${name}`, error); }
+      try { callback(mutations); } catch (error) { console.warn(`[Folio] ${name}`, error); }
     }
   };
   const scheduleSync = () => {
@@ -419,6 +421,7 @@ function createCore() {
       window.__folioAttachCalendar?.();
       for (const [name, callback] of watchers) if (name.startsWith("runner:calendar-")) callback(records);
     }
+    pendingMutations.push(...records);
     if (isBlockInput(doc.activeElement)) {
       deferred = true;
       return;
@@ -476,6 +479,7 @@ function createCore() {
       if (handle) cancelIdle(handle);
       [...modules.keys()].forEach(unload);
       watchers.clear();
+      pendingMutations.length = 0;
       if (window.__magCore === core) delete window.__magCore;
     },
   };
