@@ -7,9 +7,10 @@
 /*__SETTINGS__*/
 /*__TOOLBAR__*/
 /*__CALENDAR_SUPPORT__*/
+/*__TEMPLATE_SUPPORT__*/
 
-const VERSION = "1.4.21";
-const BUILD_DATE = "2026-11-14";
+const VERSION = "1.4.25";
+const BUILD_DATE = "2026-11-15";
 const STYLE_ID = "folio-plugin-style";
 const SETTING_PREFIX = "folio-";
 const LEGACY_SETTING_PREFIX = "imprint-";
@@ -658,6 +659,7 @@ function createRuntime(extensionAPI) {
     shortcuts: {...SHORTCUT_DEFAULTS},
     randomExcludedPages: RANDOM_EXCLUDED_DEFAULT,
     randomExcludeFuture: true,
+    templates: {weekday:"",weekend:"",plan:""},
     settingsSection: "appearance",
     bodyFont: "",
     headingFont: "",
@@ -1083,6 +1085,7 @@ function createRuntime(extensionAPI) {
             void extensionAPI.settings.set(`${SETTING_PREFIX}language`, item);
             runtime.resolveLocale();
             refreshCalendarLanguage(runtime);
+            runtime.core?.scheduleSync();
             runtime.refreshTags();
             window.setTimeout(() => runtime.createPanel(), 0);
           },
@@ -1155,6 +1158,10 @@ function createRuntime(extensionAPI) {
             runtime.shortcuts = {...SHORTCUT_DEFAULTS};
             runtime.randomExcludedPages = RANDOM_EXCLUDED_DEFAULT;
             runtime.randomExcludeFuture = true;
+            for (const kind of Object.keys(runtime.templates)) {
+              runtime.templates[kind] = "";
+              writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}template-${kind}`, ""));
+            }
             syncRandomTodoConfig(runtime);
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}random-excluded-pages`, runtime.randomExcludedPages));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}random-exclude-future`, true));
@@ -1208,6 +1215,8 @@ function createRuntime(extensionAPI) {
     runtime.randomExcludedPages = String(readDefault(`${SETTING_PREFIX}random-excluded-pages`, RANDOM_EXCLUDED_DEFAULT));
     runtime.randomExcludeFuture = Boolean(readDefault(`${SETTING_PREFIX}random-exclude-future`, true));
     syncRandomTodoConfig(runtime);
+    for (const kind of Object.keys(runtime.templates)) runtime.templates[kind] = String(readDefault(`${SETTING_PREFIX}template-${kind}`, ""));
+    window.__folioTemplates = createTemplateService(runtime);
     runtime.codeMaxHeight = codeHeight(readDefault(`${SETTING_PREFIX}code-max-height`, 420));
     for (const [key, value] of Object.entries(SHORTCUT_DEFAULTS)) runtime.shortcuts[key] = String(readDefault(`${SETTING_PREFIX}shortcut-${key}`, value));
     window.__folioMatchesShortcut = (event, key) => matchesShortcut(event, runtime.shortcuts[key]);
@@ -1262,6 +1271,7 @@ function createRuntime(extensionAPI) {
     if (window.__magLocale === runtime.locale) delete window.__magLocale;
     delete window.__folioTagConfig;
     delete window.__folioRandomTodoConfig;
+    delete window.__folioTemplates;
     console.info("[Folio] unloaded.");
   };
   return runtime;

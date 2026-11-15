@@ -1,7 +1,7 @@
 /*
  * 22.4 Video Reader
  * - 只负责杂志式卡片、上传视频适配和原生控制按钮重排
- * - 时间戳、影院模式、时间戳列表全部复用 Roam 原生实现
+ * - 影院模式和时间戳列表复用 Roam 原生实现；影院内新增时间戳在下方直接编辑
  * - 不再创建 Focus / Fullscreen / Time / Timestamp 的第二套按钮
  */
 (() => {
@@ -193,6 +193,19 @@
   let panel = null;
   let signature = "";
   let pendingInsert = null;
+  const drafts = new Map();
+  const draftKey = "folio:video-note-draft:" + (location.hash.match(/\/app\/([^/]+)/)?.[1] || "") + ":";
+  let stopped = false;
+
+  const saveLabels = {
+    en: ["Save", "Saving…", "Saved", "Retry", "Not saved. Your draft is kept; click to retry."],
+    zh: ["保存", "保存中…", "已保存", "重试", "尚未保存。草稿已保留，点击重试。"],
+    it: ["Salva", "Salvataggio…", "Salvato", "Riprova", "Non salvato. La bozza è conservata; fai clic per riprovare."],
+    de: ["Speichern", "Speichert…", "Gespeichert", "Erneut versuchen", "Nicht gespeichert. Der Entwurf bleibt erhalten; zum Wiederholen klicken."],
+    fr: ["Enregistrer", "Enregistrement…", "Enregistré", "Réessayer", "Non enregistré. Le brouillon est conservé ; cliquez pour réessayer."],
+    es: ["Guardar", "Guardando…", "Guardado", "Reintentar", "No se ha guardado. El borrador se conserva; haz clic para reintentar."]
+  };
+  const saveText = () => saveLabels[window.__magLocale] || saveLabels.en;
 
   const labels = [
     [".rm-video-player__edit-btn, button[title=\"Open in sidebar\"]", "Open"],
@@ -221,14 +234,15 @@
       const raw = String(value || "");
       if (!/video-timestamp/i.test(raw)) return null;
       const stamp = raw.match(/\b(\d{1,2}:\d{2}(?::\d{2})?)\b/)?.[1];
-      const prefix = raw.match(/^\s*(\{\{\[\[video-timestamp\]\]\s*:[\s\S]*?\}\})/)?.[1];
+      const prefix = raw.match(/^\s*\{\{\[\[video-timestamp\]\]\s*:[\s\S]*?\}\}/)?.[0];
       if (!stamp || !prefix) return null;
       return {
         uid,
         stamp,
         prefix,
         seconds: secondsOf(stamp),
-        text: raw.slice(prefix.length).trim()
+        raw,
+        text: raw.slice(prefix.length).replace(/^ /, "")
       };
     }).filter(Boolean).sort((a, b) => a.seconds - b.seconds || a.uid.localeCompare(b.uid));
   };
@@ -258,26 +272,124 @@
     editor.style.height = Math.max(34, editor.scrollHeight) + "px";
   };
 
-  const saveEditor = async (editor) => {
-    const value = editor.value.trim();
-    if (value === editor.dataset.original) return;
-    editor.classList.add("is-saving");
+  const noteString = (state, value = state.value) => state.prefix + (value ? " " + value : "");
+  const dirty = (state) => state.value !== state.saved;
+
+  // A draft belongs to the native comment UID, never to a disposable textarea.
+  const keepDraft = (state) => {
     try {
-      await api.updateBlock({
-        block: {
-          uid: editor.dataset.uid,
-          string: editor.dataset.prefix + (value ? " " + value : "")
-        }
-      });
-      editor.dataset.original = value;
-      editor.classList.add("is-saved");
-      window.setTimeout(() => editor.classList.remove("is-saved"), 900);
-    } catch (error) {
-      console.error("[Video Reader] save timestamp note", error);
-      editor.classList.add("is-error");
-    } finally {
-      editor.classList.remove("is-saving");
+      if (dirty(state) || state.inFlight) {
+        sessionStorage.setItem(draftKey + state.uid, JSON.stringify({ value: state.value }));
+      } else {
+        sessionStorage.removeItem(draftKey + state.uid);
+      }
+    } catch (_) { /* The in-memory draft still works when storage is unavailable. */ }
+  };
+
+  const paintSave = (state) => {
+    const editor = state.editor;
+    const button = state.saveButton;
+    const [save, saving, saved, retry, failed] = saveText();
+    const status = state.error ? "error" : state.inFlight ? "saving" : dirty(state) ? "pending" : "saved";
+    if (editor) {
+      editor.classList.toggle("is-saving", status === "saving");
+      editor.classList.toggle("is-saved", status === "saved" && state.didSave);
+      editor.classList.toggle("is-error", status === "error");
+      editor.dataset.original = state.saved;
     }
+    if (button) {
+      button.dataset.state = status;
+      button.hidden = !dirty(state) && !state.inFlight && !state.error && !state.didSave;
+      button.disabled = state.deleting || state.composing || status === "saving" || status === "saved";
+      button.textContent = status === "error" ? retry : status === "saving" ? saving : status === "saved" ? saved : save;
+      button.title = status === "error" ? failed : button.textContent;
+      button.setAttribute("aria-label", button.title);
+    }
+  };
+
+  const stateFor = (note) => {
+    let state = drafts.get(note.uid);
+    if (!state) {
+      state = { uid: note.uid, prefix: note.prefix, saved: note.text, value: note.text, raw: note.raw };
+      try {
+        const backup = JSON.parse(sessionStorage.getItem(draftKey + note.uid) || "null");
+        if (backup && typeof backup.value === "string" && backup.value !== note.text) {
+          state.value = backup.value;
+          state.error = true; // Recovered drafts wait for an explicit save/retry.
+        }
+      } catch (_) {}
+      drafts.set(note.uid, state);
+    } else if (!dirty(state) && !state.inFlight && !state.error) {
+      state.value = state.saved = note.text;
+      state.prefix = note.prefix;
+      state.raw = note.raw;
+    }
+    state.note = note;
+    return state;
+  };
+
+  const readComment = (uid) => api.q(
+    '[:find ?s . :in $ ?uid :where [?b :block/uid ?uid] [?b :block/string ?s]]', uid
+  );
+
+  const saveDraft = (state, retry = false) => {
+    window.clearTimeout(state.timer);
+    state.timer = 0;
+    if (state.inFlight) return state.inFlight;
+    if (state.deleting || state.composing || (state.error && !retry) || !dirty(state)) return Promise.resolve();
+    state.error = false;
+    // Start on the next microtask so inFlight is set before any result is handled.
+    state.inFlight = Promise.resolve().then(async () => {
+      while (dirty(state) && !state.deleting && !state.composing) {
+        const value = state.value;
+        const string = noteString(state, value);
+        // Updating only the existing UID preserves Roam's comment thread and author.
+        if (typeof readComment(state.uid) !== "string") throw new Error("Timestamp comment is unavailable");
+        const result = await api.updateBlock({ block: { uid: state.uid, string } });
+        if (result === false) throw new Error("Roam did not accept the comment update");
+        let confirmed = false;
+        for (let attempt = 0; attempt < 5; attempt++) {
+          if (readComment(state.uid) === string) { confirmed = true; break; }
+          if (attempt < 4) await new Promise((resolve) => window.setTimeout(resolve, 80));
+        }
+        if (!confirmed) throw new Error("Roam has not confirmed the comment update");
+        state.saved = value;
+        state.raw = string;
+        state.didSave = true;
+      }
+    }).catch((error) => {
+      state.error = true;
+      console.error("[Video Reader] save timestamp comment", error);
+    }).finally(() => {
+      state.inFlight = null;
+      keepDraft(state);
+      paintSave(state);
+    });
+    keepDraft(state);
+    paintSave(state);
+    return state.inFlight;
+  };
+
+  const captureEditor = (state, editor) => {
+    if (state.value !== editor.value) state.error = false;
+    state.value = editor.value;
+    if (!dirty(state) && !state.inFlight) state.error = false;
+    keepDraft(state);
+    paintSave(state);
+  };
+
+  const scheduleSave = (state) => {
+    window.clearTimeout(state.timer);
+    if (!state.composing && !state.deleting && !state.error && !stopped) {
+      state.timer = window.setTimeout(() => saveDraft(state), 450);
+    }
+  };
+
+  const flushDrafts = () => {
+    drafts.forEach((state) => {
+      if (state.editor?.isConnected) captureEditor(state, state.editor);
+      saveDraft(state);
+    });
   };
 
   const openInSidebar = async (uid) => {
@@ -319,12 +431,23 @@
 
     button.disabled = true;
     button.textContent = "Deleting…";
+    const state = drafts.get(note.uid);
+    if (state) {
+      state.deleting = true;
+      window.clearTimeout(state.timer);
+      paintSave(state);
+    }
     try {
+      if (state?.inFlight) await state.inFlight;
       await Promise.resolve(api.deleteBlock({ block: { uid: note.uid } }));
-      signature = "";
+      drafts.delete(note.uid);
+      try { sessionStorage.removeItem(draftKey + note.uid); } catch (_) {}
+      state?.row?.remove();
+      signature = null;
       pendingInsert = null;
       sync();
     } catch (error) {
+      if (state) { state.deleting = false; paintSave(state); }
       console.error("[Video Reader] delete timestamp note", error);
       button.disabled = false;
       button.textContent = "Delete";
@@ -343,60 +466,103 @@
       block: "center"
     });
     window.setTimeout(() => {
+      if (stopped || !editor.isConnected) return;
       editor.focus({ preventScroll: true });
       editor.setSelectionRange(editor.value.length, editor.value.length);
     }, 260);
     return true;
   };
 
+  // Roam owns timestamp creation, including comment parentage, author and time.
+  // Observe the native click only, then locate its new comment in the theater view.
   const onTimestampClick = (event) => {
-    const button = event.target.closest(
+    const button = event.target.closest?.(
       '.rm-video-theater button[title="Insert Timestamp"], .rm-video-theater .rm-video-player__comment-button'
     );
     if (!button) return;
     const videoUid = decodeURIComponent(location.hash.match(/\/video\/([^/?#]+)/)?.[1] || "");
-    if (!videoUid) return;
+    if (!videoUid || !panel?.isConnected) return;
     pendingInsert = {
+      videoUid,
       before: new Set(notesFor(videoUid).map((note) => note.uid)),
       deadline: Date.now() + 7000
     };
   };
 
   const render = (notes) => {
-    const header = make("div", "mag-video-theater-notes__header");
-    header.append(
-      make("span", "mag-video-theater-notes__eyebrow", "TIMESTAMP NOTES"),
-      make("span", "mag-video-theater-notes__count", String(notes.length).padStart(2, "0"))
-    );
+    let header = panel.querySelector(".mag-video-theater-notes__header");
+    let list = panel.querySelector(".mag-video-theater-notes__list");
+    if (!header || !list) {
+      header = make("div", "mag-video-theater-notes__header");
+      header.append(
+        make("span", "mag-video-theater-notes__eyebrow", "TIMESTAMP NOTES"),
+        make("span", "mag-video-theater-notes__count")
+      );
+      list = make("div", "mag-video-theater-notes__list");
+      panel.append(header, list);
+    }
+    header.querySelector(".mag-video-theater-notes__count").textContent = String(notes.length).padStart(2, "0");
+    list.querySelector(".mag-video-theater-notes__empty")?.remove();
+    const visible = new Set(notes.map((note) => note.uid));
+    Array.from(list.children).forEach((row) => {
+      if (!visible.has(row.dataset.uid)) row.remove();
+    });
 
-    const list = make("div", "mag-video-theater-notes__list");
-    if (!notes.length) {
-      list.append(make("div", "mag-video-theater-notes__empty", "No timestamp notes yet."));
-    } else {
-      notes.forEach((note) => {
-        const row = make("div", "mag-video-theater-note");
-        const time = make("button", "mag-video-theater-note__time", note.stamp);
+    notes.forEach((note, index) => {
+      const state = stateFor(note);
+      if (!state.row) {
+        const row = state.row = make("div", "mag-video-theater-note");
+        row.dataset.uid = note.uid;
+        const time = state.time = make("button", "mag-video-theater-note__time");
         time.type = "button";
-        time.title = "Jump to " + note.stamp;
-        time.addEventListener("click", () => seek(note.seconds));
+        time.addEventListener("click", () => seek(state.note.seconds));
 
-        const editor = make("textarea", "mag-video-theater-note__editor");
-        editor.value = note.text;
-        editor.dataset.original = note.text;
+        const editor = state.editor = make("textarea", "mag-video-theater-note__editor");
         editor.dataset.uid = note.uid;
-        editor.dataset.prefix = note.prefix;
-        editor.setAttribute("aria-label", "Edit note at " + note.stamp);
-        editor.addEventListener("input", () => resizeEditor(editor));
-        editor.addEventListener("blur", () => saveEditor(editor));
+        editor.addEventListener("input", () => {
+          captureEditor(state, editor);
+          resizeEditor(editor);
+          scheduleSave(state);
+        });
+        editor.addEventListener("compositionstart", () => {
+          state.composing = true;
+          window.clearTimeout(state.timer);
+          paintSave(state);
+        });
+        editor.addEventListener("compositionend", () => {
+          state.composing = false;
+          captureEditor(state, editor);
+          scheduleSave(state);
+        });
+        editor.addEventListener("blur", () => {
+          captureEditor(state, editor);
+          saveDraft(state);
+        });
         editor.addEventListener("keydown", (event) => {
-          if ((event.metaKey || event.ctrlKey) && event.key === "Enter") editor.blur();
+          if ((event.metaKey || event.ctrlKey) && event.key === "Enter" && !event.isComposing && !state.composing) {
+            event.preventDefault();
+            event.stopPropagation();
+            captureEditor(state, editor);
+            saveDraft(state, true);
+          }
         });
 
         const actions = make("div", "mag-video-theater-note__actions");
+        const saveButton = state.saveButton = make("button", "mag-video-theater-note__action mag-video-theater-note__save");
+        saveButton.type = "button";
+        saveButton.setAttribute("aria-live", "polite");
+        saveButton.addEventListener("click", () => {
+          captureEditor(state, editor);
+          saveDraft(state, true);
+        });
         const openButton = make("button", "mag-video-theater-note__action", "Open");
         openButton.type = "button";
         openButton.title = "Open this timestamp block in the right sidebar";
-        openButton.addEventListener("click", () => openInSidebar(note.uid));
+        openButton.addEventListener("click", async () => {
+          captureEditor(state, editor);
+          await saveDraft(state);
+          openInSidebar(note.uid);
+        });
 
         const deleteButton = make(
           "button",
@@ -405,15 +571,23 @@
         );
         deleteButton.type = "button";
         deleteButton.title = "Delete this timestamp block and its children";
-        deleteButton.addEventListener("click", () => deleteNote(note, deleteButton));
+        deleteButton.addEventListener("click", () => deleteNote(state.note, deleteButton));
 
-        actions.append(openButton, deleteButton);
+        actions.append(saveButton, openButton, deleteButton);
         row.append(time, editor, actions);
-        list.append(row);
-        requestAnimationFrame(() => resizeEditor(editor));
-      });
-    }
-    panel.replaceChildren(header, list);
+      }
+      const { row, editor, time } = state;
+      time.textContent = note.stamp;
+      time.title = "Jump to " + note.stamp;
+      // Reconcile by UID: never replace a focused or unsaved textarea on polling.
+      if (editor.value !== state.value) editor.value = state.value;
+      editor.dataset.prefix = state.prefix;
+      editor.setAttribute("aria-label", "Edit note at " + note.stamp);
+      if (list.children[index] !== row) list.insertBefore(row, list.children[index] || null);
+      paintSave(state);
+      requestAnimationFrame(() => { if (editor.isConnected) resizeEditor(editor); });
+    });
+    if (!notes.length) list.append(make("div", "mag-video-theater-notes__empty", "No timestamp notes yet."));
   };
 
   const sync = () => {
@@ -423,18 +597,27 @@
     const videoUid = decodeURIComponent(location.hash.match(/\/video\/([^/?#]+)/)?.[1] || "");
     const anchor = theater?.querySelector(".rm-video-player__spacing-wrapper--theater");
     if (!theater || !videoUid || !anchor) {
+      if (panel) flushDrafts();
       panel?.remove();
       panel = null;
       signature = "";
       return;
     }
 
+    if (panel && panel.dataset.videoUid !== videoUid) {
+      flushDrafts();
+      panel.remove();
+      panel = null;
+    }
+
     if (!panel?.isConnected) {
       panel = make("section", "mag-video-theater-notes");
+      panel.dataset.videoUid = videoUid;
       anchor.insertAdjacentElement("afterend", panel);
       signature = "";
     }
 
+    if (pendingInsert && (pendingInsert.videoUid !== videoUid || Date.now() > pendingInsert.deadline)) pendingInsert = null;
     if (panel.contains(document.activeElement) && !pendingInsert) return;
     const notes = notesFor(videoUid);
     const next = notes.map((note) => [note.uid, note.seconds, note.text].join("|")).join("¦");
@@ -457,11 +640,15 @@
   };
 
   document.addEventListener("click", onTimestampClick, true);
+  window.addEventListener("pagehide", flushDrafts);
   const timer = window.setInterval(sync, 350);
   sync();
 
   window[KEY] = () => {
+    stopped = true;
+    flushDrafts();
     window.clearInterval(timer);
+    window.removeEventListener("pagehide", flushDrafts);
     document.removeEventListener("click", onTimestampClick, true);
     pendingInsert = null;
     panel?.remove();

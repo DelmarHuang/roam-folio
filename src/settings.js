@@ -104,6 +104,7 @@ function functionalSettings(runtime, accordion, appearanceGroup, widgetGroups, t
     e('div',{key:selected.id,style:{flex:'3 1 270px',minWidth:0}},
      renderGroup(selected.id==='appearance'?appearanceGroup:selected),
      selected.id==='content'?tagGroups.map(renderGroup):null,
+     selected.id==='calendar'?templateSettings(runtime,React):null,
      extras.map(setting=>e('div',{key:setting.id,style:{borderTop:'1px solid rgba(128,128,128,.16)',padding:'10px 2px'}},e('label',null,e('span',{style:{display:'block',fontSize:'13px',fontWeight:600}},setting.name),e('span',{style:{display:'block',fontSize:'11px',opacity:.7,margin:'4px 0 8px'}},setting.description),e(setting.action.component))))
     )
    )

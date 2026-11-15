@@ -496,29 +496,6 @@ function configureRunner(key, source) {
         "const suffix = depth === 0 ? sourceSuffix(task.page, task.text) : '';"
       );
   }
-  if (key === "calendar-template") {
-    source = source
-      .replace(
-        'const LOCK_ATTR = "data-delmar-auto-dnp-date";',
-        `const LOCK_ATTR = "data-delmar-auto-dnp-date";
-                const RETRY_CLEANUP = "__delmarAutoDnpTemplateCleanup";
-                const retryTimers = new Set();
-                const scheduleRetry = (callback, delay) => {
-                  const timer = window.setTimeout(() => {
-                    retryTimers.delete(timer);
-                    callback();
-                  }, delay);
-                  retryTimers.add(timer);
-                };
-                window[RETRY_CLEANUP]?.();
-                window[RETRY_CLEANUP] = () => {
-                  retryTimers.forEach((timer) => window.clearTimeout(timer));
-                  retryTimers.clear();
-                  delete window[RETRY_CLEANUP];
-                };`
-      )
-      .replace("window.setTimeout(() => run(attempt + 1), 250);", "scheduleRetry(() => run(attempt + 1), 250);");
-  }
   // The original roam/js snippets each watched the whole document because
   // they were designed to run independently. Inside one extension they can
   // share Folio's single observer without changing their feature algorithms.
@@ -543,7 +520,7 @@ const generated = [
   "};",
 ].join("\n");
 
-const runtime = fs.readFileSync(runtimePath, "utf8").replace("/*__TOOLBAR__*/", () => fs.readFileSync(path.join(root, "src/toolbar.js"), "utf8")).replace("/*__CALENDAR_SUPPORT__*/", () => fs.readFileSync(path.join(root, "src/calendar.js"), "utf8")).replace("/*__SETTINGS__*/", () => fs.readFileSync(path.join(root, "src/settings.js"), "utf8")).replace("/*__SUPPORT__*/", () => fs.readFileSync(path.join(root, "src/support.js"), "utf8"));
+const runtime = fs.readFileSync(runtimePath, "utf8").replace("/*__TOOLBAR__*/", () => fs.readFileSync(path.join(root, "src/toolbar.js"), "utf8")).replace("/*__CALENDAR_SUPPORT__*/", () => fs.readFileSync(path.join(root, "src/calendar.js"), "utf8")).replace("/*__TEMPLATE_SUPPORT__*/", () => fs.readFileSync(path.join(root, "src/templates.js"), "utf8")).replace("/*__SETTINGS__*/", () => fs.readFileSync(path.join(root, "src/settings.js"), "utf8")).replace("/*__SUPPORT__*/", () => fs.readFileSync(path.join(root, "src/support.js"), "utf8"));
 if (!runtime.includes("/*__GENERATED_CONTENT__*/")) {
   throw new Error("Runtime template is missing the generated-content marker");
 }

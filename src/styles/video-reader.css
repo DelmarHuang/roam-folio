@@ -37,3 +37,9 @@
   align-content:start!important;
  }
 }
+
+/* Save feedback belongs only to a theater comment, not the page layout. */
+html body .mag-video-theater-note__save[hidden] {display:none!important;}
+html body .mag-video-theater-note__save[data-state="error"] {color:#b04747!important;}
+html body .mag-video-theater-note__save:disabled {cursor:default!important;}
+html body .mag-video-theater-note__actions:has(.mag-video-theater-note__save:not([hidden])) {flex-wrap:wrap!important;max-width:170px!important;}

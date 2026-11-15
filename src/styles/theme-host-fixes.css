@@ -54,6 +54,22 @@ html body .roam-app .roam-main .roam-article .rm-block-main > :is(.rm-block__inp
  flex:1 1 0%!important;min-width:0!important;max-width:100%!important;
 }
 
+/* A code editor must shrink with its own block, including nested/sidebar blocks.
+   Leave the article width and CodeMirror's internal document width to Roam. */
+html body .roam-app .rm-block-main > .rm-block__input:has(.rm-code-block) {
+ flex:1 1 0%!important;min-width:0!important;max-width:100%!important;
+}
+html body .roam-app :is(.rm-inline-code-block,.rm-code-block),
+html body .roam-app .rm-code-block :is(.cm-editor,.CodeMirror) {
+ box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:100%!important;
+}
+html body .roam-app .rm-code-block .cm-scroller {
+ min-width:0!important;max-width:100%!important;overflow-x:auto!important;
+}
+html body .roam-app .rm-code-block__settings-bar {
+ min-width:0!important;max-width:100%!important;flex-wrap:wrap!important;
+}
+
 /* The native daily separator is redundant only while this day's masthead exists.
    Keep its space; removing the marker restores Roam's own border colour. */
 html body .roam-app .roam-body-main .roam-log-container > .roam-log-page:has(> .rm-title-display-container > .rm-title-display[data-mag-masthead]) {

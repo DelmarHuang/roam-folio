@@ -1891,6 +1891,20 @@
                      未完成：细线方框；完成：方框退成淡线、金色细勾，文字变浅并划线
                      ========================================================== */
                   
+                  /* Match the 14px mark's inline space and centre it in the
+                     first text line, including wrapped and larger-font tasks. */
+                  html body .roam-app .rm-checkbox > .check-container {
+                    width: 14px !important;
+                    height: 1lh !important;
+                    line-height: inherit !important;
+                    vertical-align: top !important;
+                    top: 0 !important;
+                  }
+                  html body .roam-app .rm-checkbox > .check-container > .checkmark {
+                    top: 50% !important;
+                    transform: translateY(-50%) !important;
+                  }
+
                   html body .roam-app .check-container .checkmark {
                     box-sizing: border-box !important;
                     width: 14px !important;
@@ -9740,7 +9754,7 @@
                   }
                   
                   html body .roam-app .rm-desk-tile__more::after {
-                    content: "continued \2192";
+                    content: attr(data-mag-continued);
                     font-family: var(--mag-aside-font);
                     font-size: 12px;
                     font-style: italic;
@@ -10029,7 +10043,454 @@
                     const { doc, store } = core;
                     const s = core.scope();
                     const DAY = 864e5;
-                  
+                    const COPY = {
+                    "en": {
+                      "sort": "Sort",
+                      "manual": "Manual",
+                      "recent": "Recently edited",
+                      "stale": "Least recently edited",
+                      "deadline": "Deadline",
+                      "progress": "Completion",
+                      "type": "Type",
+                      "size": "Length",
+                      "heat": "Activity",
+                      "ondesk": "Longest on Desk",
+                      "all": "All",
+                      "draw": "Pick lead",
+                      "drawTitle": "Choose a random card as today’s lead",
+                      "clear": "Clear lead",
+                      "clearTitle": "Remove the lead and restore the previous arrangement",
+                      "unpin": "Unpin",
+                      "pin": "Pin: keep this card ahead of unpinned cards",
+                      "pinned": "PINNED",
+                      "lead": "TODAY’S LEAD",
+                      "today": "TODAY",
+                      "daysAgo": "{n}D AGO",
+                      "weeksAgo": "{n}W AGO",
+                      "monthsAgo": "{n}MO AGO",
+                      "yearsAgo": "{n}Y AGO",
+                      "overdue": "OVERDUE {n}D",
+                      "dueToday": "DUE TODAY",
+                      "dueIn": "DUE IN {n}D",
+                      "dueDate": "DUE {date}",
+                      "updated": "UPDATED {time}",
+                      "block": "BLOCK",
+                      "blocks": "BLOCKS",
+                      "done": "{done}/{total} DONE",
+                      "onDesk": "ON DESK {n}D",
+                      "item": "ITEM",
+                      "items": "ITEMS",
+                      "reverse": "Click to reverse",
+                      "continued": "continued →",
+                      "directions": {
+                        "recent": [
+                          "Newest first",
+                          "Oldest first"
+                        ],
+                        "stale": [
+                          "Least recently edited first",
+                          "Most recently edited first"
+                        ],
+                        "deadline": [
+                          "Earliest deadline first",
+                          "Latest deadline first"
+                        ],
+                        "progress": [
+                          "Lowest completion first",
+                          "Highest completion first"
+                        ],
+                        "type": [
+                          "A → Z",
+                          "Z → A"
+                        ],
+                        "size": [
+                          "Longest first",
+                          "Shortest first"
+                        ],
+                        "heat": [
+                          "Most active first",
+                          "Least active first"
+                        ],
+                        "ondesk": [
+                          "Longest on Desk first",
+                          "Newest on Desk first"
+                        ]
+                      }
+                    },
+                    "zh": {
+                      "sort": "排序",
+                      "manual": "手动",
+                      "recent": "最近编辑",
+                      "stale": "最久未动",
+                      "deadline": "截稿日",
+                      "progress": "完成度",
+                      "type": "类型",
+                      "size": "篇幅",
+                      "heat": "热度",
+                      "ondesk": "在桌最久",
+                      "all": "全部",
+                      "draw": "抽头条",
+                      "drawTitle": "从案头随机抽一张放到头条位（只保留到今天）",
+                      "clear": "撤下头条",
+                      "clearTitle": "撤下头条，回到原来的排列",
+                      "unpin": "取消置顶",
+                      "pin": "置顶：无论怎么排序都排在最前",
+                      "pinned": "已置顶",
+                      "lead": "今日头条",
+                      "today": "今天",
+                      "daysAgo": "{n} 天前",
+                      "weeksAgo": "{n} 周前",
+                      "monthsAgo": "{n} 个月前",
+                      "yearsAgo": "{n} 年前",
+                      "overdue": "逾期 {n} 天",
+                      "dueToday": "今日到期",
+                      "dueIn": "{n} 天后到期",
+                      "dueDate": "到期 {date}",
+                      "updated": "更新于{time}",
+                      "block": "块",
+                      "blocks": "块",
+                      "done": "{done}/{total} 完成",
+                      "onDesk": "在桌 {n} 天",
+                      "item": "项",
+                      "items": "项",
+                      "reverse": "点击反转",
+                      "continued": "继续阅读 →",
+                      "directions": {
+                        "recent": [
+                          "最近的在前",
+                          "最早的在前"
+                        ],
+                        "stale": [
+                          "最久未动在前",
+                          "最近动过在前"
+                        ],
+                        "deadline": [
+                          "截稿最早在前",
+                          "截稿最晚在前"
+                        ],
+                        "progress": [
+                          "完成度低在前",
+                          "完成度高在前"
+                        ],
+                        "type": [
+                          "A → Z",
+                          "Z → A"
+                        ],
+                        "size": [
+                          "篇幅大在前",
+                          "篇幅小在前"
+                        ],
+                        "heat": [
+                          "最热在前",
+                          "最冷在前"
+                        ],
+                        "ondesk": [
+                          "在桌最久在前",
+                          "最新上桌在前"
+                        ]
+                      }
+                    },
+                    "fr": {
+                      "sort": "Trier",
+                      "manual": "Manuel",
+                      "recent": "Modifié récemment",
+                      "stale": "Le moins récent",
+                      "deadline": "Échéance",
+                      "progress": "Avancement",
+                      "type": "Type",
+                      "size": "Longueur",
+                      "heat": "Activité",
+                      "ondesk": "Ancienneté sur le bureau",
+                      "all": "Tout",
+                      "draw": "Choisir la une",
+                      "drawTitle": "Choisir au hasard une carte pour la une du jour",
+                      "clear": "Retirer la une",
+                      "clearTitle": "Retirer la une et rétablir la disposition précédente",
+                      "unpin": "Désépingler",
+                      "pin": "Épingler : placer avant les cartes non épinglées",
+                      "pinned": "ÉPINGLÉ",
+                      "lead": "À LA UNE",
+                      "today": "AUJOURD’HUI",
+                      "daysAgo": "IL Y A {n} J",
+                      "weeksAgo": "IL Y A {n} SEM.",
+                      "monthsAgo": "IL Y A {n} MOIS",
+                      "yearsAgo": "IL Y A {n} AN(S)",
+                      "overdue": "RETARD {n} J",
+                      "dueToday": "ÉCHÉANCE AUJOURD’HUI",
+                      "dueIn": "DANS {n} J",
+                      "dueDate": "ÉCHÉANCE {date}",
+                      "updated": "MODIFIÉ {time}",
+                      "block": "BLOC",
+                      "blocks": "BLOCS",
+                      "done": "{done}/{total} TERMINÉS",
+                      "onDesk": "SUR LE BUREAU {n} J",
+                      "item": "ÉLÉMENT",
+                      "items": "ÉLÉMENTS",
+                      "reverse": "Cliquer pour inverser",
+                      "continued": "suite →",
+                      "directions": {
+                        "recent": [
+                          "Plus récents d’abord",
+                          "Plus anciens d’abord"
+                        ],
+                        "stale": [
+                          "Moins récemment modifiés d’abord",
+                          "Plus récemment modifiés d’abord"
+                        ],
+                        "deadline": [
+                          "Échéances proches d’abord",
+                          "Échéances lointaines d’abord"
+                        ],
+                        "progress": [
+                          "Moins avancés d’abord",
+                          "Plus avancés d’abord"
+                        ],
+                        "type": [
+                          "A → Z",
+                          "Z → A"
+                        ],
+                        "size": [
+                          "Plus longs d’abord",
+                          "Plus courts d’abord"
+                        ],
+                        "heat": [
+                          "Plus actifs d’abord",
+                          "Moins actifs d’abord"
+                        ],
+                        "ondesk": [
+                          "Plus anciens sur le bureau d’abord",
+                          "Plus nouveaux sur le bureau d’abord"
+                        ]
+                      }
+                    },
+                    "de": {
+                      "sort": "Sortieren",
+                      "manual": "Manuell",
+                      "recent": "Zuletzt bearbeitet",
+                      "stale": "Am längsten unverändert",
+                      "deadline": "Frist",
+                      "progress": "Fortschritt",
+                      "type": "Typ",
+                      "size": "Länge",
+                      "heat": "Aktivität",
+                      "ondesk": "Am längsten auf dem Desk",
+                      "all": "Alle",
+                      "draw": "Aufmacher wählen",
+                      "drawTitle": "Zufällige Karte als heutigen Aufmacher wählen",
+                      "clear": "Aufmacher entfernen",
+                      "clearTitle": "Aufmacher entfernen und vorherige Anordnung wiederherstellen",
+                      "unpin": "Loslösen",
+                      "pin": "Anheften: vor nicht angehefteten Karten anzeigen",
+                      "pinned": "ANGEHEFTET",
+                      "lead": "HEUTIGER AUFMACHER",
+                      "today": "HEUTE",
+                      "daysAgo": "VOR {n} T",
+                      "weeksAgo": "VOR {n} WO",
+                      "monthsAgo": "VOR {n} MON",
+                      "yearsAgo": "VOR {n} J",
+                      "overdue": "{n} T ÜBERFÄLLIG",
+                      "dueToday": "HEUTE FÄLLIG",
+                      "dueIn": "IN {n} T FÄLLIG",
+                      "dueDate": "FÄLLIG {date}",
+                      "updated": "BEARBEITET {time}",
+                      "block": "BLOCK",
+                      "blocks": "BLÖCKE",
+                      "done": "{done}/{total} ERLEDIGT",
+                      "onDesk": "AUF DEM DESK {n} T",
+                      "item": "ELEMENT",
+                      "items": "ELEMENTE",
+                      "reverse": "Zum Umkehren klicken",
+                      "continued": "weiter →",
+                      "directions": {
+                        "recent": [
+                          "Neueste zuerst",
+                          "Älteste zuerst"
+                        ],
+                        "stale": [
+                          "Am längsten unverändert zuerst",
+                          "Zuletzt bearbeitete zuerst"
+                        ],
+                        "deadline": [
+                          "Früheste Frist zuerst",
+                          "Späteste Frist zuerst"
+                        ],
+                        "progress": [
+                          "Niedrigster Fortschritt zuerst",
+                          "Höchster Fortschritt zuerst"
+                        ],
+                        "type": [
+                          "A → Z",
+                          "Z → A"
+                        ],
+                        "size": [
+                          "Längste zuerst",
+                          "Kürzeste zuerst"
+                        ],
+                        "heat": [
+                          "Aktivste zuerst",
+                          "Am wenigsten aktive zuerst"
+                        ],
+                        "ondesk": [
+                          "Am längsten auf dem Desk zuerst",
+                          "Neueste auf dem Desk zuerst"
+                        ]
+                      }
+                    },
+                    "es": {
+                      "sort": "Ordenar",
+                      "manual": "Manual",
+                      "recent": "Edición reciente",
+                      "stale": "Sin cambios más tiempo",
+                      "deadline": "Fecha límite",
+                      "progress": "Avance",
+                      "type": "Tipo",
+                      "size": "Extensión",
+                      "heat": "Actividad",
+                      "ondesk": "Más tiempo en Desk",
+                      "all": "Todos",
+                      "draw": "Elegir destacado",
+                      "drawTitle": "Elegir una tarjeta al azar como destacada de hoy",
+                      "clear": "Quitar destacado",
+                      "clearTitle": "Quitar el destacado y recuperar la disposición anterior",
+                      "unpin": "Desfijar",
+                      "pin": "Fijar: colocar antes de las tarjetas no fijadas",
+                      "pinned": "FIJADO",
+                      "lead": "DESTACADO DE HOY",
+                      "today": "HOY",
+                      "daysAgo": "HACE {n} D",
+                      "weeksAgo": "HACE {n} SEM",
+                      "monthsAgo": "HACE {n} MES(ES)",
+                      "yearsAgo": "HACE {n} AÑO(S)",
+                      "overdue": "{n} D DE RETRASO",
+                      "dueToday": "VENCE HOY",
+                      "dueIn": "VENCE EN {n} D",
+                      "dueDate": "VENCE {date}",
+                      "updated": "EDITADO {time}",
+                      "block": "BLOQUE",
+                      "blocks": "BLOQUES",
+                      "done": "{done}/{total} COMPLETADOS",
+                      "onDesk": "EN DESK {n} D",
+                      "item": "ELEMENTO",
+                      "items": "ELEMENTOS",
+                      "reverse": "Pulse para invertir",
+                      "continued": "continuar →",
+                      "directions": {
+                        "recent": [
+                          "Más recientes primero",
+                          "Más antiguos primero"
+                        ],
+                        "stale": [
+                          "Sin editar más tiempo primero",
+                          "Editados recientemente primero"
+                        ],
+                        "deadline": [
+                          "Fecha más cercana primero",
+                          "Fecha más lejana primero"
+                        ],
+                        "progress": [
+                          "Menor avance primero",
+                          "Mayor avance primero"
+                        ],
+                        "type": [
+                          "A → Z",
+                          "Z → A"
+                        ],
+                        "size": [
+                          "Más largos primero",
+                          "Más cortos primero"
+                        ],
+                        "heat": [
+                          "Más activos primero",
+                          "Menos activos primero"
+                        ],
+                        "ondesk": [
+                          "Más antiguos en Desk primero",
+                          "Más nuevos en Desk primero"
+                        ]
+                      }
+                    },
+                    "it": {
+                      "sort": "Ordina",
+                      "manual": "Manuale",
+                      "recent": "Modificati di recente",
+                      "stale": "Meno recenti",
+                      "deadline": "Scadenza",
+                      "progress": "Completamento",
+                      "type": "Tipo",
+                      "size": "Lunghezza",
+                      "heat": "Attività",
+                      "ondesk": "Da più tempo su Desk",
+                      "all": "Tutti",
+                      "draw": "Scegli in primo piano",
+                      "drawTitle": "Scegli una scheda casuale da mettere in primo piano oggi",
+                      "clear": "Rimuovi primo piano",
+                      "clearTitle": "Rimuovi il primo piano e ripristina la disposizione precedente",
+                      "unpin": "Rimuovi fissaggio",
+                      "pin": "Fissa: mostra prima delle schede non fissate",
+                      "pinned": "FISSATO",
+                      "lead": "IN PRIMO PIANO OGGI",
+                      "today": "OGGI",
+                      "daysAgo": "{n} G FA",
+                      "weeksAgo": "{n} SETT. FA",
+                      "monthsAgo": "{n} MESI FA",
+                      "yearsAgo": "{n} ANNI FA",
+                      "overdue": "SCADUTO DA {n} G",
+                      "dueToday": "SCADE OGGI",
+                      "dueIn": "SCADE TRA {n} G",
+                      "dueDate": "SCADENZA {date}",
+                      "updated": "MODIFICATO {time}",
+                      "block": "BLOCCO",
+                      "blocks": "BLOCCHI",
+                      "done": "{done}/{total} COMPLETATI",
+                      "onDesk": "SU DESK DA {n} G",
+                      "item": "ELEMENTO",
+                      "items": "ELEMENTI",
+                      "reverse": "Clicca per invertire",
+                      "continued": "continua →",
+                      "directions": {
+                        "recent": [
+                          "Più recenti prima",
+                          "Più vecchi prima"
+                        ],
+                        "stale": [
+                          "Meno recentemente modificati prima",
+                          "Modificati più di recente prima"
+                        ],
+                        "deadline": [
+                          "Scadenze vicine prima",
+                          "Scadenze lontane prima"
+                        ],
+                        "progress": [
+                          "Meno completati prima",
+                          "Più completati prima"
+                        ],
+                        "type": [
+                          "A → Z",
+                          "Z → A"
+                        ],
+                        "size": [
+                          "Più lunghi prima",
+                          "Più brevi prima"
+                        ],
+                        "heat": [
+                          "Più attivi prima",
+                          "Meno attivi prima"
+                        ],
+                        "ondesk": [
+                          "Da più tempo su Desk prima",
+                          "Più nuovi su Desk prima"
+                        ]
+                      }
+                    }
+                  };
+                    const locale = () => COPY[window.__magLocale] ? window.__magLocale : 'en';
+                    const t = (key,values={}) => {
+                      let text = COPY[locale()][key];
+                      for (const [name,value] of Object.entries(values)) text = text.replaceAll('{'+name+'}',String(value));
+                      return text;
+                    };
+
+
                     const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     const DNP_RE = new RegExp(`^(${MONTHS.join("|")}) (\\d{1,2})(?:st|nd|rd|th), (\\d{4})$`);
                     const TAG_ONLY_RE = /^\s*(?:#(?:\[\[[^\]]+\]\](?:\/[^\s#]+)?|[^\s#\[\]]+)\s*)+$/;
@@ -10037,19 +10498,19 @@
                     const DUE_RE = /^\s*(?:deadline|due|截稿|截止|到期)\s*::\s*(.+)$/im;
                     const TODO_RE = /\{\{\[?\[?TODO\]?\]?\}\}/;
                     const DONE_RE = /\{\{\[?\[?DONE\]?\]?\}\}/;
-                  
+
                     const Q_PAGE =
                       "[:find ?b ?s ?t :in $ ?title :where [?p :node/title ?title] [?b :block/page ?p] [?b :block/string ?s] [?b :edit/time ?t]]";
                     const Q_FIRST =
                       "[:find ?s . :in $ ?title :where [?p :node/title ?title] [?p :block/children ?f] [?f :block/order 0] [?f :block/string ?s]]";
                     const Q_HEAT =
                       "[:find (count ?b) . :in $ ?title ?since :where [?p :node/title ?title] [?b :block/refs ?p] [?b :create/time ?t] [(> ?t ?since)]]";
-                  
+
                     const Q_BLOCK =
                       "[:find ?d ?s ?t :in $ ?uid :where [?b :block/uid ?uid] [?d :block/parents ?b] [?d :block/string ?s] [?d :edit/time ?t]]";
                     const Q_BLOCK_HEAT =
                       "[:find (count ?r) . :in $ ?uid ?since :where [?b :block/uid ?uid] [?r :block/refs ?b] [?r :create/time ?t] [(> ?t ?since)]]";
-                  
+
                     const query = async (q, ...args) => {
                       const api = window.roamAlphaAPI;
                       if (!api) return null;
@@ -10060,12 +10521,12 @@
                         return null;
                       }
                     };
-                  
+
                     const readJSON = (key, fallback) => {
                       try { return JSON.parse(store.get(key, "")) || fallback; } catch (_) { return fallback; }
                     };
                     const writeJSON = (key, value) => store.set(key, JSON.stringify(value));
-                  
+
                     const today = () => {
                       const d = new Date();
                       return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
@@ -10079,9 +10540,9 @@
                       const [y, m, d] = String(key).split("-").map(Number);
                       return y ? new Date(y, m - 1, d).getTime() : today();
                     };
-                  
+
                     /* ---------- 日期解析（截稿日） ---------- */
-                  
+
                     const parseDate = (raw) => {
                       const v = raw.trim();
                       let m = /\[\[([^\]]+)\]\]/.exec(v);
@@ -10095,19 +10556,19 @@
                       if (m) return new Date(Number(m[3]), Number(m[1]) - 1, Number(m[2])).getTime();
                       return null;
                     };
-                  
+
                     /* ---------- 每张卡片的数据（按页面标题缓存） ---------- */
-                  
+
                     const cache = new Map(); // title -> { at, data }
                     const pending = new Set();
-                  
+
                     const typeOf = (first) => {
                       if (!first || !TAG_ONLY_RE.test(first)) return "";
                       const m = FIRST_TAG_RE.exec(first);
                       if (!m) return "";
                       return (m[1] ? m[1] + (m[2] || "") : m[3]) || "";
                     };
-                  
+
                     // ref = { key, kind: "page", title } 或 { key, kind: "block", uid }
                     const load = async (ref) => {
                       const { key } = ref;
@@ -10172,16 +10633,16 @@
                       });
                       core.scheduleSync();
                     };
-                  
+
                     /* ---------- 持久状态：排序、筛选、在桌日期、头条 ---------- */
-                  
+
                     let sortKey = store.get("mag-desk-sort", "manual");
                     let sortFlip = store.get("mag-desk-flip", "0") === "1"; // 反转当前排序的方向
                     let filterKey = store.get("mag-desk-filter", "");
                     const seen = readJSON("mag-desk-seen4", {}); // 卡片键 -> 第一次在案头看到的日期
                     let lead = readJSON("mag-desk-lead4", null); // { key, day }：今日头条，只到当天
                     let pins = readJSON("mag-desk-pins4", []); // 置顶的卡片键，按钉住的先后
-                  
+
                     const leadKey = () => (lead && lead.key && lead.day === dayKey() ? lead.key : null);
                     const setLead = (next) => {
                       lead = next;
@@ -10193,17 +10654,17 @@
                       writeJSON("mag-desk-pins4", pins);
                       core.scheduleSync();
                     };
-                  
+
                     /* ---------- 格式化 ---------- */
-                  
+
                     const ago = (ms) => {
                       if (!ms) return "";
                       const d = Math.floor((today() - new Date(ms).setHours(0, 0, 0, 0)) / DAY);
-                      if (d <= 0) return "TODAY";
-                      if (d < 14) return `${d}D AGO`;
-                      if (d < 60) return `${Math.round(d / 7)}W AGO`;
-                      if (d < 365) return `${Math.round(d / 30)}MO AGO`;
-                      return `${Math.round(d / 365)}Y AGO`;
+                      if (d <= 0) return t("today");
+                      if (d < 14) return t("daysAgo",{n:d});
+                      if (d < 60) return t("weeksAgo",{n:Math.round(d/7)});
+                      if (d < 365) return t("monthsAgo",{n:Math.round(d/30)});
+                      return t("yearsAgo",{n:Math.round(d/365)});
                     };
                     const daysOnDesk = (key) => {
                       const first = seen[key] ? fromKey(seen[key]) : today();
@@ -10212,15 +10673,15 @@
                     const dueStamp = (due) => {
                       if (due === null || due === undefined) return null;
                       const d = Math.round((due - today()) / DAY);
-                      if (d < 0) return { text: `OVERDUE ${-d}D`, state: "over" };
-                      if (d === 0) return { text: "DUE TODAY", state: "soon" };
-                      if (d <= CONFIG.soonDays) return { text: `DUE IN ${d}D`, state: "soon" };
-                      const date = new Date(due).toLocaleDateString("en-US", { month: "short", day: "numeric" }).toUpperCase();
-                      return { text: `DUE ${date}`, state: "later" };
+                      if (d < 0) return { text: t("overdue",{n:-d}), state: "over" };
+                      if (d === 0) return { text: t("dueToday"), state: "soon" };
+                      if (d <= CONFIG.soonDays) return { text: t("dueIn",{n:d}), state: "soon" };
+                      const date = new Date(due).toLocaleDateString(locale(), { month: "short", day: "numeric" }).toUpperCase();
+                      return { text: t("dueDate",{date}), state: "later" };
                     };
-                  
+
                     /* ---------- DOM 小工具 ---------- */
-                  
+
                     const setData = (el, name, value) => {
                       if (!el) return;
                       if (value === null || value === undefined || value === "") {
@@ -10247,7 +10708,7 @@
                         .replace(/\s+/g, " ")
                         .trim();
                     const cleanText = (el) => (el ? el.textContent.replace(/\s+/g, " ").trim() : "");
-                  
+
                     const sigOf = (tile) => {
                       const label = titleOf(tile);
                       if (/--page\b/.test(tile.className)) return { kind: "page", key: `page:${label}`, label };
@@ -10290,34 +10751,25 @@
                       if (!resolving.has(sig.key)) resolveBlock(sig);
                       return null;
                     };
-                  
+
                     const titleOf = (tile) => {
                       const p = tile.querySelector(".rm-desk-tile__preview");
                       return (p && p.getAttribute("aria-label")) || cleanText(tile.querySelector(".rm-desk-tile__title"));
                     };
-                  
+
                     /* ---------- 工具条：筛选、排序、头条（放进刊头右侧那一行，不单独占一栏） ---------- */
-                  
-                    const SORTS = [
-                      ["manual", "手动"],
-                      ["recent", "最近编辑"],
-                      ["stale", "最久未动"],
-                      ["deadline", "截稿日"],
-                      ["progress", "完成度"],
-                      ["type", "类型"],
-                      ["size", "篇幅"],
-                      ["heat", "热度"],
-                      ["ondesk", "在桌最久"],
-                    ];
-                  
+
+                    const SORTS = ["manual", "recent", "stale", "deadline", "progress", "type", "size", "heat", "ondesk"];
+
                     let bar = null;
+                    let barLocale = null;
                     let chips = null;
                     let chipsKey = null;
                     let select = null;
                     let dirBtn = null;
                     let dice = null;
                     let clearBtn = null;
-                  
+
                     const setSort = (key) => {
                       sortKey = key;
                       store.set("mag-desk-sort", key);
@@ -10330,18 +10782,18 @@
                       chipsKey = null;
                       core.scheduleSync();
                     };
-                  
+
                     let current = []; // 当前渲染的 [{ tile, ref, key }]
-                  
+
                     const drawLead = () => {
                       const pool = current.filter((c) => !c.tile.hasAttribute("data-mag-hidden") && c.key !== leadKey() && !pins.includes(c.key));
                       if (!pool.length) return;
                       setLead({ key: pool[Math.floor(Math.random() * pool.length)].key, day: dayKey() });
                     };
-                  
+
                     const PIN_ICON =
                       '<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M9.41.92c-.51.51-.41 1.5.15 2.56L4.34 7.54C2.8 6.48 1.45 6.05.92 6.58l3.54 3.54-3.54 4.95 4.95-3.54 3.54 3.54c.53-.53.1-1.88-.96-3.42l4.06-5.22c1.06.56 2.04.66 2.55.15L9.41.92z"/></svg>';
-                  
+
                     const button = (cls, html, title, onClick) => {
                       const b = doc.createElement("button");
                       b.type = "button";
@@ -10355,22 +10807,22 @@
                       });
                       return b;
                     };
-                  
+
                     const buildBar = () => {
                       bar = doc.createElement("div");
                       bar.className = "mag-desk-bar";
-                  
+
                       chips = doc.createElement("div");
                       chips.className = "mag-desk-bar__chips";
-                  
+
                       const sortLabel = doc.createElement("label");
                       sortLabel.className = "mag-desk-bar__sort";
-                      sortLabel.textContent = "排序";
+                      sortLabel.textContent = t("sort");
                       select = doc.createElement("select");
-                      for (const [key, label] of SORTS) {
+                      for (const key of SORTS) {
                         const o = doc.createElement("option");
                         o.value = key;
-                        o.textContent = label;
+                        o.textContent = t(key);
                         select.appendChild(o);
                       }
                       select.value = sortKey;
@@ -10381,18 +10833,19 @@
                         core.scheduleSync();
                       });
                       sortLabel.append(select, dirBtn);
-                  
+
                       const leadBox = doc.createElement("span");
                       leadBox.className = "mag-desk-bar__lead";
-                      dice = button("mag-desk-bar__btn mag-desk-bar__dice", "抽头条", "从案头随机抽一张放到头条位（只保留到今天）", drawLead);
-                      clearBtn = button("mag-desk-bar__btn mag-desk-bar__clear", "撤下头条", "撤下头条，回到原来的排列", () => setLead(null));
+                      dice = button("mag-desk-bar__btn mag-desk-bar__dice", t("draw"), t("drawTitle"), drawLead);
+                      clearBtn = button("mag-desk-bar__btn mag-desk-bar__clear", t("clear"), t("clearTitle"), () => setLead(null));
                       leadBox.append(dice, clearBtn);
-                  
+
                       bar.append(chips, sortLabel, leadBox);
+                      barLocale = locale();
                     };
-                  
+
                     const drawChips = (types) => {
-                      const key = `${filterKey}|${types.join("|")}`;
+                      const key = `${locale()}|${filterKey}|${types.join("|")}`;
                       if (key === chipsKey) return;
                       chipsKey = key;
                       chips.textContent = "";
@@ -10403,30 +10856,20 @@
                         b.setAttribute("aria-pressed", String(filterKey === value));
                         chips.appendChild(b);
                       };
-                      make("", "全部");
+                      make("", t("all"));
                       types.forEach((t) => make(t, t));
                     };
-                  
+
                     // 每种排序的默认方向说明（点箭头反转）
-                    const DIR_HINT = {
-                      recent: ["最近的在前", "最早的在前"],
-                      stale: ["最久未动在前", "最近动过在前"],
-                      deadline: ["截稿最早在前", "截稿最晚在前"],
-                      progress: ["完成度低在前", "完成度高在前"],
-                      type: ["A → Z", "Z → A"],
-                      size: ["篇幅大在前", "篇幅小在前"],
-                      heat: ["最热在前", "最冷在前"],
-                      ondesk: ["在桌最久在前", "最新上桌在前"],
-                    };
                     const drawLeadButtons = () => {
                       clearBtn.hidden = !leadKey();
                       const manual = sortKey === "manual";
                       dirBtn.hidden = manual;
                       dirBtn.textContent = sortFlip ? "↑" : "↓";
-                      const hint = DIR_HINT[sortKey];
-                      dirBtn.title = hint ? `${hint[sortFlip ? 1 : 0]}（点击反转）` : "";
+                      const hint = COPY[locale()].directions[sortKey];
+                      dirBtn.title = hint ? `${hint[sortFlip ? 1 : 0]} · ${t("reverse")}` : "";
                     };
-                  
+
                     // 每张卡片操作按钮里的图钉（置顶）
                     const drawPinButton = (tile, key, pinned) => {
                       const actions = tile.querySelector(".rm-desk-tile__actions");
@@ -10438,11 +10881,11 @@
                       }
                       if (pin.dataset.key !== key) pin.dataset.key = key;
                       pin.setAttribute("aria-pressed", String(pinned));
-                      pin.title = pinned ? "取消置顶" : "置顶：无论怎么排序都排在最前";
+                      pin.title = pinned ? t("unpin") : t("pin");
                     };
-                  
+
                     /* ---------- 排序 ---------- */
-                  
+
                     const sortValue = (key, d) => {
                       if (!d) return null;
                       switch (sortKey) {
@@ -10457,19 +10900,19 @@
                         default: return null;
                       }
                     };
-                  
+
                     /* ---------- 主流程 ---------- */
-                  
+
                     let lastPage = null;
-                  
+
                     const drawHeader = (page, count) => {
                       const h1 = page.querySelector(".rm-desk-page__title");
                       if (!h1) return;
                       const owner = ((page.querySelector(".rm-desk-page__owner") || {}).textContent || "").trim();
-                      const kicker = [owner.toUpperCase(), `${count} ${count === 1 ? "ITEM" : "ITEMS"}`].filter(Boolean).join("  ·  ");
+                      const kicker = [owner.toUpperCase(), `${count} ${t(count === 1 ? "item" : "items")}`].filter(Boolean).join("  ·  ");
                       setData(h1, "magKicker", kicker);
                     };
-                  
+
                     const render = (page) => {
                       const tiles = [...page.querySelectorAll(".rm-desk-tile")];
                       current = tiles.map((tile) => {
@@ -10477,7 +10920,7 @@
                         return { tile, key: sig.key, ref: refOf(sig) };
                       });
                       drawHeader(page, tiles.length);
-                  
+
                       // 在桌天数：新出现的卡片记下今天；已离开案头的卡片删掉记录
                       const keys = current.map((c) => c.key);
                       let changed = false;
@@ -10495,7 +10938,7 @@
                         pins = keptPins;
                         writeJSON("mag-desk-pins4", pins);
                       }
-                  
+
                       // 取数据：缺的或过期的才查；无法识别的卡片不查、不显示数据
                       for (const { ref } of current) {
                         if (!ref || pending.has(ref.key)) continue;
@@ -10503,12 +10946,12 @@
                         if (!c || Date.now() - c.at > CONFIG.cacheMs) load(ref);
                       }
                       const dataOf = (key) => (cache.get(key) || {}).data;
-                  
+
                       // 类型筛选签
                       const types = [...new Set(current.map((c) => dataOf(c.key)).filter((d) => d && d.type).map((d) => d.type))].sort();
                       drawChips(types);
                       drawLeadButtons();
-                  
+
                       // 排序
                       const ranked = current.map((c, i) => ({ ...c, d: dataOf(c.key), i }));
                       ranked.forEach((r) => { r.v = sortKey === "manual" ? null : sortValue(r.key, r.d); });
@@ -10538,46 +10981,47 @@
                       const final = [...head, ...ranked.filter((r) => !head.includes(r))];
                       const reorder = sortKey !== "manual" || head.length > 0;
                       const orderOf = new Map(final.map((r, n) => [r.tile, n + 1]));
-                  
+
                       for (const { tile, key, d } of ranked) {
                         const titleEl = tile.querySelector(".rm-desk-tile__title");
                         const footer = tile.querySelector(".rm-desk-tile__footer");
+                        setData(tile.querySelector(".rm-desk-tile__more"), "magContinued", t("continued"));
                         const isLead = !!leadK && key === leadK;
-                  
+
                         const isPinned = pins.includes(key);
                         setData(tile, "magLead", isLead ? "today" : null);
                         setData(tile, "magPinned", isPinned ? "1" : null);
                         setVar(tile, "--mag-desk-order", reorder ? String(orderOf.get(tile)) : null);
                         drawPinButton(tile, key, isPinned);
-                  
+
                         const hidden = !!filterKey && !isLead && !isPinned && (!d || d.type !== filterKey);
                         if (hidden !== tile.hasAttribute("data-mag-hidden")) tile.toggleAttribute("data-mag-hidden", hidden);
-                  
+
                         // 块本身就是类型标签（如 #Import）时，标题已经写着它，抬头不再重复
                         const showType = d && d.type && norm(titleOf(tile)) !== norm(d.type);
-                        const kicker = [isPinned ? "PINNED" : "", isLead ? "TODAY'S LEAD" : "", showType ? d.type.toUpperCase() : ""]
+                        const kicker = [isPinned ? t("pinned") : "", isLead ? t("lead") : "", showType ? d.type.toUpperCase() : ""]
                           .filter(Boolean)
                           .join("  ·  ");
                         setData(titleEl, "magKicker", kicker);
-                  
+
                         // 没有数据（还在查、或无法识别）时不显示任何统计，避免显示错误的数字
                         const total = d ? d.todo + d.done : 0;
                         const meta = d
                           ? [
-                              d.edited ? `UPDATED ${ago(d.edited)}` : "",
-                              `${d.blocks} ${d.blocks === 1 ? "BLOCK" : "BLOCKS"}`,
-                              total ? `${d.done}/${total} DONE` : "",
-                              `ON DESK ${daysOnDesk(key)}D`,
+                              d.edited ? t("updated",{time:ago(d.edited)}) : "",
+                              `${d.blocks} ${t(d.blocks === 1 ? "block" : "blocks")}`,
+                              total ? t("done",{done:d.done,total}) : "",
+                              t("onDesk",{n:daysOnDesk(key)}),
                             ].filter(Boolean).join("  ·  ")
                           : "";
                         setData(footer, "magMeta", meta);
                         setData(footer, "magProgress", total ? "1" : null);
                         if (footer) setVar(footer, "--mag-desk-progress", total ? (d.done / total).toFixed(3) : null);
-                  
+
                         const stamp = d ? dueStamp(d.due) : null;
                         setData(tile, "magDue", stamp ? stamp.text : null);
                         setData(tile, "magDueState", stamp ? stamp.state : null);
-                  
+
                         let age = 0;
                         if (d && d.edited) {
                           const idle = (today() - new Date(d.edited).setHours(0, 0, 0, 0)) / DAY;
@@ -10587,7 +11031,7 @@
                         setData(tile, "magAge", age || null);
                       }
                     };
-                  
+
                     const clearPage = (page) => {
                       if (!page) return;
                       page.querySelectorAll(".mag-desk-bar, .mag-desk-pin").forEach((el) => el.remove());
@@ -10597,6 +11041,8 @@
                         ["magLead", "magPinned", "magDue", "magDueState", "magAge"].forEach((k) => delete tile.dataset[k]);
                         tile.removeAttribute("data-mag-hidden");
                         tile.style.removeProperty("--mag-desk-order");
+                        const more = tile.querySelector(".rm-desk-tile__more");
+                        if (more) delete more.dataset.magContinued;
                         const t = tile.querySelector(".rm-desk-tile__title");
                         if (t) delete t.dataset.magKicker;
                         const f = tile.querySelector(".rm-desk-tile__footer");
@@ -10607,7 +11053,7 @@
                         }
                       });
                     };
-                  
+
                     // 非手动排序下拖动卡片或点「置顶」：自动回到手动，避免看到的位置和真实位置不一致
                     s.on(doc, "dragstart", (e) => {
                       if (sortKey !== "manual" && e.target instanceof Element && e.target.closest(".rm-desk-tile")) setSort("manual");
@@ -10615,7 +11061,7 @@
                     s.on(doc, "click", (e) => {
                       if (sortKey !== "manual" && e.target instanceof Element && e.target.closest(".rm-desk-tile__move-to-top")) setSort("manual");
                     }, true);
-                  
+
                     return {
                       sync() {
                         const page = doc.querySelector(".roam-body-main .rm-desk-page");
@@ -10625,6 +11071,13 @@
                         }
                         if (!page) return;
                         if (!bar) buildBar();
+                        if (barLocale !== locale()) {
+                          bar.querySelector('.mag-desk-bar__sort').firstChild.textContent = t('sort');
+                          for (const option of select.options) option.textContent = t(option.value);
+                          dice.textContent = t('draw'); dice.title = t('drawTitle');
+                          clearBtn.textContent = t('clear'); clearBtn.title = t('clearTitle');
+                          barLocale = locale();
+                        }
                         const tools = page.querySelector(".rm-desk-page__tools");
                         if (tools && tools.firstElementChild !== bar) tools.prepend(bar);
                         render(page);
@@ -10725,81 +11178,28 @@
     - 06 工作日 / 周末自动 DNP 模板
         - {{[[roam/js]]}}
             - ```javascript
-              /* Auto DNP schedule · weekday/weekend SmartBlock */
+              /* Auto DNP schedule · configured weekday/weekend SmartBlock */
               (() => {
                 const KEY = "__delmarAutoDnpTemplate";
-                const WEEKDAY_UID = "-SrmsqCDW";
-                const WEEKEND_UID = "R-buUSbAm";
-                const SIGNATURE = "roam-render-Nautilus-Log-cljs";
-                const RUN_DATE = new Date().toDateString();
-                const LOCK_ATTR = "data-delmar-auto-dnp-date";
-              
-                // The same roam/js macro can be rendered in the page, linked references and
-                // sidebar at once. A DOM attribute is shared by those render contexts and
-                // provides a synchronous lock before any async SmartBlock call begins.
-                if (document.documentElement.getAttribute(LOCK_ATTR) === RUN_DATE) return;
-                document.documentElement.setAttribute(LOCK_ATTR, RUN_DATE);
-                if (window[KEY]?.date === RUN_DATE) return;
-                window[KEY] = { date: RUN_DATE, running: true };
-              
-                const stringsOnDailyPage = (dailyPageUid) =>
-                  window.roamAlphaAPI.q(
-                    `[:find ?string
-                      :in $ ?daily-page-uid
-                      :where
-                      [?page :block/uid ?daily-page-uid]
-                      [?block :block/page ?page]
-                      [?block :block/string ?string]]`,
-                    dailyPageUid
-                  ) || [];
-              
+                const CLEANUP = "__delmarAutoDnpTemplateCleanup";
+                window[CLEANUP]?.();
+                let active = true, retryTimer = 0;
+                window[CLEANUP] = () => { active = false; clearTimeout(retryTimer); delete window[CLEANUP]; };
                 const run = async (attempt = 0) => {
-                  const api = window.roamAlphaAPI;
-                  const trigger = window.roamjs?.extension?.smartblocks?.triggerSmartblock;
-                  if (!api?.q || !api?.util?.dateToPageUid || !api?.util?.dateToPageTitle || !trigger) {
-                    if (attempt < 80) window.setTimeout(() => run(attempt + 1), 250);
-                    else window[KEY].running = false;
-                    return;
-                  }
-              
-                  const now = new Date();
-                  const dailyPageUid = api.util.dateToPageUid(now);
-                  const title = api.util.dateToPageTitle(now);
-              
-                  // Follow the same DNP lookup used by ((DeMkp4sw_)): resolve today's page
-                  // by date UID, then inspect blocks whose :block/page is that DNP.
-                  const pageExists = api.q(
-                    `[:find ?page . :in $ ?uid :where [?page :block/uid ?uid]]`,
-                    dailyPageUid
-                  );
-                  if (!pageExists) {
-                    window[KEY] = { date: RUN_DATE, running: false, missingPage: true };
-                    return;
-                  }
-              
-                  const alreadyExists = stringsOnDailyPage(dailyPageUid).some(([string]) =>
-                    String(string || "").includes(SIGNATURE)
-                  );
-                  if (alreadyExists) {
-                    window[KEY] = { date: now.toDateString(), running: false, skipped: true };
-                    return;
-                  }
-              
-                  const day = now.getDay();
-                  const srcUid = day === 0 || day === 6 ? WEEKEND_UID : WEEKDAY_UID;
+                  window[KEY] = {running:true};
                   try {
-                    const firstUid = await trigger({ srcUid, targetName: title });
-                    window[KEY] = {
-                      date: now.toDateString(),
-                      running: false,
-                      srcUid,
-                      firstUid: firstUid || "",
-                    };
+                    const result = await window.__folioTemplates?.automatic(new Date(), () => active);
+                    if (active) window[KEY] = {...result,running:false};
                   } catch (error) {
-                    window[KEY] = { date: now.toDateString(), running: false, error: String(error) };
+                    if (!active) return;
+                    if (error.templateCode === 'dependency' && attempt < 80) {
+                      retryTimer = setTimeout(() => run(attempt + 1),250);
+                      return;
+                    }
+                    window[KEY] = {running:false,error:error.message};
+                    console.warn('[Folio] '+error.message);
                   }
                 };
-              
                 run();
               })();
               ```
@@ -11428,7 +11828,6 @@
             const KEY = "__delmarCalendarCaptureCleanup";
             const STYLE_ID = "delmar-calendar-capture-style";
             const BAR_CLASS = "delmar-calendar-capture-bar";
-            const TEMPLATE_UID = "MR5mXjbsv";
             if (typeof window[KEY] === "function") window[KEY]();
             document.getElementById(STYLE_ID)?.remove();
             document.querySelectorAll("." + BAR_CLASS + ", .folio-calendar-plan").forEach((el) => el.remove());
@@ -11462,31 +11861,9 @@
               const parentUid = await ensurePage(date);
               await window.roamAlphaAPI.createBlock({ location: { "parent-uid": parentUid, order: 999999 }, block: { string } });
             };
-            const childrenOf = (uid) =>
-              (window.roamAlphaAPI.q(
-                '[:find ?childUid ?text ?order :in $ ?uid :where ' +
-                '[?parent :block/uid ?uid] [?parent :block/children ?child] ' +
-                '[?child :block/uid ?childUid] [?child :block/string ?text] [?child :block/order ?order]]', uid
-              ) || []).sort((a, b) => a[2] - b[2]);
-
-            const copyChildren = async (sourceUid, targetUid) => {
-              for (const [childUid, text] of childrenOf(sourceUid)) {
-                const newUid = window.roamAlphaAPI.util.generateUID();
-                await window.roamAlphaAPI.createBlock({
-                  location: { "parent-uid": targetUid, order: 999999 }, block: { uid: newUid, string: text }
-                });
-                await copyChildren(childUid, newUid);
-              }
-            };
             const createPlan = async (date) => {
-              const parentUid = await ensurePage(date);
-              const existing = window.roamAlphaAPI.q(
-                '[:find ?uid . :in $ ?pageUid :where [?page :block/uid ?pageUid] [?page :block/children ?block] ' +
-                '[?block :block/uid ?uid] [?block :block/string "今日计划"]]', parentUid
-              );
-              if (existing) return "已有“今日计划”";
-              await copyChildren(TEMPLATE_UID, parentUid);
-              return "已复制 ((" + TEMPLATE_UID + ")) 下方内容";
+              const result = await window.__folioTemplates.plan(date);
+              return templateText(result.status, {n:result.count});
             };
 
             const syncBar = () => {
@@ -11511,7 +11888,7 @@
               };
               const run = async (action) => {
                 try { setStatus("处理中…"); await action(); input.value = ""; }
-                catch (error) { setStatus("操作失败，请重试", true); console.error("[顶部日历 4/5] 快速记录失败", error); }
+                catch (error) { setStatus(error.templateCode ? templateText(error.templateCode) : "操作失败，请重试", true); console.error("[顶部日历 4/5] 快速记录失败", error); }
               };
               const makeButton = (label, action) => {
                 const button = document.createElement("button"); button.type = "button"; button.textContent = label;
@@ -11525,7 +11902,12 @@
                 const text = input.value.trim(); if (!text) return input.focus();
                 run(async () => { await append(targetDate, text); setStatus("笔记已添加到 " + titleOf(targetDate)); });
               });
-              const plan = makeButton("今日计划", () => run(async () => setStatus(await createPlan(targetDate))));
+              const plan = makeButton("今日计划", async () => {
+                if (plan.disabled) return;
+                plan.disabled = true;
+                try { await run(async () => setStatus(await createPlan(targetDate))); }
+                finally { plan.disabled = false; }
+              });
               plan.classList.add("folio-calendar-plan");
               bar.append(input, todo, note, plan, status);
               const carry = host.querySelector(":scope > .delmar-calendar-tools");
@@ -11547,7 +11929,7 @@
               observer.disconnect(); clearInterval(timer); document.removeEventListener("contextmenu", onContextMenu, true);
               document.querySelectorAll("." + BAR_CLASS + ", .folio-calendar-plan").forEach((el) => el.remove()); document.getElementById(STYLE_ID)?.remove(); delete window[KEY];
             };
-            console.log("[顶部日历 4/5] TODO、笔记、今日计划已直接显示；计划复制 MR5mXjbsv 子树。");
+
           })();
           ```
     - 今日计划模板（可修改）
@@ -11787,7 +12169,7 @@
           /*
            * 22.4 Video Reader
            * - 只负责杂志式卡片、上传视频适配和原生控制按钮重排
-           * - 时间戳、影院模式、时间戳列表全部复用 Roam 原生实现
+           * - 影院模式和时间戳列表复用 Roam 原生实现；影院内新增时间戳在下方直接编辑
            * - 不再创建 Focus / Fullscreen / Time / Timestamp 的第二套按钮
            */
           (() => {
@@ -11797,20 +12179,20 @@
             const CLASS = "mag-video-reader";
             const records = new Map();
             let titleTimer = 0;
-
+          
             const el = (tag, className, text) => {
               const node = doc.createElement(tag);
               if (className) node.className = className;
               if (text != null) node.textContent = text;
               return node;
             };
-
+          
             const readBlock = (uid) =>
               api?.q?.(
                 '[:find ?s . :in $ ?uid :where [?b :block/uid ?uid] [?b :block/string ?s]]',
                 uid
               ) || "";
-
+          
             const sourceOf = (media, raw) => {
               const src = media.currentSrc || media.src || media.getAttribute("src") || "";
               const rawUrl = (String(raw).match(/https?:\/\/[^\s)\]}]+/i) || [src])[0] || src;
@@ -11821,16 +12203,16 @@
               }
               return url;
             };
-
+          
             const kindOf = (media, source) => {
               if (media.tagName === "VIDEO") return "Uploaded video";
               if (/youtu(?:\.be|be\.com)/i.test(source) || /youtube/i.test(media.src || "")) return "YouTube";
               if (/vimeo/i.test(source) || /vimeo/i.test(media.src || "")) return "Vimeo";
               return "Embedded video";
             };
-
+          
             const isMediaFile = (value) => /\.(mp4|webm|mov|m4v|ogv|ogg)(?:$|\?)/i.test(value || "");
-
+          
             const titleOf = (media, raw, source, kind) => {
               const live = media.getAttribute("title") || "";
               if (live && live !== "YouTube video player") return live;
@@ -11842,38 +12224,38 @@
               } catch (_) {}
               return kind;
             };
-
+          
             const directShell = (media, input) => {
               let shell = media;
               while (shell.parentElement && shell.parentElement !== input) shell = shell.parentElement;
               return shell;
             };
-
+          
             const nativeSelector = [
               ".rm-video-player__edit-btn",
               ".rm-video-player__comment-button",
               ".rm-video-player__theater-button",
               ".rm-video-player__timestamps-button"
             ].join(",");
-
+          
             const adoptNativeControls = () => {};
-
+          
             const install = (media) => {
               const input = media.closest(".rm-block__input");
               const block = media.closest(".rm-block[data-block-uid]");
               const uid = block?.dataset.blockUid || "";
               if (!input || !block || !uid || records.has(input)) return;
               if (input.classList.contains(CLASS) || input.querySelector(":scope > .mag-video-toolbar")) return;
-
+          
               const raw = readBlock(uid);
               const source = sourceOf(media, raw);
               const kind = kindOf(media, source);
               const shell = directShell(media, input);
               if (!shell || shell === input) return;
-
+          
               input.classList.add(CLASS);
               shell.classList.add("mag-video-stage");
-
+          
               if (media.tagName === "IFRAME") {
                 media.setAttribute("allowfullscreen", "");
                 const allow = media.getAttribute("allow") || "";
@@ -11881,7 +12263,7 @@
               } else if (media.tagName === "VIDEO") {
                 media.setAttribute("controls", "");
               }
-
+          
               const toolbar = el("div", "mag-video-toolbar");
               const kicker = el("span", "mag-video-kicker", "VIDEO");
               const heading = el("div", "mag-video-heading");
@@ -11890,9 +12272,9 @@
               const actions = el("div", "mag-video-actions");
               heading.append(title, sourceLabel);
               toolbar.append(kicker, heading, actions);
-
+          
               input.insertBefore(toolbar, shell);
-
+          
               const record = {
                 input, block, uid, raw, source, kind, media, shell,
                 toolbar, title, actions, nativeControls: []
@@ -11900,9 +12282,9 @@
               records.set(input, record);
               adoptNativeControls(record);
             };
-
+          
             const restoreNativeControls = () => {};
-
+          
             const remove = (record) => {
               restoreNativeControls(record);
               record.toolbar.remove();
@@ -11910,7 +12292,7 @@
               record.input.classList.remove(CLASS);
               records.delete(record.input);
             };
-
+          
             titleTimer = window.setInterval(() => {
               for (const record of records.values()) {
                 const live = record.media.getAttribute("title") || "";
@@ -11918,7 +12300,7 @@
                 adoptNativeControls(record);
               }
             }, 1000);
-
+          
             return {
               sync() {
                 for (const record of [...records.values()]) {
@@ -11936,8 +12318,8 @@
               }
             };
           };
-
-
+          
+          
             const cleanupKey = "__magVideoReaderCleanup";
             if (typeof window[cleanupKey] === "function") {
               try { window[cleanupKey](); } catch (error) {
@@ -11969,24 +12351,37 @@
               delete window[cleanupKey];
             };
           })();
-
+          
           /* 22.4b Theater editable timestamp notes + English native controls */
           (() => {
             const KEY = "__magVideoTheaterCleanup";
             if (typeof window[KEY] === "function") window[KEY]();
-
+          
             const api = window.roamAlphaAPI;
             let panel = null;
             let signature = "";
             let pendingInsert = null;
-
+            const drafts = new Map();
+            const draftKey = "folio:video-note-draft:" + (location.hash.match(/\/app\/([^/]+)/)?.[1] || "") + ":";
+            let stopped = false;
+          
+            const saveLabels = {
+              en: ["Save", "Saving…", "Saved", "Retry", "Not saved. Your draft is kept; click to retry."],
+              zh: ["保存", "保存中…", "已保存", "重试", "尚未保存。草稿已保留，点击重试。"],
+              it: ["Salva", "Salvataggio…", "Salvato", "Riprova", "Non salvato. La bozza è conservata; fai clic per riprovare."],
+              de: ["Speichern", "Speichert…", "Gespeichert", "Erneut versuchen", "Nicht gespeichert. Der Entwurf bleibt erhalten; zum Wiederholen klicken."],
+              fr: ["Enregistrer", "Enregistrement…", "Enregistré", "Réessayer", "Non enregistré. Le brouillon est conservé ; cliquez pour réessayer."],
+              es: ["Guardar", "Guardando…", "Guardado", "Reintentar", "No se ha guardado. El borrador se conserva; haz clic para reintentar."]
+            };
+            const saveText = () => saveLabels[window.__magLocale] || saveLabels.en;
+          
             const labels = [
               [".rm-video-player__edit-btn, button[title=\"Open in sidebar\"]", "Open"],
               [".rm-video-player__comment-button, button[title=\"Insert Timestamp\"]", "Timestamp"],
               [".rm-video-player__theater-button, button[title=\"Theater mode\"], button[title=\"Default view\"]", "Theater"],
               [".rm-video-player__timestamps-button, button[title=\"View timestamps\"]", "Notes"]
             ];
-
+          
             const labelControls = () => {
               labels.forEach(([selector, fallback]) => {
                 document.querySelectorAll(selector).forEach((button) => {
@@ -11994,10 +12389,10 @@
                 });
               });
             };
-
+          
             const secondsOf = (stamp) =>
               stamp.split(":").map(Number).reduce((total, part) => total * 60 + part, 0);
-
+          
             const notesFor = (videoUid) => {
               const rows = api?.q?.(
                 '[:find ?uid ?s :in $ ?videoUid :where [?v :block/uid ?videoUid] [?b :block/refs ?v] [?b :block/uid ?uid] [?b :block/string ?s]]',
@@ -12007,18 +12402,19 @@
                 const raw = String(value || "");
                 if (!/video-timestamp/i.test(raw)) return null;
                 const stamp = raw.match(/\b(\d{1,2}:\d{2}(?::\d{2})?)\b/)?.[1];
-                const prefix = raw.match(/^\s*(\{\{\[\[video-timestamp\]\]\s*:[\s\S]*?\}\})/)?.[1];
+                const prefix = raw.match(/^\s*\{\{\[\[video-timestamp\]\]\s*:[\s\S]*?\}\}/)?.[0];
                 if (!stamp || !prefix) return null;
                 return {
                   uid,
                   stamp,
                   prefix,
                   seconds: secondsOf(stamp),
-                  text: raw.slice(prefix.length).trim()
+                  raw,
+                  text: raw.slice(prefix.length).replace(/^ /, "")
                 };
               }).filter(Boolean).sort((a, b) => a.seconds - b.seconds || a.uid.localeCompare(b.uid));
             };
-
+          
             const seek = (seconds) => {
               const theater = document.querySelector(".rm-video-theater");
               const video = theater?.querySelector("video");
@@ -12031,41 +12427,139 @@
                 "*"
               );
             };
-
+          
             const make = (tag, className, text) => {
               const node = document.createElement(tag);
               node.className = className;
               if (text != null) node.textContent = text;
               return node;
             };
-
+          
             const resizeEditor = (editor) => {
               editor.style.height = "0px";
               editor.style.height = Math.max(34, editor.scrollHeight) + "px";
             };
-
-            const saveEditor = async (editor) => {
-              const value = editor.value.trim();
-              if (value === editor.dataset.original) return;
-              editor.classList.add("is-saving");
+          
+            const noteString = (state, value = state.value) => state.prefix + (value ? " " + value : "");
+            const dirty = (state) => state.value !== state.saved;
+          
+            // A draft belongs to the native comment UID, never to a disposable textarea.
+            const keepDraft = (state) => {
               try {
-                await api.updateBlock({
-                  block: {
-                    uid: editor.dataset.uid,
-                    string: editor.dataset.prefix + (value ? " " + value : "")
-                  }
-                });
-                editor.dataset.original = value;
-                editor.classList.add("is-saved");
-                window.setTimeout(() => editor.classList.remove("is-saved"), 900);
-              } catch (error) {
-                console.error("[Video Reader] save timestamp note", error);
-                editor.classList.add("is-error");
-              } finally {
-                editor.classList.remove("is-saving");
+                if (dirty(state) || state.inFlight) {
+                  sessionStorage.setItem(draftKey + state.uid, JSON.stringify({ value: state.value }));
+                } else {
+                  sessionStorage.removeItem(draftKey + state.uid);
+                }
+              } catch (_) { /* The in-memory draft still works when storage is unavailable. */ }
+            };
+          
+            const paintSave = (state) => {
+              const editor = state.editor;
+              const button = state.saveButton;
+              const [save, saving, saved, retry, failed] = saveText();
+              const status = state.error ? "error" : state.inFlight ? "saving" : dirty(state) ? "pending" : "saved";
+              if (editor) {
+                editor.classList.toggle("is-saving", status === "saving");
+                editor.classList.toggle("is-saved", status === "saved" && state.didSave);
+                editor.classList.toggle("is-error", status === "error");
+                editor.dataset.original = state.saved;
+              }
+              if (button) {
+                button.dataset.state = status;
+                button.hidden = !dirty(state) && !state.inFlight && !state.error && !state.didSave;
+                button.disabled = state.deleting || state.composing || status === "saving" || status === "saved";
+                button.textContent = status === "error" ? retry : status === "saving" ? saving : status === "saved" ? saved : save;
+                button.title = status === "error" ? failed : button.textContent;
+                button.setAttribute("aria-label", button.title);
               }
             };
-
+          
+            const stateFor = (note) => {
+              let state = drafts.get(note.uid);
+              if (!state) {
+                state = { uid: note.uid, prefix: note.prefix, saved: note.text, value: note.text, raw: note.raw };
+                try {
+                  const backup = JSON.parse(sessionStorage.getItem(draftKey + note.uid) || "null");
+                  if (backup && typeof backup.value === "string" && backup.value !== note.text) {
+                    state.value = backup.value;
+                    state.error = true; // Recovered drafts wait for an explicit save/retry.
+                  }
+                } catch (_) {}
+                drafts.set(note.uid, state);
+              } else if (!dirty(state) && !state.inFlight && !state.error) {
+                state.value = state.saved = note.text;
+                state.prefix = note.prefix;
+                state.raw = note.raw;
+              }
+              state.note = note;
+              return state;
+            };
+          
+            const readComment = (uid) => api.q(
+              '[:find ?s . :in $ ?uid :where [?b :block/uid ?uid] [?b :block/string ?s]]', uid
+            );
+          
+            const saveDraft = (state, retry = false) => {
+              window.clearTimeout(state.timer);
+              state.timer = 0;
+              if (state.inFlight) return state.inFlight;
+              if (state.deleting || state.composing || (state.error && !retry) || !dirty(state)) return Promise.resolve();
+              state.error = false;
+              // Start on the next microtask so inFlight is set before any result is handled.
+              state.inFlight = Promise.resolve().then(async () => {
+                while (dirty(state) && !state.deleting && !state.composing) {
+                  const value = state.value;
+                  const string = noteString(state, value);
+                  // Updating only the existing UID preserves Roam's comment thread and author.
+                  if (typeof readComment(state.uid) !== "string") throw new Error("Timestamp comment is unavailable");
+                  const result = await api.updateBlock({ block: { uid: state.uid, string } });
+                  if (result === false) throw new Error("Roam did not accept the comment update");
+                  let confirmed = false;
+                  for (let attempt = 0; attempt < 5; attempt++) {
+                    if (readComment(state.uid) === string) { confirmed = true; break; }
+                    if (attempt < 4) await new Promise((resolve) => window.setTimeout(resolve, 80));
+                  }
+                  if (!confirmed) throw new Error("Roam has not confirmed the comment update");
+                  state.saved = value;
+                  state.raw = string;
+                  state.didSave = true;
+                }
+              }).catch((error) => {
+                state.error = true;
+                console.error("[Video Reader] save timestamp comment", error);
+              }).finally(() => {
+                state.inFlight = null;
+                keepDraft(state);
+                paintSave(state);
+              });
+              keepDraft(state);
+              paintSave(state);
+              return state.inFlight;
+            };
+          
+            const captureEditor = (state, editor) => {
+              if (state.value !== editor.value) state.error = false;
+              state.value = editor.value;
+              if (!dirty(state) && !state.inFlight) state.error = false;
+              keepDraft(state);
+              paintSave(state);
+            };
+          
+            const scheduleSave = (state) => {
+              window.clearTimeout(state.timer);
+              if (!state.composing && !state.deleting && !state.error && !stopped) {
+                state.timer = window.setTimeout(() => saveDraft(state), 450);
+              }
+            };
+          
+            const flushDrafts = () => {
+              drafts.forEach((state) => {
+                if (state.editor?.isConnected) captureEditor(state, state.editor);
+                saveDraft(state);
+              });
+            };
+          
             const openInSidebar = async (uid) => {
               try {
                 api.ui.rightSidebar.open();
@@ -12088,7 +12582,7 @@
                 console.error("[Video Reader] open timestamp note in sidebar", error);
               }
             };
-
+          
             const deleteNote = async (note, button) => {
               if (button.dataset.confirm !== "true") {
                 button.dataset.confirm = "true";
@@ -12102,15 +12596,26 @@
                 }, 3200);
                 return;
               }
-
+          
               button.disabled = true;
               button.textContent = "Deleting…";
+              const state = drafts.get(note.uid);
+              if (state) {
+                state.deleting = true;
+                window.clearTimeout(state.timer);
+                paintSave(state);
+              }
               try {
+                if (state?.inFlight) await state.inFlight;
                 await Promise.resolve(api.deleteBlock({ block: { uid: note.uid } }));
-                signature = "";
+                drafts.delete(note.uid);
+                try { sessionStorage.removeItem(draftKey + note.uid); } catch (_) {}
+                state?.row?.remove();
+                signature = null;
                 pendingInsert = null;
                 sync();
               } catch (error) {
+                if (state) { state.deleting = false; paintSave(state); }
                 console.error("[Video Reader] delete timestamp note", error);
                 button.disabled = false;
                 button.textContent = "Delete";
@@ -12118,7 +12623,7 @@
                 delete button.dataset.confirm;
               }
             };
-
+          
             const focusEditor = (uid) => {
               const editor = panel?.querySelector(
                 '.mag-video-theater-note__editor[data-uid="' + CSS.escape(uid) + '"]'
@@ -12129,61 +12634,104 @@
                 block: "center"
               });
               window.setTimeout(() => {
+                if (stopped || !editor.isConnected) return;
                 editor.focus({ preventScroll: true });
                 editor.setSelectionRange(editor.value.length, editor.value.length);
               }, 260);
               return true;
             };
-
+          
+            // Roam owns timestamp creation, including comment parentage, author and time.
+            // Observe the native click only, then locate its new comment in the theater view.
             const onTimestampClick = (event) => {
-              const button = event.target.closest(
+              const button = event.target.closest?.(
                 '.rm-video-theater button[title="Insert Timestamp"], .rm-video-theater .rm-video-player__comment-button'
               );
               if (!button) return;
               const videoUid = decodeURIComponent(location.hash.match(/\/video\/([^/?#]+)/)?.[1] || "");
-              if (!videoUid) return;
+              if (!videoUid || !panel?.isConnected) return;
               pendingInsert = {
+                videoUid,
                 before: new Set(notesFor(videoUid).map((note) => note.uid)),
                 deadline: Date.now() + 7000
               };
             };
-
+          
             const render = (notes) => {
-              const header = make("div", "mag-video-theater-notes__header");
-              header.append(
-                make("span", "mag-video-theater-notes__eyebrow", "TIMESTAMP NOTES"),
-                make("span", "mag-video-theater-notes__count", String(notes.length).padStart(2, "0"))
-              );
-
-              const list = make("div", "mag-video-theater-notes__list");
-              if (!notes.length) {
-                list.append(make("div", "mag-video-theater-notes__empty", "No timestamp notes yet."));
-              } else {
-                notes.forEach((note) => {
-                  const row = make("div", "mag-video-theater-note");
-                  const time = make("button", "mag-video-theater-note__time", note.stamp);
+              let header = panel.querySelector(".mag-video-theater-notes__header");
+              let list = panel.querySelector(".mag-video-theater-notes__list");
+              if (!header || !list) {
+                header = make("div", "mag-video-theater-notes__header");
+                header.append(
+                  make("span", "mag-video-theater-notes__eyebrow", "TIMESTAMP NOTES"),
+                  make("span", "mag-video-theater-notes__count")
+                );
+                list = make("div", "mag-video-theater-notes__list");
+                panel.append(header, list);
+              }
+              header.querySelector(".mag-video-theater-notes__count").textContent = String(notes.length).padStart(2, "0");
+              list.querySelector(".mag-video-theater-notes__empty")?.remove();
+              const visible = new Set(notes.map((note) => note.uid));
+              Array.from(list.children).forEach((row) => {
+                if (!visible.has(row.dataset.uid)) row.remove();
+              });
+          
+              notes.forEach((note, index) => {
+                const state = stateFor(note);
+                if (!state.row) {
+                  const row = state.row = make("div", "mag-video-theater-note");
+                  row.dataset.uid = note.uid;
+                  const time = state.time = make("button", "mag-video-theater-note__time");
                   time.type = "button";
-                  time.title = "Jump to " + note.stamp;
-                  time.addEventListener("click", () => seek(note.seconds));
-
-                  const editor = make("textarea", "mag-video-theater-note__editor");
-                  editor.value = note.text;
-                  editor.dataset.original = note.text;
+                  time.addEventListener("click", () => seek(state.note.seconds));
+          
+                  const editor = state.editor = make("textarea", "mag-video-theater-note__editor");
                   editor.dataset.uid = note.uid;
-                  editor.dataset.prefix = note.prefix;
-                  editor.setAttribute("aria-label", "Edit note at " + note.stamp);
-                  editor.addEventListener("input", () => resizeEditor(editor));
-                  editor.addEventListener("blur", () => saveEditor(editor));
-                  editor.addEventListener("keydown", (event) => {
-                    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") editor.blur();
+                  editor.addEventListener("input", () => {
+                    captureEditor(state, editor);
+                    resizeEditor(editor);
+                    scheduleSave(state);
                   });
-
+                  editor.addEventListener("compositionstart", () => {
+                    state.composing = true;
+                    window.clearTimeout(state.timer);
+                    paintSave(state);
+                  });
+                  editor.addEventListener("compositionend", () => {
+                    state.composing = false;
+                    captureEditor(state, editor);
+                    scheduleSave(state);
+                  });
+                  editor.addEventListener("blur", () => {
+                    captureEditor(state, editor);
+                    saveDraft(state);
+                  });
+                  editor.addEventListener("keydown", (event) => {
+                    if ((event.metaKey || event.ctrlKey) && event.key === "Enter" && !event.isComposing && !state.composing) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      captureEditor(state, editor);
+                      saveDraft(state, true);
+                    }
+                  });
+          
                   const actions = make("div", "mag-video-theater-note__actions");
+                  const saveButton = state.saveButton = make("button", "mag-video-theater-note__action mag-video-theater-note__save");
+                  saveButton.type = "button";
+                  saveButton.setAttribute("aria-live", "polite");
+                  saveButton.addEventListener("click", () => {
+                    captureEditor(state, editor);
+                    saveDraft(state, true);
+                  });
                   const openButton = make("button", "mag-video-theater-note__action", "Open");
                   openButton.type = "button";
                   openButton.title = "Open this timestamp block in the right sidebar";
-                  openButton.addEventListener("click", () => openInSidebar(note.uid));
-
+                  openButton.addEventListener("click", async () => {
+                    captureEditor(state, editor);
+                    await saveDraft(state);
+                    openInSidebar(note.uid);
+                  });
+          
                   const deleteButton = make(
                     "button",
                     "mag-video-theater-note__action mag-video-theater-note__delete",
@@ -12191,48 +12739,65 @@
                   );
                   deleteButton.type = "button";
                   deleteButton.title = "Delete this timestamp block and its children";
-                  deleteButton.addEventListener("click", () => deleteNote(note, deleteButton));
-
-                  actions.append(openButton, deleteButton);
+                  deleteButton.addEventListener("click", () => deleteNote(state.note, deleteButton));
+          
+                  actions.append(saveButton, openButton, deleteButton);
                   row.append(time, editor, actions);
-                  list.append(row);
-                  requestAnimationFrame(() => resizeEditor(editor));
-                });
-              }
-              panel.replaceChildren(header, list);
+                }
+                const { row, editor, time } = state;
+                time.textContent = note.stamp;
+                time.title = "Jump to " + note.stamp;
+                // Reconcile by UID: never replace a focused or unsaved textarea on polling.
+                if (editor.value !== state.value) editor.value = state.value;
+                editor.dataset.prefix = state.prefix;
+                editor.setAttribute("aria-label", "Edit note at " + note.stamp);
+                if (list.children[index] !== row) list.insertBefore(row, list.children[index] || null);
+                paintSave(state);
+                requestAnimationFrame(() => { if (editor.isConnected) resizeEditor(editor); });
+              });
+              if (!notes.length) list.append(make("div", "mag-video-theater-notes__empty", "No timestamp notes yet."));
             };
-
+          
             const sync = () => {
               labelControls();
-
+          
               const theater = document.querySelector(".rm-video-theater");
               const videoUid = decodeURIComponent(location.hash.match(/\/video\/([^/?#]+)/)?.[1] || "");
               const anchor = theater?.querySelector(".rm-video-player__spacing-wrapper--theater");
               if (!theater || !videoUid || !anchor) {
+                if (panel) flushDrafts();
                 panel?.remove();
                 panel = null;
                 signature = "";
                 return;
               }
-
+          
+              if (panel && panel.dataset.videoUid !== videoUid) {
+                flushDrafts();
+                panel.remove();
+                panel = null;
+              }
+          
               if (!panel?.isConnected) {
                 panel = make("section", "mag-video-theater-notes");
+                panel.dataset.videoUid = videoUid;
                 anchor.insertAdjacentElement("afterend", panel);
                 signature = "";
               }
-
+          
+              if (pendingInsert && (pendingInsert.videoUid !== videoUid || Date.now() > pendingInsert.deadline)) pendingInsert = null;
               if (panel.contains(document.activeElement) && !pendingInsert) return;
               const notes = notesFor(videoUid);
               const next = notes.map((note) => [note.uid, note.seconds, note.text].join("|")).join("¦");
               const inserted = pendingInsert
                 ? notes.find((note) => !pendingInsert.before.has(note.uid))
                 : null;
-
+          
               if (next !== signature) {
                 signature = next;
                 render(notes);
               }
-
+          
               if (inserted) {
                 const uid = inserted.uid;
                 pendingInsert = null;
@@ -12241,13 +12806,17 @@
                 pendingInsert = null;
               }
             };
-
+          
             document.addEventListener("click", onTimestampClick, true);
+            window.addEventListener("pagehide", flushDrafts);
             const timer = window.setInterval(sync, 350);
             sync();
-
+          
             window[KEY] = () => {
+              stopped = true;
+              flushDrafts();
               window.clearInterval(timer);
+              window.removeEventListener("pagehide", flushDrafts);
               document.removeEventListener("click", onTimestampClick, true);
               pendingInsert = null;
               panel?.remove();
