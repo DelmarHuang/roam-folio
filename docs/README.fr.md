@@ -1,4 +1,6 @@
-# Folio · 1.4.25
+# Folio · 1.4.28
+
+Les raccourcis G / T / D sont désactivés par défaut, même après une mise à jour. Activez-les dans les réglages Folio → Navigation. Les flèches ne changent plus de jour. Le déplacement des tâches conserve leur hiérarchie.
 
 [简体中文 · English · Français · Deutsch · Español · Italiano](../README.md#languages)
 

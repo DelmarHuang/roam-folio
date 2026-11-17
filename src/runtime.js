@@ -9,8 +9,8 @@
 /*__CALENDAR_SUPPORT__*/
 /*__TEMPLATE_SUPPORT__*/
 
-const VERSION = "1.4.25";
-const BUILD_DATE = "2026-11-15";
+const VERSION = "1.4.28";
+const BUILD_DATE = "2026-11-18";
 const STYLE_ID = "folio-plugin-style";
 const SETTING_PREFIX = "folio-";
 const LEGACY_SETTING_PREFIX = "imprint-";
@@ -657,6 +657,7 @@ function createRuntime(extensionAPI) {
     settingsDefinitions: [],
     toolbarUi: null,
     shortcuts: {...SHORTCUT_DEFAULTS},
+    calendarShortcutsEnabled: false,
     randomExcludedPages: RANDOM_EXCLUDED_DEFAULT,
     randomExcludeFuture: true,
     templates: {weekday:"",weekend:"",plan:""},
@@ -1156,6 +1157,7 @@ function createRuntime(extensionAPI) {
             runtime.headingFont = "";
             runtime.codeMaxHeight = 420;
             runtime.shortcuts = {...SHORTCUT_DEFAULTS};
+            runtime.calendarShortcutsEnabled = false;
             runtime.randomExcludedPages = RANDOM_EXCLUDED_DEFAULT;
             runtime.randomExcludeFuture = true;
             for (const kind of Object.keys(runtime.templates)) {
@@ -1173,6 +1175,7 @@ function createRuntime(extensionAPI) {
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}body-font`, ""));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}heading-font`, ""));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}code-max-height`, 420));
+            writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}calendar-shortcuts-enabled`, false));
             for (const [key,value] of Object.entries(SHORTCUT_DEFAULTS)) writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}shortcut-${key}`, value));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}motto-line-1`, runtime.mottoLine1));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}motto-line-2`, runtime.mottoLine2));
@@ -1194,11 +1197,22 @@ function createRuntime(extensionAPI) {
     // upgrade and remove only generated DOM, never native comment blocks.
     window.__magNativeCommentRailCleanup?.();
     window.__magVideoTheaterCleanup?.();
-    document.querySelectorAll(".mag-native-comment,.mag-comment-fold-count,.mag-video-theater-notes,.folio-video-open").forEach(el => el.remove());
+    document.querySelectorAll(".mag-video-theater-notes,.folio-video-open").forEach(el => el.remove());
+    if (!window.__readingDeskFeatures?.comments && !window.__readingDeskCommentRail) {
+    document.querySelectorAll(".mag-native-comment,.mag-comment-fold-count").forEach(el => el.remove());
     document.querySelectorAll(".mag-comment-rail-host,.mag-comment-anchor-active,.mag-comment-anchor-rail").forEach(el => {
       el.classList.remove("mag-comment-rail-host", "mag-comment-anchor-active", "mag-comment-anchor-rail");
       el.style.removeProperty("--mag-comment-reserve");
     });
+    }
+    const yieldReadingFeatures = () => {
+      const active = window.__readingDeskFeatures || {};
+      if (active.comments) window.__magNativeCommentRailCleanup?.();
+      if (active.mark) { window.__magQuickMark?.cleanup?.(); window.__zenithQuickMark?.cleanup?.(); }
+    };
+    yieldReadingFeatures();
+    window.addEventListener("reading-desk-features-change", yieldReadingFeatures);
+    runtime.stopReadingCoexistence = () => window.removeEventListener("reading-desk-features-change", yieldReadingFeatures);
     const defaultWrites = [];
     const readDefault = (key, fallback) => {
       const stored = extensionAPI.settings.get(key);
@@ -1219,7 +1233,8 @@ function createRuntime(extensionAPI) {
     window.__folioTemplates = createTemplateService(runtime);
     runtime.codeMaxHeight = codeHeight(readDefault(`${SETTING_PREFIX}code-max-height`, 420));
     for (const [key, value] of Object.entries(SHORTCUT_DEFAULTS)) runtime.shortcuts[key] = String(readDefault(`${SETTING_PREFIX}shortcut-${key}`, value));
-    window.__folioMatchesShortcut = (event, key) => matchesShortcut(event, runtime.shortcuts[key]);
+    runtime.calendarShortcutsEnabled = Boolean(readDefault(`${SETTING_PREFIX}calendar-shortcuts-enabled`, false));
+    window.__folioMatchesShortcut = (event, key) => runtime.calendarShortcutsEnabled && Object.prototype.hasOwnProperty.call(SHORTCUT_DEFAULTS, key) && matchesShortcut(event, runtime.shortcuts[key]);
     runtime.languageChoice = readDefault(`${SETTING_PREFIX}language`, "Auto");
     runtime.themeEnabled = Boolean(readDefault(`${SETTING_PREFIX}theme-enabled`, true));
     runtime.paused = Boolean(readDefault(`${SETTING_PREFIX}pause-interactive`, false));
@@ -1253,6 +1268,7 @@ function createRuntime(extensionAPI) {
   runtime.destroy = () => {
     if (runtime.destroyed) return;
     runtime.destroyed = true;
+    runtime.stopReadingCoexistence?.();
     runtime.toolbarUi?.destroy();
     runtime.toolbarUi = null;
     runtime.cancelStarts();

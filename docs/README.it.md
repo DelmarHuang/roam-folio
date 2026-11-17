@@ -1,4 +1,6 @@
-# Folio · 1.4.25
+# Folio · 1.4.28
+
+G / T / D sono disattivati per impostazione predefinita, anche dopo gli aggiornamenti. Attivali nelle impostazioni Folio → Navigazione. Le frecce non cambiano più giorno. Le attività spostate mantengono la gerarchia.
 
 [简体中文 · English · Français · Deutsch · Español · Italiano](../README.md#languages)
 

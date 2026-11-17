@@ -1,3 +1,23 @@
+# 1.4.28 · 2026-11-18
+
+- Carry Reference and Move preserve the original ancestor paths and sibling order. Ordinary ancestors are represented once as references; unrelated sibling blocks stay behind.
+- Outermost unfinished TODOs retain all descendants, including DONE tasks and explanatory notes. Only their roots move, so nested TODOs are never extracted twice.
+- Move Undo restores original parents/order and removes generated context references only when still empty, unchanged and unreferenced. User edits are retained.
+- Added carry-context regression scenarios. No layout or Reading Desk changes in this release.
+
+# 1.4.27 · 2026-11-18
+
+- Reference today now creates block references in the original subtree order, including plain-text children. Nested TODOs are not duplicated at the top level; original blocks stay in place. Move is unchanged.
+- On main article/daily rows with a pin, reclaim only the empty native reference placeholder and its separator. Keep actual reference counters, pin controls and comment reservation.
+- Verified reference nesting, unchanged originals, Move/Undo regression and pin-row CSS selector scope. Reading Desk is unchanged.
+
+# 1.4.26 · 2026-11-17
+
+- Calendar Move now moves only outermost TODO candidates, preserving nested TODOs and intervening non-task blocks. Original locations are captured before moving so Undo restores sibling order.
+- Removed previous/next-day keyboard navigation. G / T / D and custom calendar keys require the new “Enable calendar keyboard shortcuts” switch (off by default, including upgrades). Selected blocks and selected text retain their keys.
+- Folio listens to Reading Desk feature ownership and yields its legacy comment rail / Mark handlers itself. Startup preserves Reading Desk comment elements.
+- Added reviewer regression tests; run `npm ci`, `npm run build`, `npm run check`, and `npm run check:review`.
+
 # 1.4.25 · 2026-11-15
 
 - 修复影院笔记只在失焦时保存、列表刷新可能覆盖未保存文字的问题。按原评论 UID 保留草稿；输入暂停后自动保存，失焦、Ctrl/Cmd＋Enter 或“保存”立即提交。

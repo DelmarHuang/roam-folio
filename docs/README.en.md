@@ -1,4 +1,6 @@
-# Folio · 1.4.25
+# Folio · 1.4.28
+
+Calendar shortcuts G / T / D are off by default (including upgrades). Enable them in Folio settings → Navigation → Enable calendar keyboard shortcuts. Previous/next-day arrow shortcuts have been removed. Moving unfinished tasks preserves nested TODOs.
 
 [简体中文 · English · Français · Deutsch · Español · Italiano](../README.md#languages)
 

@@ -14,42 +14,42 @@ const SETTINGS_COPY = {
   title:'By function · resource impact per component',impact:'Estimated resource impact',impactHelp:'Estimated from runtime behaviour; not a live CPU measurement.',
   pages:'Excluded pages',pagesHelp:'TODOs on these pages are excluded. Enter one exact page title per line.',defaults:'Defaults: SmartBlock and roam/templates. Edit or add page titles below.',
   future:'Exclude TODOs with future dates',futureHelp:'On by default. Turn off to include tasks with explicit future daily-note dates.',policy:'These rules only filter random picks; original tasks are not modified.',
-  code:'Limit code block height',sidebar:'Keep native sidebar toggles visible',defaultLabel:'Default',height:'Code block maximum height (px)',heightHelp:'Default 420; 0 removes the limit. Long code scrolls inside the block.',shortcuts:['Jump to date','Today','Daily notes','Previous day','Next day'],shortcut:'Navigation shortcut',shortcutHelp:'Default: {key}. Examples: Alt+G, Mod+Shift+J. Empty disables. Inactive while editing; the first matching action wins.'
+  code:'Limit code block height',sidebar:'Keep native sidebar toggles visible',defaultLabel:'Default',height:'Code block maximum height (px)',heightHelp:'Default 420; 0 removes the limit. Long code scrolls inside the block.',shortcuts:['Jump to date','Today','Daily notes'],shortcut:'Navigation shortcut',shortcutHelp:'Default: {key}. Examples: Alt+G, Mod+Shift+J. Empty disables. Inactive while editing; the first matching action wins.'
  },
  zh: {
   groups:['界面与导航','标签与内容','写作与代码','日记与日历','阅读与媒体','页面洞察','任务与回顾'],
   title:'按功能分组 · 每项标注资源消耗',impact:'资源消耗（估计）',impactHelp:'按运行方式估计，不代表实时 CPU 占用。',
   pages:'排除页面',pagesHelp:'这些页面下的 TODO 不参与随机抽取；每行填写一个完整页面名。',defaults:'默认填入 SmartBlock 和 roam/templates，可自行修改或添加。',
   future:'排除带未来日期的 TODO',futureHelp:'默认开启；关闭后，明确带有未来日记日期的任务也可参与随机抽取。',policy:'排除规则仅影响随机抽取，不修改原任务。',
-  code:'限制代码块高度',sidebar:'固定显示原生侧栏开关',defaultLabel:'默认',height:'代码块最大高度（px）',heightHelp:'默认 420；0 表示不限制。长代码在块内滚动。',shortcuts:['跳转日期','今天','日记流','前一天','后一天'],shortcut:'导航快捷键',shortcutHelp:'默认 {key}。支持 Alt+G、Mod+Shift+J；留空停用。编辑文字时不触发，重复组合仅第一个生效。'
+  code:'限制代码块高度',sidebar:'固定显示原生侧栏开关',defaultLabel:'默认',height:'代码块最大高度（px）',heightHelp:'默认 420；0 表示不限制。长代码在块内滚动。',shortcuts:['跳转日期','今天','日记流'],shortcut:'导航快捷键',shortcutHelp:'默认 {key}。支持 Alt+G、Mod+Shift+J；留空停用。编辑文字时不触发，重复组合仅第一个生效。'
  },
  fr: {
   groups:['Interface et navigation','Étiquettes et contenu','Écriture et code','Journal et calendrier','Lecture et médias','Analyse des pages','Tâches et révision'],
   title:'Par fonction · impact indiqué par composant',impact:'Impact estimé sur les ressources',impactHelp:'Estimation selon le fonctionnement ; ce n’est pas une mesure CPU en direct.',
   pages:'Pages exclues',pagesHelp:'Les TODO de ces pages sont exclus. Un titre exact de page par ligne.',defaults:'Valeurs par défaut : SmartBlock et roam/templates. Modifiez ou ajoutez des titres.',
   future:'Exclure les TODO avec une date future',futureHelp:'Activé par défaut. Désactivez pour inclure les tâches portant une date explicite de journal future.',policy:'Ces règles filtrent uniquement le tirage aléatoire, sans modifier les tâches originales.',
-  code:'Limiter la hauteur du code',sidebar:'Garder visibles les boutons des barres latérales',defaultLabel:'Par défaut',height:'Hauteur maximale du code (px)',heightHelp:'420 par défaut ; 0 supprime la limite. Le code long défile dans le bloc.',shortcuts:['Aller à une date','Aujourd’hui','Journal','Jour précédent','Jour suivant'],shortcut:'Raccourci de navigation',shortcutHelp:'Par défaut : {key}. Exemples : Alt+G, Mod+Shift+J. Vide pour désactiver. Inactif pendant la saisie ; la première action correspondante prévaut.'
+  code:'Limiter la hauteur du code',sidebar:'Garder visibles les boutons des barres latérales',defaultLabel:'Par défaut',height:'Hauteur maximale du code (px)',heightHelp:'420 par défaut ; 0 supprime la limite. Le code long défile dans le bloc.',shortcuts:['Aller à une date','Aujourd’hui','Journal'],shortcut:'Raccourci de navigation',shortcutHelp:'Par défaut : {key}. Exemples : Alt+G, Mod+Shift+J. Vide pour désactiver. Inactif pendant la saisie ; la première action correspondante prévaut.'
  },
  de: {
   groups:['Oberfläche und Navigation','Tags und Inhalt','Schreiben und Code','Tagesnotizen und Kalender','Lesen und Medien','Seitenanalyse','Aufgaben und Rückblick'],
   title:'Nach Funktion · Ressourcenlast je Komponente',impact:'Geschätzte Ressourcenlast',impactHelp:'Schätzung anhand der Arbeitsweise, keine Echtzeit-CPU-Messung.',
   pages:'Ausgeschlossene Seiten',pagesHelp:'TODOs auf diesen Seiten werden ausgeschlossen. Ein exakter Seitentitel pro Zeile.',defaults:'Standard: SmartBlock und roam/templates. Titel können geändert oder ergänzt werden.',
   future:'TODOs mit zukünftigem Datum ausschließen',futureHelp:'Standardmäßig aktiviert. Deaktivieren, um Aufgaben mit einem ausdrücklich zukünftigen Tagesnotizdatum einzubeziehen.',policy:'Diese Regeln filtern nur die Zufallsauswahl und ändern keine ursprünglichen Aufgaben.',
-  code:'Codeblockhöhe begrenzen',sidebar:'Schalter der Seitenleisten sichtbar halten',defaultLabel:'Standard',height:'Maximale Codeblockhöhe (px)',heightHelp:'Standard 420; 0 hebt die Begrenzung auf. Langer Code scrollt innerhalb des Blocks.',shortcuts:['Zu Datum springen','Heute','Tagesnotizen','Vorheriger Tag','Nächster Tag'],shortcut:'Navigationstastenkürzel',shortcutHelp:'Standard: {key}. Beispiele: Alt+G, Mod+Shift+J. Leer deaktiviert. Bei Texteingabe inaktiv; die erste passende Aktion hat Vorrang.'
+  code:'Codeblockhöhe begrenzen',sidebar:'Schalter der Seitenleisten sichtbar halten',defaultLabel:'Standard',height:'Maximale Codeblockhöhe (px)',heightHelp:'Standard 420; 0 hebt die Begrenzung auf. Langer Code scrollt innerhalb des Blocks.',shortcuts:['Zu Datum springen','Heute','Tagesnotizen'],shortcut:'Navigationstastenkürzel',shortcutHelp:'Standard: {key}. Beispiele: Alt+G, Mod+Shift+J. Leer deaktiviert. Bei Texteingabe inaktiv; die erste passende Aktion hat Vorrang.'
  },
  es: {
   groups:['Interfaz y navegación','Etiquetas y contenido','Escritura y código','Diario y calendario','Lectura y medios','Análisis de páginas','Tareas y revisión'],
   title:'Por función · consumo indicado por componente',impact:'Consumo estimado de recursos',impactHelp:'Estimación según el funcionamiento; no mide la CPU en tiempo real.',
   pages:'Páginas excluidas',pagesHelp:'Los TODO de estas páginas se excluyen. Un título exacto de página por línea.',defaults:'Por defecto: SmartBlock y roam/templates. Puede modificar o añadir títulos.',
   future:'Excluir TODO con fechas futuras',futureHelp:'Activado por defecto. Desactive para incluir tareas con una fecha futura explícita de nota diaria.',policy:'Estas reglas solo filtran la selección aleatoria; no modifican las tareas originales.',
-  code:'Limitar la altura del código',sidebar:'Mantener visibles los controles laterales',defaultLabel:'Predeterminado',height:'Altura máxima del código (px)',heightHelp:'420 por defecto; 0 elimina el límite. El código largo se desplaza dentro del bloque.',shortcuts:['Ir a una fecha','Hoy','Notas diarias','Día anterior','Día siguiente'],shortcut:'Atajo de navegación',shortcutHelp:'Predeterminado: {key}. Ejemplos: Alt+G, Mod+Shift+J. Vacío para desactivar. Inactivo al editar; prevalece la primera acción coincidente.'
+  code:'Limitar la altura del código',sidebar:'Mantener visibles los controles laterales',defaultLabel:'Predeterminado',height:'Altura máxima del código (px)',heightHelp:'420 por defecto; 0 elimina el límite. El código largo se desplaza dentro del bloque.',shortcuts:['Ir a una fecha','Hoy','Notas diarias'],shortcut:'Atajo de navegación',shortcutHelp:'Predeterminado: {key}. Ejemplos: Alt+G, Mod+Shift+J. Vacío para desactivar. Inactivo al editar; prevalece la primera acción coincidente.'
  },
  it: {
   groups:['Interfaccia e navigazione','Tag e contenuti','Scrittura e codice','Diario e calendario','Lettura e media','Analisi delle pagine','Attività e revisione'],
   title:'Per funzione · consumo indicato per componente',impact:'Consumo stimato di risorse',impactHelp:'Stima basata sul funzionamento, non una misura della CPU in tempo reale.',
   pages:'Pagine escluse',pagesHelp:'I TODO in queste pagine sono esclusi. Un titolo esatto di pagina per riga.',defaults:'Valori iniziali: SmartBlock e roam/templates. Puoi modificare o aggiungere titoli.',
   future:'Escludi TODO con date future',futureHelp:'Attivo per impostazione predefinita. Disattiva per includere attività con una data futura esplicita di nota giornaliera.',policy:'Queste regole filtrano solo la selezione casuale e non modificano le attività originali.',
-  code:'Limita l’altezza del codice',sidebar:'Mantieni visibili i controlli delle barre laterali',defaultLabel:'Predefinito',height:'Altezza massima del codice (px)',heightHelp:'420 predefinito; 0 elimina il limite. Il codice lungo scorre dentro il blocco.',shortcuts:['Vai a una data','Oggi','Note giornaliere','Giorno precedente','Giorno successivo'],shortcut:'Scorciatoia di navigazione',shortcutHelp:'Predefinito: {key}. Esempi: Alt+G, Mod+Shift+J. Vuoto per disattivare. Inattivo durante la modifica; prevale la prima azione corrispondente.'
+  code:'Limita l’altezza del codice',sidebar:'Mantieni visibili i controlli delle barre laterali',defaultLabel:'Predefinito',height:'Altezza massima del codice (px)',heightHelp:'420 predefinito; 0 elimina il limite. Il codice lungo scorre dentro il blocco.',shortcuts:['Vai a una data','Oggi','Note giornaliere'],shortcut:'Scorciatoia di navigazione',shortcutHelp:'Predefinito: {key}. Esempi: Alt+G, Mod+Shift+J. Vuoto per disattivare. Inattivo durante la modifica; prevale la prima azione corrispondente.'
  }
 };
 const SETTINGS_DETAILS = {
@@ -77,12 +77,26 @@ function randomTodoSettings(runtime, React, copy) {
   e('p',{style:{fontSize:'11px',opacity:.7}},copy.futureHelp),
   e('p',{style:{fontSize:'11px',opacity:.7,marginBottom:0}},copy.policy));
 }
+const CALENDAR_SHORTCUT_COPY = {
+ en: ['Enable calendar keyboard shortcuts', 'Off by default. Enables G / T / D (or your custom keys). Arrow-key navigation has been removed.'],
+ zh: ['启用日历键盘快捷键', '默认关闭。开启后使用 G / T / D（或自定义按键）。方向键导航已移除。'],
+ fr: ['Activer les raccourcis du calendrier', 'Désactivés par défaut. Active G / T / D ou vos touches personnalisées. Navigation par flèches supprimée.'],
+ de: ['Kalender-Tastenkürzel aktivieren', 'Standardmäßig aus. Aktiviert G / T / D oder eigene Tasten. Pfeiltasten-Navigation wurde entfernt.'],
+ es: ['Activar atajos del calendario', 'Desactivados por defecto. Activa G / T / D o tus teclas. Se eliminó la navegación con flechas.'],
+ it: ['Attiva scorciatoie del calendario', 'Disattivate per impostazione predefinita. Abilita G / T / D o i tuoi tasti. Navigazione con frecce rimossa.']
+};
 function localizedExtraSettings(runtime) {
  const copy=SETTINGS_COPY[runtime.locale]||SETTINGS_COPY.en;
- return extraSettings(runtime).map((setting,index)=>({...setting,
+ const [name,description]=CALENDAR_SHORTCUT_COPY[runtime.locale]||CALENDAR_SHORTCUT_COPY.en;
+ const settings=extraSettings(runtime).map((setting,index)=>({...setting,
   name:index===0?copy.height:`${copy.shortcut} · ${copy.shortcuts[index-1]}`,
   description:index===0?copy.heightHelp:copy.shortcutHelp.replace('{key}',Object.values(SHORTCUT_DEFAULTS)[index-1])
  }));
+ settings.splice(1,0,{id:SETTING_PREFIX+'calendar-shortcuts-enabled',name,description,action:{type:'reactComponent',component:()=>window.React?.createElement('input',{
+  type:'checkbox',role:'switch',defaultChecked:runtime.calendarShortcutsEnabled,
+  onChange:event=>{runtime.calendarShortcutsEnabled=Boolean(event.target.checked);void runtime.extensionAPI.settings.set(SETTING_PREFIX+'calendar-shortcuts-enabled',runtime.calendarShortcutsEnabled);}
+ })}});
+ return settings;
 }
 function functionalSettings(runtime, accordion, appearanceGroup, widgetGroups, tagGroups) {
  const copy=SETTINGS_COPY[runtime.locale]||SETTINGS_COPY.en;

@@ -1,4 +1,6 @@
-# Folio · 1.4.25
+# Folio · 1.4.28
+
+G / T / D sind standardmäßig deaktiviert, auch nach Updates. Aktivierung unter Folio-Einstellungen → Navigation. Pfeiltasten wechseln nicht mehr den Tag. Verschobene Aufgaben behalten ihre Hierarchie.
 
 [简体中文 · English · Français · Deutsch · Español · Italiano](../README.md#languages)
 

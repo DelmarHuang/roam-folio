@@ -1,0 +1,56 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {JSDOM} from 'jsdom';
+const code=fs.readFileSync(new URL('./extension.js',import.meta.url),'utf8').replace(/export default[\s\S]*$/,'');
+const dom=new JSDOM('<body><div class="bp3-datepicker"><div><div class="DayPicker"></div></div></div></body>',{url:'https://example.test/#/app/Test',runScripts:'outside-only',pretendToBeVisual:true});
+const w=dom.window,d=w.document;Object.defineProperty(w.HTMLElement.prototype,'offsetParent',{get(){return this.parentElement;}});
+w.eval(code+';window.review={runners:MAGAZINE_RUNNERS,createRuntime,localizedExtraSettings};');
+w.__magCore={watch:(_,callback)=>new w.MutationObserver(callback)};
+const nodes=new Map([['parent001',{parent:'yesterday',text:'{{[[TODO]]}} Parent',order:0}],['plain0001',{parent:'parent001',text:'Notes',order:0}],['child0001',{parent:'plain0001',text:'{{[[TODO]]}} Child',order:0}],['other0001',{parent:'yesterday',text:'{{[[TODO]]}} Other',order:1}]]);
+const ancestors=uid=>{let p=nodes.get(uid)?.parent;const a=[];while(p){a.push(p);p=nodes.get(p)?.parent;}return a;};
+const moves=[],creates=[];
+w.roamAlphaAPI={util:{dateToPageTitle:date=>'Yesterday',dateToPageUid:date=>'today'},q:(query,uid)=>{
+ if(query.includes(':find ?uid ?text'))return [...nodes].filter(([id])=>ancestors(id).includes('yesterday')).map(([id,n])=>[id,n.text]);
+ if(query.includes(':find ?ancestorUid'))return ancestors(uid).map(id=>[id]);
+ if(query.includes(':find ?parentUid ?order')){const n=nodes.get(uid);return n?[[n.parent,n.order]]:[];}
+ if(query.includes(':find ?text'))return nodes.get(uid)?.text||'';
+ if(query.includes(':find ?e .'))return 1;throw Error(query);
+},moveBlock:async({block,location})=>{moves.push(block.uid);const n=nodes.get(block.uid);n.parent=location['parent-uid'];n.order=location.order;},createPage:async()=>{creates.push('page');},ui:{mainWindow:{openPage:async()=>{creates.push('open');},openDailyNotes:async()=>{creates.push('daily');}},commandPalette:{addCommand:()=>{},removeCommand:()=>{}}}};
+let generated=0; const refs=[];
+w.roamAlphaAPI.util.generateUID=()=>`ref${String(++generated).padStart(6,'0')}`;
+const sourceTree=uid=>({':block/uid':uid,':block/order':nodes.get(uid).order,':block/children':[...nodes].filter(([,n])=>n.parent===uid).map(([id])=>sourceTree(id))});
+w.roamAlphaAPI.data={pull:(_,[field,uid])=>field===':node/title'?{':block/children':[...nodes].filter(([,n])=>n.parent==='yesterday').map(([id])=>sourceTree(id))}:sourceTree(uid)};
+w.roamAlphaAPI.createBlock=async payload=>refs.push(payload);
+w.review.runners['calendar-carry']();d.querySelector('.delmar-calendar-carry-entry').click();
+const original=JSON.stringify([...nodes]);await d.querySelector('#delmar-calendar-carry-panel .is-ref').onclick();
+assert.equal(JSON.stringify([...nodes]),original);assert.equal(moves.length,0);
+assert.deepEqual(refs.map(r=>[r.block.string,r.location['parent-uid']]),[
+ ['((parent001))','today'],['((plain0001))','ref000001'],['((child0001))','ref000002'],['((other0001))','today']
+]);
+console.log('PASS reference carry preserves the full subtree including plain blocks, without moving originals or duplicating nested TODOs');
+d.querySelector('.delmar-calendar-carry-entry').click();await d.querySelector('#delmar-calendar-carry-panel .is-move').onclick();
+assert.deepEqual(moves,['parent001','other0001']);assert.equal(nodes.get('child0001').parent,'plain0001');assert.equal(nodes.get('plain0001').parent,'parent001');
+assert.deepEqual(JSON.parse(w.sessionStorage.getItem('__delmarCarryMoveUndo')).blocks.map(b=>[b.uid,b.parentUid,b.order]),[['parent001','yesterday',0],['other0001','yesterday',1]]);
+d.querySelector('.delmar-calendar-tools .is-undo').click();await new Promise(r=>setTimeout(r,10));assert.equal(nodes.get('parent001').parent,'yesterday');assert.equal(nodes.get('other0001').order,1);assert.equal(nodes.get('child0001').parent,'plain0001');
+console.log('PASS nested TODO move and undo preserve hierarchy and sibling order');
+w.__delmarCalendarCarryCleanup();
+const settings=new Map([['folio-shortcut-jump','g'],['folio-shortcut-today','t'],['folio-shortcut-daily','d'],['folio-shortcut-previous','ArrowLeft'],['folio-shortcut-next','ArrowRight']]);
+const extensionAPI={settings:{get:key=>settings.get(key),set:async(key,value)=>settings.set(key,value),panel:{create:async()=>{}}}};
+const rt=w.review.createRuntime(extensionAPI);rt.apply=()=>{};rt.createPanel=async()=>{};await rt.start();
+assert.equal(rt.calendarShortcutsEnabled,false);assert.equal(settings.get('folio-calendar-shortcuts-enabled'),false);
+w.review.runners['calendar-keyboard']();
+const key=value=>{const event=new w.KeyboardEvent('keydown',{key:value,bubbles:true,cancelable:true});d.dispatchEvent(event);return event;};
+for(const k of ['g','t','d','ArrowLeft','ArrowRight'])assert.equal(key(k).defaultPrevented,false);
+assert.equal(creates.length,0);
+w.React={createElement:(type,props)=>({type,props})};const toggle=w.review.localizedExtraSettings(rt).find(x=>x.id==='folio-calendar-shortcuts-enabled');toggle.action.component().props.onChange({target:{checked:true}});
+assert.equal(key('t').defaultPrevented,true);await new Promise(r=>setTimeout(r,0));assert.deepEqual(creates,['open']);
+for(const k of ['ArrowLeft','ArrowRight'])assert.equal(key(k).defaultPrevented,false);
+const selected=d.createElement('div');selected.className='block-highlight-blue';d.body.append(selected);assert.equal(key('t').defaultPrevented,false);selected.remove();
+console.log('PASS explicit G/T/D opt-in, no arrow navigation, block selection protected');
+w.__delmarCalendarKeyboardCleanup();
+let railCalls=0,markCalls=0;w.__magNativeCommentRailCleanup=()=>railCalls++;w.__magQuickMark={cleanup:()=>markCalls++};w.__readingDeskFeatures={comments:true,mark:true};w.dispatchEvent(new w.Event('reading-desk-features-change'));assert.equal(railCalls,1);assert.equal(markCalls,1);
+const card=d.createElement('div');card.className='mag-native-comment';d.body.append(card);
+const rt2=w.review.createRuntime(extensionAPI);rt2.apply=()=>{};rt2.createPanel=async()=>{};await rt2.start();assert.ok(card.isConnected,'Folio startup preserves Reading Desk cards');
+rt.destroy();rt2.destroy();const old=markCalls;w.dispatchEvent(new w.Event('reading-desk-features-change'));assert.equal(markCalls,old);
+console.log('PASS Folio owns coexistence in both load orders and removes its listener');
+dom.window.close();

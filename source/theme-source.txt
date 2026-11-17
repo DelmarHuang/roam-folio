@@ -11574,6 +11574,47 @@
             };
 
             const currentTasks = () => getTasks(dayTitle(yesterdayDate()));
+            // Retain only ancestor paths to outermost TODOs. A selected TODO
+            // owns its entire subtree, including DONEs and explanatory blocks.
+            const carryPlan = () => {
+              const ids = new Set(currentTasks().map(task => task.uid));
+              if (!ids.size) return [];
+              const page = window.roamAlphaAPI.data.pull(
+                '[:block/uid :block/order {:block/children ...}]', [':node/title', dayTitle(yesterdayDate())]
+              );
+              if (!page) throw new Error('The source daily page is unavailable.');
+              const ordered = node => [...(node[':block/children'] || [])].sort((a, b) => (a[':block/order'] || 0) - (b[':block/order'] || 0));
+              const seen = new Set();
+              const recordTree = node => { seen.add(node[':block/uid']); ordered(node).forEach(recordTree); };
+              const visit = node => {
+                const uid = node[':block/uid'];
+                if (ids.has(uid)) { recordTree(node); return { uid, task: true, tree: node }; }
+                const children = ordered(node).map(visit).filter(Boolean);
+                return children.length ? { uid, task: false, children } : null;
+              };
+              const plan = ordered(page).map(visit).filter(Boolean);
+              if ([...ids].some(uid => !seen.has(uid))) throw new Error('Source tasks changed. Reopen the carry panel.');
+              return plan;
+            };
+            const createReference = async (sourceUid, parentUid) => {
+              const uid = window.roamAlphaAPI.util.generateUID();
+              await window.roamAlphaAPI.createBlock({
+                location: { 'parent-uid': parentUid, order: 999999 },
+                block: { uid, string: '((' + sourceUid + '))' }
+              });
+              return uid;
+            };
+            const cleanContextReferences = async (groups) => {
+              for (const group of [...(groups || [])].reverse()) {
+                try {
+                  const node = window.roamAlphaAPI.data.pull('[:block/string {:block/children [:block/uid]}]', [':block/uid', group.uid]);
+                  if (!node || node[':block/string'] !== '((' + group.sourceUid + '))' || node[':block/children']?.length) continue;
+                  const refs = window.roamAlphaAPI.q('[:find ?source :in $ ?uid :where [?target :block/uid ?uid] [?source :block/refs ?target]]', group.uid) || [];
+                  if (!refs.length) await window.roamAlphaAPI.deleteBlock({ block: { uid: group.uid } });
+                } catch (error) { console.warn('[Folio] Kept context reference', group.uid, error); }
+              }
+            };
+
             const getUndo = () => {
               try {
                 const value = JSON.parse(sessionStorage.getItem(UNDO_KEY) || "null");
@@ -11616,7 +11657,8 @@
                 '[?parent :block/children ?b] [?parent :block/uid ?parentUid]]',
                 uid
               );
-              return row ? { uid, parentUid: row[0], order: row[1] } : null;
+              const pair = Array.isArray(row?.[0]) ? row[0] : row;
+              return pair && typeof pair[0] === "string" && Number.isFinite(pair[1]) ? { uid, parentUid: pair[0], order: pair[1] } : null;
             };
 
             const makeButton = (label, className) => {
@@ -11689,8 +11731,9 @@
                   console.error("[顶部日历 3/5] 撤销迁移失败", block, error);
                 }
               }
+              await cleanContextReferences(undo.groups);
               if (failed.length) {
-                sessionStorage.setItem(UNDO_KEY, JSON.stringify({ movedAt: undo.movedAt, blocks: failed }));
+                sessionStorage.setItem(UNDO_KEY, JSON.stringify({ movedAt: undo.movedAt, blocks: failed, groups: undo.groups || [] }));
                 showStatus(anchor, "仍有 " + failed.length + " 个任务未能放回，请再试一次", true);
               } else {
                 sessionStorage.removeItem(UNDO_KEY);
@@ -11714,41 +11757,82 @@
                 const refButton = makeButton("引用到今天", "is-ref");
                 const moveButton = makeButton("迁移到今天", "is-move");
                 refButton.onclick = async () => {
-                  const parentUid = await ensureToday();
-                  for (const task of tasks) {
-                    await window.roamAlphaAPI.createBlock({
-                      location: { "parent-uid": parentUid, order: 999999 },
-                      block: { string: "((" + task.uid + "))" }
-                    });
+                  refButton.disabled = moveButton.disabled = true;
+                  try {
+                    const plan = carryPlan();
+                    const parentUid = await ensureToday();
+                    const referenceTree = async (tree, parent) => {
+                      const uid = await createReference(tree[':block/uid'], parent);
+                      const children = [...(tree[':block/children'] || [])].sort((a, b) => (a[':block/order'] || 0) - (b[':block/order'] || 0));
+                      for (const child of children) await referenceTree(child, uid);
+                    };
+                    const referencePlan = async (entries, parent) => {
+                      for (const entry of entries) {
+                        if (entry.task) await referenceTree(entry.tree, parent);
+                        else {
+                          const uid = await createReference(entry.uid, parent);
+                          await referencePlan(entry.children, uid);
+                        }
+                      }
+                    };
+                    await referencePlan(plan, parentUid);
+                    closePanel();
+                    syncCalendarTools();
+                  } catch (error) {
+                    console.error('[Folio] Reference carry failed', error);
+                    message.textContent = calendarText('failed');
+                  } finally {
+                    refButton.disabled = moveButton.disabled = false;
                   }
-                  closePanel();
-                  syncCalendarTools();
                 };
                 moveButton.onclick = async () => {
-                  const parentUid = await ensureToday();
-                  const moved = [];
-                  moveButton.disabled = true;
+                  moveButton.disabled = refButton.disabled = true;
                   message.textContent = "正在迁移…";
-                  for (const task of tasks) {
-                    const original = getLocation(task.uid);
-                    if (!original) continue;
-                    try {
-                      await window.roamAlphaAPI.moveBlock({
-                        location: { "parent-uid": parentUid, order: 999999 },
-                        block: { uid: task.uid }
-                      });
-                      moved.push(original);
-                      sessionStorage.setItem(UNDO_KEY, JSON.stringify({ movedAt: Date.now(), blocks: moved }));
-                    } catch (error) {
-                      console.error("[顶部日历 3/5] 迁移失败", task, error);
-                    }
+                  const moved = [], groups = [];
+                  const movedAt = Date.now();
+                  const saveUndo = () => sessionStorage.setItem(UNDO_KEY, JSON.stringify({ movedAt, blocks: moved, groups }));
+                  try {
+                    const plan = carryPlan();
+                    const originals = new Map();
+                    const collect = entries => entries.forEach(entry => {
+                      if (entry.task) {
+                        const location = getLocation(entry.uid);
+                        if (!location) throw new Error('A source task is no longer available.');
+                        originals.set(entry.uid, location);
+                      } else collect(entry.children);
+                    });
+                    collect(plan);
+                    const parentUid = await ensureToday();
+                    const movePlan = async (entries, parent) => {
+                      for (const entry of entries) {
+                        if (entry.task) {
+                          const original = originals.get(entry.uid);
+                          if (getLocation(entry.uid)?.parentUid !== original.parentUid) throw new Error('A source task was moved. Reopen the carry panel.');
+                          await window.roamAlphaAPI.moveBlock({
+                            location: { 'parent-uid': parent, order: 999999 }, block: { uid: entry.uid }
+                          });
+                          moved.push(original);
+                          saveUndo();
+                        } else {
+                          const uid = await createReference(entry.uid, parent);
+                          groups.push({ uid, sourceUid: entry.uid });
+                          if (moved.length) saveUndo();
+                          await movePlan(entry.children, uid);
+                        }
+                      }
+                    };
+                    await movePlan(plan, parentUid);
+                    if (moved.length) showStatus(anchor, "已迁移 " + moved.length + " 个；日历内可撤销");
+                    else showStatus(anchor, "没有任务被迁移", true);
+                  } catch (error) {
+                    console.error('[Folio] Carry move failed', error);
+                    if (moved.length) saveUndo();
+                    showStatus(anchor, calendarText('failed'), true);
+                  } finally {
+                    await cleanContextReferences(groups);
+                    moveButton.disabled = refButton.disabled = false;
+                    syncCalendarTools();
                   }
-                  if (moved.length) {
-                    showStatus(anchor, "已迁移 " + moved.length + " 个；日历内可撤销");
-                  } else {
-                    showStatus(anchor, "没有任务被迁移", true);
-                  }
-                  syncCalendarTools();
                 };
                 panel.append(refButton, moveButton);
               }
@@ -11984,21 +12068,6 @@
               await window.roamAlphaAPI.ui.mainWindow.openPage({ page: { uid } });
             };
 
-            const currentDailyDate = () => {
-              const match = location.hash.match(/\/page\/([^/?]+)/);
-              if (!match) return normalize(new Date());
-              const title = window.roamAlphaAPI.q(
-                '[:find ?title . :in $ ?uid :where [?page :block/uid ?uid] [?page :node/title ?title]]',
-                match[1]
-              );
-              if (!title) return normalize(new Date());
-              try {
-                return normalize(window.roamAlphaAPI.util.pageTitleToDate(title) || new Date());
-              } catch (_) {
-                return normalize(new Date());
-              }
-            };
-
             const parseInput = (value) => {
               const input = value.trim();
               const key = input.toLowerCase();
@@ -12136,11 +12205,6 @@
               if (match("jump")) action = showJump;
               else if (match("today")) action = () => openDate(new Date());
               else if (match("daily")) action = () => window.roamAlphaAPI.ui.mainWindow.openDailyNotes();
-              else if (match("previous") || match("next")) {
-                const date = currentDailyDate();
-                date.setDate(date.getDate() + (match("next") ? 1 : -1));
-                action = () => openDate(date);
-              }
               if (!action) return;
               event.preventDefault(); event.stopImmediatePropagation();
               await action();

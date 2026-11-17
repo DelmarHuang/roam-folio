@@ -2,7 +2,7 @@ import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:asser
 const code=fs.readFileSync('extension.js','utf8').replace(/export default[\s\S]*$/,'');
 let panel,section='appearance';const writes=[];const store=new Map();
 const document={querySelectorAll:()=>[],querySelector:()=>null,getElementById:()=>null};
-const window={setTimeout:()=>1,clearTimeout:()=>{},React:{useState:()=>[section,()=>{}],createElement:(type,props,...children)=>({type,props:props||{},children:children.flat(Infinity)})}};
+const window={addEventListener:()=>{},removeEventListener:()=>{},setTimeout:()=>1,clearTimeout:()=>{},React:{useState:()=>[section,()=>{}],createElement:(type,props,...children)=>({type,props:props||{},children:children.flat(Infinity)})}};
 const sb={window,document,navigator:{language:'en'},console,setTimeout,clearTimeout,location:{hash:''},Date};vm.createContext(sb);
 vm.runInContext(code+';globalThis.x={createRuntime,FUNCTION_GROUPS,FEATURES,SETTINGS_COPY,randomPageNames,syncRandomTodoConfig,runners:MAGAZINE_RUNNERS};',sb);const x=sb.x;
 const settings={get:key=>store.get(key),set:(key,value)=>{store.set(key,value);writes.push([key,value]);},panel:{create:p=>{panel=p;}}};

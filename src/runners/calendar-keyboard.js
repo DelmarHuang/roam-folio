@@ -44,21 +44,6 @@
     await window.roamAlphaAPI.ui.mainWindow.openPage({ page: { uid } });
   };
 
-  const currentDailyDate = () => {
-    const match = location.hash.match(/\/page\/([^/?]+)/);
-    if (!match) return normalize(new Date());
-    const title = window.roamAlphaAPI.q(
-      '[:find ?title . :in $ ?uid :where [?page :block/uid ?uid] [?page :node/title ?title]]',
-      match[1]
-    );
-    if (!title) return normalize(new Date());
-    try {
-      return normalize(window.roamAlphaAPI.util.pageTitleToDate(title) || new Date());
-    } catch (_) {
-      return normalize(new Date());
-    }
-  };
-
   const parseInput = (value) => {
     const input = value.trim();
     const key = input.toLowerCase();
@@ -215,16 +200,12 @@
 
   const onKeyDown = async (event) => {
     if (event.repeat || event.isComposing || isEditing(event.target)) return;
+    if (document.querySelector(".block-highlight-blue, .rm-block--selected") || window.getSelection?.()?.toString()) return;
     const match = (name) => window.__folioMatchesShortcut?.(event, name);
     let action = null;
     if (match("jump")) action = showJump;
     else if (match("today")) action = () => openDate(new Date());
     else if (match("daily")) action = () => window.roamAlphaAPI.ui.mainWindow.openDailyNotes();
-    else if (match("previous") || match("next")) {
-      const date = currentDailyDate();
-      date.setDate(date.getDate() + (match("next") ? 1 : -1));
-      action = () => openDate(date);
-    }
     if (!action) return;
     event.preventDefault(); event.stopImmediatePropagation();
     await action();

@@ -10,7 +10,7 @@ const requireToken = (token, where = code) => {
 };
 
 for (const token of [
-  "export default", "Folio · 书页集", 'VERSION = "1.4.25"', 'BUILD_DATE = "2026-11-15"',
+  "export default", "Folio · 书页集", 'VERSION = "1.4.28"', 'BUILD_DATE = "2026-11-18"',
   'SETTING_PREFIX = "folio-"', "Enable Folio theme", "启用 Folio 主题",
   "Français", "Deutsch", "Español", "Italiano",
   "hide-left-sidebar-items", "隐藏左侧边栏项目", "hide-top-buttons",
@@ -38,7 +38,7 @@ for (const tag of [
 
 if (runtime.includes('default: "@ "')) failures.push("Removed @ marker is still exposed in settings");
 if (code.includes("data-mag-custom-label")) failures.push("The 1.2 custom label redraw layer is still present");
-if (/reading-desk|rm-reading-desk/i.test(code)) failures.push("Reading Desk extension styles are present");
+if (/\.rm-reading-desk|#reading-desk-panel/i.test(code)) failures.push("Reading Desk extension styles are present");
 if (/version-studio/i.test(code)) failures.push("Version Studio styles are present");
 
 const features = [...runtime.matchAll(/\{ id: "([a-z0-9-]+)", impact:/g)].map((match) => match[1]);

@@ -45,7 +45,7 @@ const MAGAZINE_CSS = {
   "editorial-desk": "/* ==========================================================\n   34. Desk · 编辑部案头\n   刊头 · 稿纸卡片 · 刊尾信息行 · 截稿日印章 · 案头老化 · 头条位 · 筛选与排序\n   卡片上的数据由「Desk」脚本写入 data-mag-*；没开脚本时只有外观样式\n   ========================================================== */\n\n/* ---------- 刊头 ---------- */\nhtml body .roam-app .rm-desk-page__toolbar {\n  display: flex !important;\n  flex-wrap: wrap !important;\n  align-items: flex-end !important;\n  justify-content: space-between !important;\n  gap: 12px 20px !important;\n  margin: 0 0 20px !important;\n  padding: 8px 0 14px !important;\n  background: transparent !important;\n  border: 0 !important;\n  border-top: 2px solid var(--mag-ink) !important;\n  border-bottom: 1px solid var(--mag-border) !important;\n  box-shadow: none !important;\n}\n\nhtml body .roam-app .rm-desk-page__title {\n  margin: 0 !important;\n  padding: 0 !important;\n  font-family: var(--mag-heading) !important;\n  font-size: 34px !important;\n  font-weight: 800 !important;\n  line-height: 1.15 !important;\n  letter-spacing: -0.03em !important;\n  color: var(--mag-ink) !important;\n}\n\n/* 脚本写入 data-mag-kicker 后：隐藏「notes's Desk (6)」，\n   换成小号大写抬头「NOTES · 6 ITEMS」+ 衬线大标题「The Desk」 */\nhtml body .roam-app .rm-desk-page__title[data-mag-kicker] {\n  font-size: 0 !important;\n  line-height: 0 !important;\n}\n\nhtml body .roam-app .rm-desk-page__title[data-mag-kicker] > * {\n  display: none !important;\n}\n\nhtml body .roam-app .rm-desk-page__title[data-mag-kicker]::before {\n  content: attr(data-mag-kicker);\n  display: block;\n  margin: 0 0 8px;\n  font-family: var(--mag-body);\n  font-size: 10.5px;\n  font-weight: 600;\n  font-variant-numeric: tabular-nums;\n  line-height: 1.4;\n  letter-spacing: 2px;\n  color: var(--mag-muted);\n}\n\nhtml body .roam-app .rm-desk-page__title[data-mag-kicker]::after {\n  content: \"The Desk\";\n  display: block;\n  font-family: var(--mag-heading);\n  font-size: 34px;\n  font-weight: 800;\n  line-height: 1.15;\n  letter-spacing: -0.03em;\n  color: var(--mag-ink);\n}\n\nhtml body .roam-app .rm-desk-page__tools {\n  display: flex !important;\n  flex-wrap: wrap !important;\n  align-items: center !important;\n  justify-content: flex-end !important;\n  gap: 8px !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-input-group .bp3-input {\n  height: 30px !important;\n  font-family: var(--mag-body) !important;\n  font-size: 12.5px !important;\n  color: var(--mag-ink) !important;\n  background: var(--mag-paper) !important;\n  border: 1px solid var(--mag-border) !important;\n  border-radius: 6px !important;\n  box-shadow: none !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-input-group .bp3-input:focus {\n  border-color: var(--mag-gold) !important;\n  outline: none !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-input-group .bp3-icon {\n  color: var(--mag-faint) !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-button {\n  min-height: 30px !important;\n  font-family: var(--mag-body) !important;\n  font-size: 12px !important;\n  font-weight: 600 !important;\n  color: var(--mag-muted) !important;\n  background: transparent !important;\n  background-image: none !important;\n  border: 0 !important;\n  border-radius: 6px !important;\n  box-shadow: none !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-button:is(:hover, :focus-visible) {\n  color: var(--mag-ink) !important;\n  background: var(--mag-yellow-soft) !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-button .bp3-icon {\n  color: inherit !important;\n}\n\n/* New note：金色描边小按钮 */\nhtml body .roam-app .rm-desk-page__tools .rm-desk-page__new-note {\n  padding: 0 12px !important;\n  color: var(--mag-gold-ink) !important;\n  border: 1px solid color-mix(in srgb, var(--mag-gold) 60%, transparent) !important;\n}\n\n/* ---------- 工具条：类型筛选、排序、头条（脚本插入到刊头右侧同一行） ---------- */\nhtml body .roam-app .mag-desk-bar {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 8px 12px;\n  margin-right: 4px;\n  padding-right: 12px;\n  font-family: var(--mag-body);\n  border-right: 1px solid var(--mag-border);\n}\n\nhtml body .roam-app .mag-desk-bar__chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 2px;\n}\n\nhtml body .roam-app .mag-desk-bar__chips:empty {\n  display: none;\n}\n\nhtml body .roam-app .mag-desk-bar__chip {\n  padding: 2px 8px;\n  font-family: var(--mag-body);\n  font-size: 10px;\n  font-weight: 700;\n  line-height: 1.7;\n  letter-spacing: 1.1px;\n  text-transform: uppercase;\n  color: var(--mag-muted);\n  background: transparent;\n  border: 1px solid transparent;\n  border-radius: 3px;\n  cursor: pointer;\n}\n\nhtml body .roam-app .mag-desk-bar__chip:hover {\n  color: var(--mag-ink);\n  background: var(--mag-yellow-soft);\n}\n\nhtml body .roam-app .mag-desk-bar__chip[aria-pressed=\"true\"] {\n  color: var(--mag-ink);\n  border-color: var(--mag-ink);\n}\n\nhtml body .roam-app .mag-desk-bar__sort {\n  display: inline-flex;\n  align-items: center;\n  gap: 6px;\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.5px;\n  color: var(--mag-muted);\n}\n\nhtml body .roam-app .mag-desk-bar__sort select {\n  height: 30px;\n  padding: 0 6px;\n  font-family: var(--mag-body);\n  font-size: 12px;\n  color: var(--mag-ink);\n  background: var(--mag-paper);\n  border: 1px solid var(--mag-border);\n  border-radius: 6px;\n  outline: none;\n  cursor: pointer;\n}\n\nhtml body .roam-app .mag-desk-bar__sort select:focus {\n  border-color: var(--mag-gold);\n}\n\nhtml body .roam-app .mag-desk-bar__lead {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n}\n\nhtml body .roam-app .mag-desk-bar__btn {\n  display: inline-flex;\n  align-items: center;\n  gap: 4px;\n  height: 30px;\n  padding: 0 10px;\n  font-family: var(--mag-body);\n  font-size: 12px;\n  font-weight: 600;\n  white-space: nowrap;\n  color: var(--mag-muted);\n  background: transparent;\n  border: 1px solid var(--mag-border);\n  border-radius: 6px;\n  cursor: pointer;\n}\n\nhtml body .roam-app .mag-desk-bar__btn[hidden] {\n  display: none;\n}\n\nhtml body .roam-app .mag-desk-bar__btn:hover:not(:disabled) {\n  color: var(--mag-ink);\n  background: var(--mag-yellow-soft);\n}\n\nhtml body .roam-app .mag-desk-bar__dice {\n  color: var(--mag-gold-ink);\n  border-color: color-mix(in srgb, var(--mag-gold) 60%, transparent);\n}\n\nhtml body .roam-app .mag-desk-bar__dice:disabled {\n  opacity: 0.4;\n  cursor: not-allowed;\n}\n\nhtml body .roam-app .mag-desk-bar__pin[aria-pressed=\"true\"] {\n  color: var(--mag-blue);\n  border-color: color-mix(in srgb, var(--mag-blue) 45%, transparent);\n}\n\n/* ---------- 卡片：摊开的稿纸 ---------- */\nhtml body .roam-app .rm-desk-tile {\n  position: relative !important;\n  order: var(--mag-desk-order, 0);\n  color: var(--mag-ink) !important;\n  background: var(--mag-paper) !important;\n  border: 1px solid var(--mag-border) !important;\n  border-top: 2px solid var(--mag-ink) !important;\n  border-radius: 3px !important;\n  box-shadow: 0 2px 8px var(--mag-shadow) !important;\n  transition: box-shadow 0.2s ease, background-color 0.2s ease !important;\n}\n\nhtml body .roam-app .rm-desk-tile:hover {\n  box-shadow: 0 6px 18px var(--mag-shadow), 0 1px 3px var(--mag-shadow) !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-hidden] {\n  display: none !important;\n}\n\nhtml body .roam-app .rm-desk-tile__preview {\n  padding: 14px 16px 10px !important;\n  background: transparent !important;\n}\n\n/* 标题；上方的小号大写抬头为头条 / 类型（脚本写入 data-mag-kicker） */\nhtml body .roam-app .rm-desk-tile__title {\n  margin: 0 0 8px !important;\n  font-family: var(--mag-heading) !important;\n  font-size: 18px !important;\n  font-weight: 700 !important;\n  line-height: 1.3 !important;\n  letter-spacing: -0.01em !important;\n  color: var(--mag-ink) !important;\n}\n\nhtml body .roam-app .rm-desk-tile__title[data-mag-kicker]::before {\n  content: attr(data-mag-kicker);\n  display: block;\n  margin: 0 0 5px;\n  font-family: var(--mag-body);\n  font-size: 9.5px;\n  font-weight: 700;\n  line-height: 1.4;\n  letter-spacing: 1.6px;\n  color: var(--mag-gold-ink);\n}\n\nhtml body .roam-app .rm-desk-tile__row {\n  font-family: var(--mag-body) !important;\n  font-size: 12.5px !important;\n  line-height: 1.65 !important;\n  color: var(--mag-muted) !important;\n}\n\nhtml body .roam-app .rm-desk-tile__row--nested {\n  padding-left: 14px !important;\n}\n\nhtml body .roam-app .rm-desk-tile__bullet {\n  display: inline-block !important;\n  flex: 0 0 auto !important;\n  width: 4px !important;\n  height: 4px !important;\n  margin: 0 8px 0 0 !important;\n  vertical-align: middle !important;\n  background: var(--mag-faint) !important;\n  border-radius: 50% !important;\n}\n\n/* 「...」改成转页提示 */\nhtml body .roam-app .rm-desk-tile__more {\n  font-size: 0 !important;\n  line-height: 1 !important;\n}\n\nhtml body .roam-app .rm-desk-tile__more::after {\n  content: attr(data-mag-continued);\n  font-family: var(--mag-aside-font);\n  font-size: 12px;\n  font-style: italic;\n  font-synthesis: none;\n  line-height: 1.8;\n  color: var(--mag-faint);\n}\n\n/* ---------- 刊尾：信息行 + 进度细线 + 操作按钮（悬停才出现） ---------- */\nhtml body .roam-app .rm-desk-tile__footer {\n  display: flex !important;\n  flex-wrap: wrap !important;\n  align-items: center !important;\n  gap: 2px 6px !important;\n  font-family: var(--mag-body) !important;\n  font-size: 11px !important;\n  color: var(--mag-faint) !important;\n  min-height: 32px !important;\n  padding: 4px 8px 6px 16px !important;\n  background: transparent !important;\n  border-top: 1px dotted var(--mag-border) !important;\n}\n\n/* 信息行独占一行；块卡片自带的来源日期与操作按钮排在下一行 */\nhtml body .roam-app .rm-desk-tile__footer[data-mag-meta]::before {\n  content: attr(data-mag-meta);\n  flex: 1 1 100%;\n  padding-top: 4px;\n  min-width: 0;\n  font-family: var(--mag-body);\n  font-size: 9.5px;\n  font-weight: 600;\n  font-variant-numeric: tabular-nums;\n  line-height: 1.5;\n  letter-spacing: 1.1px;\n  color: var(--mag-muted);\n}\n\nhtml body .roam-app .rm-desk-tile__footer[data-mag-progress] {\n  background:\n    linear-gradient(var(--mag-gold), var(--mag-gold)) left bottom / calc(var(--mag-desk-progress, 0) * 100%) 2px no-repeat,\n    linear-gradient(var(--mag-border), var(--mag-border)) left bottom / 100% 2px no-repeat !important;\n}\n\nhtml body .roam-app .rm-desk-tile__actions {\n  display: flex !important;\n  gap: 2px !important;\n  margin-left: auto !important;\n  opacity: 0 !important;\n  transition: opacity 0.15s ease !important;\n}\n\nhtml body .roam-app .rm-desk-tile:hover .rm-desk-tile__actions {\n  opacity: 1 !important;\n}\n\nhtml body .roam-app .rm-desk-tile__actions .bp3-button,\nhtml body .roam-app .rm-desk-tile__actions .mag-desk-pin {\n  display: inline-flex !important;\n  align-items: center !important;\n  justify-content: center !important;\n  width: 26px !important;\n  height: 26px !important;\n  min-width: 26px !important;\n  min-height: 26px !important;\n  padding: 0 !important;\n  color: var(--mag-muted) !important;\n  background: transparent !important;\n  background-image: none !important;\n  border: 0 !important;\n  border-radius: 5px !important;\n  box-shadow: none !important;\n  cursor: pointer !important;\n}\n\nhtml body .roam-app .rm-desk-tile__actions .bp3-button:is(:hover, :focus-visible),\nhtml body .roam-app .rm-desk-tile__actions .mag-desk-pin:is(:hover, :focus-visible) {\n  color: var(--mag-ink) !important;\n  background: var(--mag-yellow-soft) !important;\n}\n\nhtml body .roam-app .rm-desk-tile__actions .bp3-icon {\n  color: inherit !important;\n}\n\nhtml body .roam-app .rm-desk-tile__actions .bp3-icon svg {\n  width: 14px !important;\n  height: 14px !important;\n}\n\n/* ---------- 截稿日印章 ---------- */\nhtml body .roam-app .rm-desk-tile[data-mag-due]::after {\n  content: attr(data-mag-due);\n  position: absolute;\n  top: 12px;\n  right: 12px;\n  padding: 0 6px;\n  font-family: var(--mag-body);\n  font-size: 9.5px;\n  font-weight: 700;\n  line-height: 1.6;\n  letter-spacing: 1.1px;\n  color: var(--mag-muted);\n  background: var(--mag-paper);\n  border: 1.25px solid currentColor;\n  border-radius: 2px;\n  transform: rotate(-2deg);\n  pointer-events: none;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-due-state=\"soon\"]::after {\n  color: var(--mag-gold-ink);\n  background: var(--mag-yellow-soft);\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-due-state=\"over\"]::after {\n  color: #a8443a;\n}\n\n/* 有印章时，标题右侧让出位置 */\nhtml body .roam-app .rm-desk-tile[data-mag-due] .rm-desk-tile__title {\n  padding-right: 92px !important;\n}\n\n/* ---------- 案头老化：久未编辑的卡片逐级泛黄 ---------- */\nhtml body .roam-app .rm-desk-tile[data-mag-age=\"1\"] {\n  background: color-mix(in srgb, var(--mag-paper) 94%, var(--mag-sepia)) !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-age=\"2\"] {\n  background: color-mix(in srgb, var(--mag-paper) 88%, var(--mag-sepia)) !important;\n  border-top-color: color-mix(in srgb, var(--mag-ink) 70%, var(--mag-sepia)) !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-age=\"3\"] {\n  background: color-mix(in srgb, var(--mag-paper) 82%, var(--mag-sepia)) !important;\n  border-top-color: color-mix(in srgb, var(--mag-ink) 55%, var(--mag-sepia)) !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-age] .rm-desk-tile__title {\n  color: var(--mag-age2-ink) !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-age=\"3\"] .rm-desk-tile__title {\n  color: var(--mag-age3-ink) !important;\n}\n\n/* ---------- 今日头条：横跨两栏、金色粗顶线、顶部一抹浅黄、标题放大，抬头金色 ----------\n   排在置顶卡片之后（置顶优先级最高）；属性写两遍是为了压过案头老化的底色 */\nhtml body .roam-app .rm-desk-tile[data-mag-lead][data-mag-lead] {\n  grid-column: span 2 !important;\n  background:\n    linear-gradient(to bottom, var(--mag-yellow-soft), transparent 140px),\n    var(--mag-paper) !important;\n  border-top: 4px solid var(--mag-gold) !important;\n  box-shadow: 0 8px 22px var(--mag-shadow), 0 1px 3px var(--mag-shadow) !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-lead] .rm-desk-tile__preview {\n  padding: 18px 22px 12px !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-lead] .rm-desk-tile__title {\n  font-size: 28px !important;\n  line-height: 1.2 !important;\n  color: var(--mag-ink) !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-lead] .rm-desk-tile__title::before {\n  color: var(--mag-gold-ink);\n  letter-spacing: 2px;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-lead] .rm-desk-tile__row {\n  font-size: 13.5px !important;\n}\n\n/* ---------- 置顶：卡片操作按钮里的图钉；钉住的卡片顶线变蓝、抬头带 PINNED ---------- */\nhtml body .roam-app .rm-desk-tile__actions .mag-desk-pin[aria-pressed=\"true\"] {\n  color: var(--mag-blue) !important;\n}\n\nhtml body .roam-app .rm-desk-tile[data-mag-pinned] {\n  border-top-color: var(--mag-blue) !important;\n}\n\n/* ---------- 块卡片：来源页面、任务方框 ---------- */\nhtml body .roam-app .rm-desk-tile__source {\n  font-family: var(--mag-body) !important;\n  font-size: 11px !important;\n  color: var(--mag-faint) !important;\n}\n\nhtml body .roam-app .rm-desk-tile__check {\n  display: inline-block !important;\n  flex: 0 0 auto !important;\n  box-sizing: border-box !important;\n  width: 11px !important;\n  height: 11px !important;\n  margin: 0 7px 0 0 !important;\n  vertical-align: -1px !important;\n  border: 1.25px solid color-mix(in srgb, var(--mag-muted) 70%, transparent) !important;\n  border-radius: 2.5px !important;\n}\n\n/* ---------- 刊头右侧一行对齐：所有控件统一 30px 高、垂直居中、无外边距 ---------- */\nhtml body .roam-app .rm-desk-page__tools > *,\nhtml body .roam-app .mag-desk-bar > *,\nhtml body .roam-app .mag-desk-bar__lead > * {\n  align-self: center !important;\n  margin-top: 0 !important;\n  margin-bottom: 0 !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-input-group {\n  display: flex !important;\n  align-items: center !important;\n  height: 30px !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-input-group .bp3-input,\nhtml body .roam-app .rm-desk-page__tools .bp3-button,\nhtml body .roam-app .mag-desk-bar__sort select,\nhtml body .roam-app .mag-desk-bar__btn {\n  box-sizing: border-box !important;\n  height: 30px !important;\n  min-height: 30px !important;\n  margin: 0 !important;\n  line-height: 28px !important;\n  vertical-align: middle !important;\n}\n\nhtml body .roam-app .rm-desk-page__tools .bp3-input-group > .bp3-icon {\n  top: 50% !important;\n  margin: 0 !important;\n  transform: translateY(-50%) !important;\n}\n\nhtml body .roam-app .mag-desk-bar {\n  height: 30px;\n}\n\nhtml body .roam-app .mag-desk-bar__sort {\n  height: 30px;\n  line-height: 30px;\n}\n\n/* 排序方向（↓ 默认 / ↑ 反转）：小方钮，手动排序时隐藏 */\nhtml body .roam-app .mag-desk-bar__dir {\n  width: 30px;\n  padding: 0 !important;\n  justify-content: center;\n  font-size: 14px;\n}\n\n/* 既是置顶又是头条：顶线用置顶的蓝色 */\nhtml body .roam-app .rm-desk-tile[data-mag-lead][data-mag-pinned] {\n  border-top-color: var(--mag-blue) !important;\n}\n/* Native Desk only. Keep the current search size and move its glyph inward. */\nhtml body .roam-app .rm-desk-page__tools .bp3-input-group > .bp3-icon-search {\n left:10px!important;right:auto!important;pointer-events:none!important;\n}\nhtml body .roam-app .rm-desk-page__tools .bp3-input-group:has(> .bp3-icon-search) > .bp3-input {\n padding-left:34px!important;\n}\n",
   "hide-top-buttons": ".rm-topbar > .bp3-popover-wrapper:has(.bp3-icon-horizontal-distribution),\n.rm-topbar > .rm-topbar__help {\n  display: none !important;\n}",
   "hide-left-sidebar-items": "\nhtml body .roam-app .roam-sidebar-container .bp3-icon.icon[style*=\"background-image\"][style*=\"googleusercontent.com\"] {\n  display: none !important;\n}\nhtml body .roam-app .roam-sidebar-container .starred-pages-wrapper > .title {\n  height: 0 !important;\n  min-height: 0 !important;\n  margin: 0 !important;\n  padding: 0 !important;\n  opacity: 0 !important;\n  overflow: hidden !important;\n}\n",
-  "theme-host-fixes": "\n/* Keep All Pages headers and rows in the same horizontal scroll plane. */\nhtml body .roam-app .rm-all-pages .ReactTable .rt-table {\n  overflow: auto !important;\n}\nhtml body .roam-app .rm-all-pages .ReactTable :is(.rt-thead, .rt-tbody) {\n  min-width: max-content !important;\n}\nhtml body .roam-app .rm-all-pages .ReactTable .rt-thead {\n  position: sticky !important;\n  top: 0 !important;\n  z-index: 3 !important;\n}\n\n/* Keep callout icons beside their title, not at the far edge of the card. */\nhtml body .roam-app .rm-block[data-page-links*='\">\"'] [class*=\"callout\"] [class*=\"icon\"],\nhtml body .roam-app .rm-block[data-page-links*='\">\"'] [class*=\"callout-icon\"] {\n  margin-left: 0 !important;\n  margin-right: 8px !important;\n  flex: 0 0 auto !important;\n}\n\n/* Roam's advanced search should be centred rather than retaining a large left gutter. */\nhtml body .roam-app :is(.rm-advanced-search, .rm-search-query, .rm-find-or-create-wrapper) {\n  margin-inline: auto !important;\n}\n\n/* Page and block autocomplete popovers use the same paper/ink tokens. */\nhtml body :is(.rm-autocomplete__results, .rm-block-ref-selector) {\n  color: var(--mag-ink) !important;\n  background: var(--mag-paper) !important;\n  border-color: var(--mag-border) !important;\n}\n\n\n\n/* Leave Roam's saved sizes and native drag handles in charge. Header padding\n   must be inside the measured width, including the final action column. */\nhtml body .roam-app .rm-data-table {width:max-content!important;max-width:100%!important;min-width:0!important;}\nhtml body .roam-app .rm-data-table__table {max-width:100%!important;overflow-x:auto!important;}\nhtml body .roam-app .rm-data-table__table > table {table-layout:fixed!important;min-width:0!important;max-width:none!important;}\nhtml body .roam-app .rm-data-table__table > table > thead > tr > th {box-sizing:border-box!important;padding:0!important;position:relative!important;overflow:visible!important;}\nhtml body .roam-app .rm-data-table .rm-column-header {box-sizing:border-box!important;padding:8px 12px!important;min-width:0!important;}\nhtml body .roam-app .rm-data-table .rm-column-header--fake {padding:8px!important;min-width:0!important;}\nhtml body .roam-app .rm-data-table__table > table > tbody > tr > td {box-sizing:border-box!important;overflow-wrap:anywhere!important;}\nhtml body .roam-app .rm-block:is(.list-query,[data-page-links*='\".list-query\"']) .rm-ref-page-view-title {display:none!important;}\nhtml body .roam-app .rm-block:is(.list-query,[data-page-links*='\".list-query\"']) :is(.rm-query-content,.rm-ref-page-view) {padding:0!important;margin:0!important;border:0!important;background:transparent!important;}\n\n/* Highlight rows only. Descendants and the results wrapper keep paper colour. */\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) {background:var(--mag-paper)!important;color:var(--mag-ink)!important;}\nhtml body .rm-autocomplete__results {border:1px solid var(--mag-border)!important;border-radius:6px!important;overflow:hidden!important;}\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role=\"option\"]) {background:transparent!important;outline:0!important;border:0!important;box-shadow:none!important;}\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role=\"option\"]):hover {background:var(--mag-blue-soft,#d8e1e8)!important;box-shadow:none!important;}\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result--selected,.rm-autocomplete-result.rm-menu-item--active,.rm-autocomplete-result.bp3-active,.rm-autocomplete-result.selected,.rm-autocomplete-result:focus-visible,[role=\"option\"][aria-selected=\"true\"]) {background:var(--mag-blue-soft,#d8e1e8)!important;border-color:transparent!important;outline:0!important;box-shadow:none!important;}\nhtml body :is(.rm-autocomplete__preview,.rm-autocomplete-footer,.rm-find-or-create-modal-preview) {background:var(--mag-paper)!important;color:var(--mag-ink)!important;border-color:var(--mag-border)!important;}\nhtml body .rm-find-or-create-modal--with-preview .rm-find-or-create-modal-body-col,\nhtml body .rm-find-or-create-modal .rm-find-or-create-modal-preview {flex:1 1 0!important;min-width:0!important;width:50%!important;max-width:50%!important;}\n\n/* A custom settings component occupies the entire row, not the action column. */\nhtml body .rm-settings :is(.rm-settings-panel__setting,.rm-settings-panel__setting-container):has(.folio-settings-group) {display:block!important;width:100%!important;}\nhtml body .rm-settings :is(.rm-settings-panel__setting,.rm-settings-panel__setting-container):has(.folio-settings-group) > :has(.folio-settings-group) {width:100%!important;max-width:none!important;flex:1 1 100%!important;margin:0!important;padding-inline:0!important;}\nhtml body .rm-settings .folio-settings-group {box-sizing:border-box!important;margin-inline:0!important;text-align:left!important;}\nhtml body .rm-settings :is(.flex-h-box,.flex-v-box):has(> .folio-settings-group) {width:100%!important;max-width:none!important;flex-basis:100%!important;margin-inline:0!important;}\n\nhtml body .rm-settings .rm-settings-panel__setting:has(.folio-settings-group) {display:grid!important;grid-template-columns:minmax(0,1fr)!important;}\nhtml body .rm-settings .rm-settings-panel__setting:has(.folio-settings-group) > * {grid-column:1/-1!important;min-width:0!important;}\nhtml body .bp3-menu :is(.bp3-button-group,.rm-block-context-menu) .bp3-button {\n color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;\n}\nhtml body .bp3-menu :is(.bp3-button-group,.rm-block-context-menu) .bp3-button:is(:hover,.bp3-active) {background:var(--mag-blue-soft)!important;color:var(--mag-ink)!important;}\nhtml body .bp3-menu :is(hr,.bp3-menu-divider) {border-color:var(--mag-border)!important;}\n/* Colours only for native H1/H2/H3 and alignment controls; keep their sizing. */\nhtml body .bp3-menu button.bp3-button {color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;}\nhtml body .bp3-menu button.bp3-button:is(:hover,.bp3-active) {background:var(--mag-blue-soft)!important;color:var(--mag-ink)!important;}\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role=\"option\"]):is(:hover,.rm-autocomplete-result--selected,.rm-menu-item--active,.bp3-active,.selected,[aria-selected=\"true\"]) {background:#d5dce2!important;color:var(--mag-ink)!important;outline:0!important;box-shadow:none!important;}\nhtml body .roam-app :is(.roam-main,#right-sidebar,.roam-sidebar-container) > .rm-resize-handle {width:6px!important;min-width:6px!important;cursor:col-resize!important;pointer-events:auto!important;z-index:20!important;}\nhtml body .roam-app :is(.roam-main,#right-sidebar,.roam-sidebar-container) > .rm-resize-handle:hover {background:var(--mag-border)!important;}\n/* Main-page width and horizontal spacing belong to Roam. */\nhtml body .bp3-menu :is(button.bp3-button,.bp3-button-group > .bp3-button) {color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;}\nhtml body .bp3-menu :is(button.bp3-button,.bp3-button-group > .bp3-button):is(:hover,.bp3-active) {color:var(--mag-ink)!important;background:var(--mag-blue-soft)!important;}\nhtml body .bp3-menu :is(hr,.bp3-menu-divider) {border-color:var(--mag-border)!important;}\n\n/* Sidebar spacing classes must not reserve a percentage of each block row.\n   Keep the real reference counter and its 24px native slot; reclaim only the\n   separator. The same constraints apply while editing and in wide layouts. */\nhtml body .roam-app .roam-main .roam-article .rm-block-main > .rm-block-separator {\n flex:0 0 8px!important;width:8px!important;min-width:0!important;max-width:8px!important;\n}\nhtml body .roam-app .roam-main .roam-article .rm-block-main > :is(.rm-block__input,.rm-autocomplete__wrapper) {\n flex:1 1 0%!important;min-width:0!important;max-width:100%!important;\n}\n\n/* A code editor must shrink with its own block, including nested/sidebar blocks.\n   Leave the article width and CodeMirror's internal document width to Roam. */\nhtml body .roam-app .rm-block-main > .rm-block__input:has(.rm-code-block) {\n flex:1 1 0%!important;min-width:0!important;max-width:100%!important;\n}\nhtml body .roam-app :is(.rm-inline-code-block,.rm-code-block),\nhtml body .roam-app .rm-code-block :is(.cm-editor,.CodeMirror) {\n box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:100%!important;\n}\nhtml body .roam-app .rm-code-block .cm-scroller {\n min-width:0!important;max-width:100%!important;overflow-x:auto!important;\n}\nhtml body .roam-app .rm-code-block__settings-bar {\n min-width:0!important;max-width:100%!important;flex-wrap:wrap!important;\n}\n\n/* The native daily separator is redundant only while this day's masthead exists.\n   Keep its space; removing the marker restores Roam's own border colour. */\nhtml body .roam-app .roam-body-main .roam-log-container > .roam-log-page:has(> .rm-title-display-container > .rm-title-display[data-mag-masthead]) {\n border-top-color:transparent!important;\n}\n",
+  "theme-host-fixes": "\n/* Keep All Pages headers and rows in the same horizontal scroll plane. */\nhtml body .roam-app .rm-all-pages .ReactTable .rt-table {\n  overflow: auto !important;\n}\nhtml body .roam-app .rm-all-pages .ReactTable :is(.rt-thead, .rt-tbody) {\n  min-width: max-content !important;\n}\nhtml body .roam-app .rm-all-pages .ReactTable .rt-thead {\n  position: sticky !important;\n  top: 0 !important;\n  z-index: 3 !important;\n}\n\n/* Keep callout icons beside their title, not at the far edge of the card. */\nhtml body .roam-app .rm-block[data-page-links*='\">\"'] [class*=\"callout\"] [class*=\"icon\"],\nhtml body .roam-app .rm-block[data-page-links*='\">\"'] [class*=\"callout-icon\"] {\n  margin-left: 0 !important;\n  margin-right: 8px !important;\n  flex: 0 0 auto !important;\n}\n\n/* Roam's advanced search should be centred rather than retaining a large left gutter. */\nhtml body .roam-app :is(.rm-advanced-search, .rm-search-query, .rm-find-or-create-wrapper) {\n  margin-inline: auto !important;\n}\n\n/* Page and block autocomplete popovers use the same paper/ink tokens. */\nhtml body :is(.rm-autocomplete__results, .rm-block-ref-selector) {\n  color: var(--mag-ink) !important;\n  background: var(--mag-paper) !important;\n  border-color: var(--mag-border) !important;\n}\n\n\n\n/* Leave Roam's saved sizes and native drag handles in charge. Header padding\n   must be inside the measured width, including the final action column. */\nhtml body .roam-app .rm-data-table {width:max-content!important;max-width:100%!important;min-width:0!important;}\nhtml body .roam-app .rm-data-table__table {max-width:100%!important;overflow-x:auto!important;}\nhtml body .roam-app .rm-data-table__table > table {table-layout:fixed!important;min-width:0!important;max-width:none!important;}\nhtml body .roam-app .rm-data-table__table > table > thead > tr > th {box-sizing:border-box!important;padding:0!important;position:relative!important;overflow:visible!important;}\nhtml body .roam-app .rm-data-table .rm-column-header {box-sizing:border-box!important;padding:8px 12px!important;min-width:0!important;}\nhtml body .roam-app .rm-data-table .rm-column-header--fake {padding:8px!important;min-width:0!important;}\nhtml body .roam-app .rm-data-table__table > table > tbody > tr > td {box-sizing:border-box!important;overflow-wrap:anywhere!important;}\nhtml body .roam-app .rm-block:is(.list-query,[data-page-links*='\".list-query\"']) .rm-ref-page-view-title {display:none!important;}\nhtml body .roam-app .rm-block:is(.list-query,[data-page-links*='\".list-query\"']) :is(.rm-query-content,.rm-ref-page-view) {padding:0!important;margin:0!important;border:0!important;background:transparent!important;}\n\n/* Highlight rows only. Descendants and the results wrapper keep paper colour. */\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) {background:var(--mag-paper)!important;color:var(--mag-ink)!important;}\nhtml body .rm-autocomplete__results {border:1px solid var(--mag-border)!important;border-radius:6px!important;overflow:hidden!important;}\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role=\"option\"]) {background:transparent!important;outline:0!important;border:0!important;box-shadow:none!important;}\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role=\"option\"]):hover {background:var(--mag-blue-soft,#d8e1e8)!important;box-shadow:none!important;}\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result--selected,.rm-autocomplete-result.rm-menu-item--active,.rm-autocomplete-result.bp3-active,.rm-autocomplete-result.selected,.rm-autocomplete-result:focus-visible,[role=\"option\"][aria-selected=\"true\"]) {background:var(--mag-blue-soft,#d8e1e8)!important;border-color:transparent!important;outline:0!important;box-shadow:none!important;}\nhtml body :is(.rm-autocomplete__preview,.rm-autocomplete-footer,.rm-find-or-create-modal-preview) {background:var(--mag-paper)!important;color:var(--mag-ink)!important;border-color:var(--mag-border)!important;}\nhtml body .rm-find-or-create-modal--with-preview .rm-find-or-create-modal-body-col,\nhtml body .rm-find-or-create-modal .rm-find-or-create-modal-preview {flex:1 1 0!important;min-width:0!important;width:50%!important;max-width:50%!important;}\n\n/* A custom settings component occupies the entire row, not the action column. */\nhtml body .rm-settings :is(.rm-settings-panel__setting,.rm-settings-panel__setting-container):has(.folio-settings-group) {display:block!important;width:100%!important;}\nhtml body .rm-settings :is(.rm-settings-panel__setting,.rm-settings-panel__setting-container):has(.folio-settings-group) > :has(.folio-settings-group) {width:100%!important;max-width:none!important;flex:1 1 100%!important;margin:0!important;padding-inline:0!important;}\nhtml body .rm-settings .folio-settings-group {box-sizing:border-box!important;margin-inline:0!important;text-align:left!important;}\nhtml body .rm-settings :is(.flex-h-box,.flex-v-box):has(> .folio-settings-group) {width:100%!important;max-width:none!important;flex-basis:100%!important;margin-inline:0!important;}\n\nhtml body .rm-settings .rm-settings-panel__setting:has(.folio-settings-group) {display:grid!important;grid-template-columns:minmax(0,1fr)!important;}\nhtml body .rm-settings .rm-settings-panel__setting:has(.folio-settings-group) > * {grid-column:1/-1!important;min-width:0!important;}\nhtml body .bp3-menu :is(.bp3-button-group,.rm-block-context-menu) .bp3-button {\n color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;\n}\nhtml body .bp3-menu :is(.bp3-button-group,.rm-block-context-menu) .bp3-button:is(:hover,.bp3-active) {background:var(--mag-blue-soft)!important;color:var(--mag-ink)!important;}\nhtml body .bp3-menu :is(hr,.bp3-menu-divider) {border-color:var(--mag-border)!important;}\n/* Colours only for native H1/H2/H3 and alignment controls; keep their sizing. */\nhtml body .bp3-menu button.bp3-button {color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;}\nhtml body .bp3-menu button.bp3-button:is(:hover,.bp3-active) {background:var(--mag-blue-soft)!important;color:var(--mag-ink)!important;}\nhtml body :is(.rm-autocomplete__results,.rm-block-ref-selector) :is(.rm-autocomplete-result,.rm-autocomplete__result,.rm-search-list-item,[role=\"option\"]):is(:hover,.rm-autocomplete-result--selected,.rm-menu-item--active,.bp3-active,.selected,[aria-selected=\"true\"]) {background:#d5dce2!important;color:var(--mag-ink)!important;outline:0!important;box-shadow:none!important;}\nhtml body .roam-app :is(.roam-main,#right-sidebar,.roam-sidebar-container) > .rm-resize-handle {width:6px!important;min-width:6px!important;cursor:col-resize!important;pointer-events:auto!important;z-index:20!important;}\nhtml body .roam-app :is(.roam-main,#right-sidebar,.roam-sidebar-container) > .rm-resize-handle:hover {background:var(--mag-border)!important;}\n/* Main-page width and horizontal spacing belong to Roam. */\nhtml body .bp3-menu :is(button.bp3-button,.bp3-button-group > .bp3-button) {color:var(--mag-muted)!important;background:var(--mag-paper)!important;border-color:var(--mag-border)!important;box-shadow:none!important;}\nhtml body .bp3-menu :is(button.bp3-button,.bp3-button-group > .bp3-button):is(:hover,.bp3-active) {color:var(--mag-ink)!important;background:var(--mag-blue-soft)!important;}\nhtml body .bp3-menu :is(hr,.bp3-menu-divider) {border-color:var(--mag-border)!important;}\n\n/* Sidebar spacing classes must not reserve a percentage of each block row.\n   Keep the real reference counter and its 24px native slot; reclaim only the\n   separator. The same constraints apply while editing and in wide layouts. */\nhtml body .roam-app .roam-main .roam-article .rm-block-main > .rm-block-separator {\n flex:0 0 8px!important;width:8px!important;min-width:0!important;max-width:8px!important;\n}\nhtml body .roam-app .roam-main .roam-article .rm-block-main > :is(.rm-block__input,.rm-autocomplete__wrapper) {\n flex:1 1 0%!important;min-width:0!important;max-width:100%!important;\n}\n\n/* A code editor must shrink with its own block, including nested/sidebar blocks.\n   Leave the article width and CodeMirror's internal document width to Roam. */\nhtml body .roam-app .rm-block-main > .rm-block__input:has(.rm-code-block) {\n flex:1 1 0%!important;min-width:0!important;max-width:100%!important;\n}\nhtml body .roam-app :is(.rm-inline-code-block,.rm-code-block),\nhtml body .roam-app .rm-code-block :is(.cm-editor,.CodeMirror) {\n box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:100%!important;\n}\nhtml body .roam-app .rm-code-block .cm-scroller {\n min-width:0!important;max-width:100%!important;overflow-x:auto!important;\n}\nhtml body .roam-app .rm-code-block__settings-bar {\n min-width:0!important;max-width:100%!important;flex-wrap:wrap!important;\n}\n\n/* The native daily separator is redundant only while this day's masthead exists.\n   Keep its space; removing the marker restores Roam's own border colour. */\nhtml body .roam-app .roam-body-main .roam-log-container > .roam-log-page:has(> .rm-title-display-container > .rm-title-display[data-mag-masthead]) {\n border-top-color:transparent!important;\n}\n\n/* A pin already has its own action slot. Empty native reference placeholders\n   need no additional width. Actual counters and comment rails remain intact. */\nhtml body .roam-app .roam-main :is(.roam-article,.roam-log-page) .rm-block-main:has(> button.folio-own-pin) > :is(.rm-block__input,.rm-autocomplete__wrapper) {\n flex:1 1 0%!important;min-width:0!important;max-width:100%!important;\n}\nhtml body .roam-app .roam-main :is(.roam-article,.roam-log-page) .rm-block-main:has(> button.folio-own-pin) > .rm-block-separator:has(+ div:is([style*=\"min-width: 24px\"],[style*=\"min-width:24px\"]):empty),\nhtml body .roam-app .roam-main :is(.roam-article,.roam-log-page) .rm-block-main:has(> button.folio-own-pin) > .rm-block-separator + div:is([style*=\"min-width: 24px\"],[style*=\"min-width:24px\"]):empty {\n flex:0 0 0!important;width:0!important;min-width:0!important;max-width:0!important;\n margin-inline:0!important;padding-inline:0!important;\n}\n",
   "native-component-tokens": "\n:root {\n  --mag-toolbar-height: 48px;\n  --mag-frame-bottom: 16px;\n  --mag-shadow: rgba(0,0,0,0);\n  --mag-body: var(--roam-font-family, var(--global-font, system-ui, -apple-system, \"Segoe UI\", sans-serif));\n  --mag-heading: var(--header-font, var(--roam-font-family, var(--global-font, system-ui, -apple-system, \"Segoe UI\", sans-serif)));\n  --mag-aside-font: var(--header-font, var(--roam-font-family, var(--global-font, system-ui, -apple-system, \"Segoe UI\", sans-serif)));\n  --mag-code: ui-monospace, SFMono-Regular, Consolas, monospace;\n  --mag-paper: var(--bc-main, var(--main-area-background-color, #ffffff));\n  --mag-shell: var(--bc-right-sidebar, var(--bc-left-sidebar, #f5f6f8));\n  --mag-surface: var(--bc-main, var(--main-area-background-color, #ffffff));\n  --mag-active: var(--bc-highlight, var(--bc-hover, rgba(127,127,127,.12)));\n  --mag-ink: var(--cl-primary, var(--primary-text-color, #182026));\n  --mag-muted: var(--cl-secondary, var(--secondary-text-color, #5c7080));\n  --mag-faint: var(--cl-tertiary, var(--secondary-text-color, #8a9ba8));\n  --mag-blue: var(--cl-blue, var(--cl-accent, #137cbd));\n  --mag-blue-soft: color-mix(in srgb, var(--mag-blue) 12%, transparent);\n  --mag-yellow: #d6b83c;\n  --mag-yellow-soft: color-mix(in srgb, var(--mag-yellow) 20%, transparent);\n  --mag-gold: #a58a2c;\n  --mag-gold-ink: #806d2e;\n  --mag-border: var(--border-color, rgba(127,127,127,.22));\n  --mag-sepia: #8a6d3b;\n  --mag-age1-ink: color-mix(in srgb, var(--mag-ink) 86%, var(--mag-sepia));\n  --mag-age2-ink: color-mix(in srgb, var(--mag-ink) 72%, var(--mag-sepia));\n  --mag-age3-ink: color-mix(in srgb, var(--mag-ink) 58%, var(--mag-sepia));\n  --mag-code-bg: var(--bc-codeblock, rgba(127,127,127,.08));\n  --mag-inline-bg: var(--bc-code, rgba(127,127,127,.08));\n  --mag-inline-text: var(--cl-primary, inherit);\n  --mag-radius: 6px;\n}\n:root.mag-dark,\nbody.bp3-dark,\nbody.bp4-dark,\n.roam-app.bp3-dark,\n.roam-app.bp4-dark {\n  --mag-paper: var(--bc-main, var(--main-area-background-color, #20242c));\n  --mag-shell: var(--bc-right-sidebar, var(--bc-left-sidebar, #171a20));\n  --mag-surface: var(--bc-main, var(--main-area-background-color, #20242c));\n  --mag-active: var(--bc-highlight, var(--bc-hover, rgba(255,255,255,.10)));\n  --mag-ink: var(--cl-primary, var(--primary-text-color, #f0f1f3));\n  --mag-muted: var(--cl-secondary, var(--secondary-text-color, #b7bdc7));\n  --mag-faint: var(--cl-tertiary, var(--secondary-text-color, #89919d));\n  --mag-blue: var(--cl-blue, var(--cl-accent, #70b7e6));\n  --mag-gold-ink: #d2b95d;\n  --mag-border: var(--bc-left-sidebar, rgba(255,255,255,.18));\n  --mag-sepia: #c8a96e;\n}\n",
   "sidebar-toggles": "\n/* Visibility only: keep Roam's original nodes, icons and click handlers. */\nhtml body .roam-app .roam-sidebar-container .top-row {position:relative!important;}\nhtml body .roam-app .roam-sidebar-container .top-row > .bp3-icon-menu-closed {\n display:inline-flex!important;opacity:1!important;visibility:visible!important;\n position:absolute!important;top:calc((var(--mag-toolbar-height,48px) - 30px) / 2)!important;right:8px!important;\n align-items:center!important;justify-content:center!important;width:30px!important;height:30px!important;\n margin:0!important;padding:0!important;z-index:2!important;pointer-events:auto!important;\n}\nhtml body .roam-app .rm-topbar .rm-open-left-sidebar-btn,\nhtml body .roam-app .rm-topbar > .bp3-button:is(.bp3-icon-menu-closed,:has(> .bp3-icon-menu-closed)),\nhtml body .roam-app #right-sidebar > .flex-h-box .bp3-button:is(.bp3-icon-menu-open,:has(.bp3-icon-menu-open)) {\n display:inline-flex!important;opacity:1!important;visibility:visible!important;\n align-items:center!important;justify-content:center!important;pointer-events:auto!important;\n}\n\n/* One slot for both native states. JS sets mutually exclusive inline visibility\n   so unrelated component styles cannot force both states back on. */\nhtml body .roam-app [data-folio-sidebar-role=\"close\"] {\n position:fixed!important;left:var(--folio-native-toggle-x,calc(100vw - 38px))!important;\n top:var(--folio-native-toggle-y,9px)!important;right:auto!important;bottom:auto!important;\n width:30px!important;min-width:30px!important;height:30px!important;min-height:30px!important;\n margin:0!important;padding:0!important;z-index:1000!important;transform:none!important;\n align-items:center!important;justify-content:center!important;\n color:var(--mag-muted)!important;background:transparent!important;border:0!important;box-shadow:none!important;\n}\n\n/* Closed state: the native open button keeps its own flex slot. Open state:\n   reserve a dedicated slot for the native close button over the main topbar. */\nhtml body .roam-app .rm-topbar [data-folio-sidebar-role=\"open\"] {\n position:static!important;inset:auto!important;flex:0 0 30px!important;\n width:30px!important;min-width:30px!important;margin:0!important;transform:none!important;\n}\nhtml[data-folio-right-sidebar=\"open\"] body .roam-app .rm-topbar {box-sizing:border-box!important;padding-right:44px!important;}\n",
   "calendar-preview": "\nhtml body .bp3-datepicker :is(.DayPicker,.DayPicker-Month,.DayPicker-Caption,.DayPicker-Weekdays,.DayPicker-Body,.bp3-datepicker-navbar,.bp3-datepicker-caption,.bp3-datepicker-shortcuts,.bp3-menu) { background: var(--mag-paper) !important; color: var(--mag-ink) !important; }\nhtml body .bp3-datepicker .bp3-datepicker-shortcuts .bp3-menu-item { color: var(--mag-ink) !important; }\nhtml body .bp3-datepicker .bp3-datepicker-shortcuts .bp3-menu-item:hover { background: var(--mag-yellow-soft) !important; }\nhtml body .bp3-datepicker .DayPicker-Day--today .bp3-datepicker-day-wrapper { background: var(--mag-ink) !important; color: var(--mag-paper) !important; box-shadow: 0 0 0 2px var(--mag-gold),0 0 0 4px var(--mag-paper) !important; font-weight: 800 !important; border-radius: 50% !important; }\n",
@@ -4380,6 +4380,47 @@ window.__magCore && window.__magCore.load("desk");
   };
 
   const currentTasks = () => getTasks(dayTitle(yesterdayDate()));
+  // Retain only ancestor paths to outermost TODOs. A selected TODO
+  // owns its entire subtree, including DONEs and explanatory blocks.
+  const carryPlan = () => {
+    const ids = new Set(currentTasks().map(task => task.uid));
+    if (!ids.size) return [];
+    const page = window.roamAlphaAPI.data.pull(
+      '[:block/uid :block/order {:block/children ...}]', [':node/title', dayTitle(yesterdayDate())]
+    );
+    if (!page) throw new Error('The source daily page is unavailable.');
+    const ordered = node => [...(node[':block/children'] || [])].sort((a, b) => (a[':block/order'] || 0) - (b[':block/order'] || 0));
+    const seen = new Set();
+    const recordTree = node => { seen.add(node[':block/uid']); ordered(node).forEach(recordTree); };
+    const visit = node => {
+      const uid = node[':block/uid'];
+      if (ids.has(uid)) { recordTree(node); return { uid, task: true, tree: node }; }
+      const children = ordered(node).map(visit).filter(Boolean);
+      return children.length ? { uid, task: false, children } : null;
+    };
+    const plan = ordered(page).map(visit).filter(Boolean);
+    if ([...ids].some(uid => !seen.has(uid))) throw new Error('Source tasks changed. Reopen the carry panel.');
+    return plan;
+  };
+  const createReference = async (sourceUid, parentUid) => {
+    const uid = window.roamAlphaAPI.util.generateUID();
+    await window.roamAlphaAPI.createBlock({
+      location: { 'parent-uid': parentUid, order: 999999 },
+      block: { uid, string: '((' + sourceUid + '))' }
+    });
+    return uid;
+  };
+  const cleanContextReferences = async (groups) => {
+    for (const group of [...(groups || [])].reverse()) {
+      try {
+        const node = window.roamAlphaAPI.data.pull('[:block/string {:block/children [:block/uid]}]', [':block/uid', group.uid]);
+        if (!node || node[':block/string'] !== '((' + group.sourceUid + '))' || node[':block/children']?.length) continue;
+        const refs = window.roamAlphaAPI.q('[:find ?source :in $ ?uid :where [?target :block/uid ?uid] [?source :block/refs ?target]]', group.uid) || [];
+        if (!refs.length) await window.roamAlphaAPI.deleteBlock({ block: { uid: group.uid } });
+      } catch (error) { console.warn('[Folio] Kept context reference', group.uid, error); }
+    }
+  };
+
   const getUndo = () => {
     try {
       const value = JSON.parse(sessionStorage.getItem(UNDO_KEY) || "null");
@@ -4422,7 +4463,8 @@ window.__magCore && window.__magCore.load("desk");
       '[?parent :block/children ?b] [?parent :block/uid ?parentUid]]',
       uid
     );
-    return row ? { uid, parentUid: row[0], order: row[1] } : null;
+    const pair = Array.isArray(row?.[0]) ? row[0] : row;
+    return pair && typeof pair[0] === "string" && Number.isFinite(pair[1]) ? { uid, parentUid: pair[0], order: pair[1] } : null;
   };
 
   const makeButton = (label, className) => {
@@ -4495,8 +4537,9 @@ window.__magCore && window.__magCore.load("desk");
         console.error("[顶部日历 3/5] 撤销迁移失败", block, error);
       }
     }
+    await cleanContextReferences(undo.groups);
     if (failed.length) {
-      sessionStorage.setItem(UNDO_KEY, JSON.stringify({ movedAt: undo.movedAt, blocks: failed }));
+      sessionStorage.setItem(UNDO_KEY, JSON.stringify({ movedAt: undo.movedAt, blocks: failed, groups: undo.groups || [] }));
       showStatus(anchor, calendarText("restoreFailed", {n:failed.length}), true);
     } else {
       sessionStorage.removeItem(UNDO_KEY);
@@ -4520,41 +4563,82 @@ window.__magCore && window.__magCore.load("desk");
       const refButton = makeButton(calendarText("reference"), "is-ref");
       const moveButton = makeButton(calendarText("move"), "is-move");
       refButton.onclick = async () => {
-        const parentUid = await ensureToday();
-        for (const task of tasks) {
-          await window.roamAlphaAPI.createBlock({
-            location: { "parent-uid": parentUid, order: 999999 },
-            block: { string: "((" + task.uid + "))" }
-          });
+        refButton.disabled = moveButton.disabled = true;
+        try {
+          const plan = carryPlan();
+          const parentUid = await ensureToday();
+          const referenceTree = async (tree, parent) => {
+            const uid = await createReference(tree[':block/uid'], parent);
+            const children = [...(tree[':block/children'] || [])].sort((a, b) => (a[':block/order'] || 0) - (b[':block/order'] || 0));
+            for (const child of children) await referenceTree(child, uid);
+          };
+          const referencePlan = async (entries, parent) => {
+            for (const entry of entries) {
+              if (entry.task) await referenceTree(entry.tree, parent);
+              else {
+                const uid = await createReference(entry.uid, parent);
+                await referencePlan(entry.children, uid);
+              }
+            }
+          };
+          await referencePlan(plan, parentUid);
+          closePanel();
+          syncCalendarTools();
+        } catch (error) {
+          console.error('[Folio] Reference carry failed', error);
+          message.textContent = calendarText('failed');
+        } finally {
+          refButton.disabled = moveButton.disabled = false;
         }
-        closePanel();
-        syncCalendarTools();
       };
       moveButton.onclick = async () => {
-        const parentUid = await ensureToday();
-        const moved = [];
-        moveButton.disabled = true;
+        moveButton.disabled = refButton.disabled = true;
         message.textContent = calendarText("moving");
-        for (const task of tasks) {
-          const original = getLocation(task.uid);
-          if (!original) continue;
-          try {
-            await window.roamAlphaAPI.moveBlock({
-              location: { "parent-uid": parentUid, order: 999999 },
-              block: { uid: task.uid }
-            });
-            moved.push(original);
-            sessionStorage.setItem(UNDO_KEY, JSON.stringify({ movedAt: Date.now(), blocks: moved }));
-          } catch (error) {
-            console.error("[顶部日历 3/5] 迁移失败", task, error);
-          }
+        const moved = [], groups = [];
+        const movedAt = Date.now();
+        const saveUndo = () => sessionStorage.setItem(UNDO_KEY, JSON.stringify({ movedAt, blocks: moved, groups }));
+        try {
+          const plan = carryPlan();
+          const originals = new Map();
+          const collect = entries => entries.forEach(entry => {
+            if (entry.task) {
+              const location = getLocation(entry.uid);
+              if (!location) throw new Error('A source task is no longer available.');
+              originals.set(entry.uid, location);
+            } else collect(entry.children);
+          });
+          collect(plan);
+          const parentUid = await ensureToday();
+          const movePlan = async (entries, parent) => {
+            for (const entry of entries) {
+              if (entry.task) {
+                const original = originals.get(entry.uid);
+                if (getLocation(entry.uid)?.parentUid !== original.parentUid) throw new Error('A source task was moved. Reopen the carry panel.');
+                await window.roamAlphaAPI.moveBlock({
+                  location: { 'parent-uid': parent, order: 999999 }, block: { uid: entry.uid }
+                });
+                moved.push(original);
+                saveUndo();
+              } else {
+                const uid = await createReference(entry.uid, parent);
+                groups.push({ uid, sourceUid: entry.uid });
+                if (moved.length) saveUndo();
+                await movePlan(entry.children, uid);
+              }
+            }
+          };
+          await movePlan(plan, parentUid);
+          if (moved.length) showStatus(anchor, calendarText("moved", {n:moved.length}));
+          else showStatus(anchor, calendarText("notMoved"), true);
+        } catch (error) {
+          console.error('[Folio] Carry move failed', error);
+          if (moved.length) saveUndo();
+          showStatus(anchor, calendarText('failed'), true);
+        } finally {
+          await cleanContextReferences(groups);
+          moveButton.disabled = refButton.disabled = false;
+          syncCalendarTools();
         }
-        if (moved.length) {
-          showStatus(anchor, calendarText("moved", {n:moved.length}));
-        } else {
-          showStatus(anchor, calendarText("notMoved"), true);
-        }
-        syncCalendarTools();
       };
       panel.append(refButton, moveButton);
     }
@@ -4785,21 +4869,6 @@ window.__magCore && window.__magCore.load("desk");
     await window.roamAlphaAPI.ui.mainWindow.openPage({ page: { uid } });
   };
 
-  const currentDailyDate = () => {
-    const match = location.hash.match(/\/page\/([^/?]+)/);
-    if (!match) return normalize(new Date());
-    const title = window.roamAlphaAPI.q(
-      '[:find ?title . :in $ ?uid :where [?page :block/uid ?uid] [?page :node/title ?title]]',
-      match[1]
-    );
-    if (!title) return normalize(new Date());
-    try {
-      return normalize(window.roamAlphaAPI.util.pageTitleToDate(title) || new Date());
-    } catch (_) {
-      return normalize(new Date());
-    }
-  };
-
   const parseInput = (value) => {
     const input = value.trim();
     const key = input.toLowerCase();
@@ -4956,16 +5025,12 @@ window.__magCore && window.__magCore.load("desk");
 
   const onKeyDown = async (event) => {
     if (event.repeat || event.isComposing || isEditing(event.target)) return;
+    if (document.querySelector(".block-highlight-blue, .rm-block--selected") || window.getSelection?.()?.toString()) return;
     const match = (name) => window.__folioMatchesShortcut?.(event, name);
     let action = null;
     if (match("jump")) action = showJump;
     else if (match("today")) action = () => openDate(new Date());
     else if (match("daily")) action = () => window.roamAlphaAPI.ui.mainWindow.openDailyNotes();
-    else if (match("previous") || match("next")) {
-      const date = currentDailyDate();
-      date.setDate(date.getDate() + (match("next") ? 1 : -1));
-      action = () => openDate(date);
-    }
     if (!action) return;
     event.preventDefault(); event.stopImmediatePropagation();
     await action();
@@ -5652,7 +5717,7 @@ window.__magCore && window.__magCore.load("desk");
 })();
 }
 };
-const SHORTCUT_DEFAULTS = { jump: "g", today: "t", daily: "d", previous: "ArrowLeft", next: "ArrowRight" };
+const SHORTCUT_DEFAULTS = { jump: "g", today: "t", daily: "d" };
 const shortcutParts = (value) => String(value).trim().toLowerCase().split("+").map(x => x.trim()).filter(Boolean);
 function matchesShortcut(event, value) {
   const parts = shortcutParts(value);
@@ -5706,7 +5771,7 @@ function extraSettings(runtime) {
   return [textSetting("code-max-height", zh?"代码块最大高度（px）":"Code block maximum height (px)",zh?"默认 420；0 表示不限制。长代码在块内滚动。":"Default 420; 0 removes the limit. Long code scrolls inside the block.",runtime.codeMaxHeight, value=>{
     runtime.codeMaxHeight=codeHeight(value); void runtime.extensionAPI.settings.set(SETTING_PREFIX+"code-max-height",runtime.codeMaxHeight); runtime.rebuildCss();
   },"number"), ...Object.entries(SHORTCUT_DEFAULTS).map(([key,fallback])=>textSetting("shortcut-"+key,
-    (zh?"导航快捷键 · ":"Navigation shortcut · ")+({jump:zh?"跳转日期":"Jump to date",today:zh?"今天":"Today",daily:zh?"日记流":"Daily notes",previous:zh?"前一天":"Previous day",next:zh?"后一天":"Next day"}[key]),
+    (zh?"导航快捷键 · ":"Navigation shortcut · ")+({jump:zh?"跳转日期":"Jump to date",today:zh?"今天":"Today",daily:zh?"日记流":"Daily notes"}[key]),
     zh?`默认 ${fallback}。支持 Alt+G、Mod+Shift+J；留空停用。编辑文字时不触发。重复组合仅第一个生效。`:`Default ${fallback}. Examples: Alt+G, Mod+Shift+J. Empty disables. Never runs while editing. First matching action wins.`,
     runtime.shortcuts[key],value=>{runtime.shortcuts[key]=value.trim();void runtime.extensionAPI.settings.set(SETTING_PREFIX+"shortcut-"+key,value.trim());}
   ))];
@@ -5866,42 +5931,42 @@ const SETTINGS_COPY = {
   title:'By function · resource impact per component',impact:'Estimated resource impact',impactHelp:'Estimated from runtime behaviour; not a live CPU measurement.',
   pages:'Excluded pages',pagesHelp:'TODOs on these pages are excluded. Enter one exact page title per line.',defaults:'Defaults: SmartBlock and roam/templates. Edit or add page titles below.',
   future:'Exclude TODOs with future dates',futureHelp:'On by default. Turn off to include tasks with explicit future daily-note dates.',policy:'These rules only filter random picks; original tasks are not modified.',
-  code:'Limit code block height',sidebar:'Keep native sidebar toggles visible',defaultLabel:'Default',height:'Code block maximum height (px)',heightHelp:'Default 420; 0 removes the limit. Long code scrolls inside the block.',shortcuts:['Jump to date','Today','Daily notes','Previous day','Next day'],shortcut:'Navigation shortcut',shortcutHelp:'Default: {key}. Examples: Alt+G, Mod+Shift+J. Empty disables. Inactive while editing; the first matching action wins.'
+  code:'Limit code block height',sidebar:'Keep native sidebar toggles visible',defaultLabel:'Default',height:'Code block maximum height (px)',heightHelp:'Default 420; 0 removes the limit. Long code scrolls inside the block.',shortcuts:['Jump to date','Today','Daily notes'],shortcut:'Navigation shortcut',shortcutHelp:'Default: {key}. Examples: Alt+G, Mod+Shift+J. Empty disables. Inactive while editing; the first matching action wins.'
  },
  zh: {
   groups:['界面与导航','标签与内容','写作与代码','日记与日历','阅读与媒体','页面洞察','任务与回顾'],
   title:'按功能分组 · 每项标注资源消耗',impact:'资源消耗（估计）',impactHelp:'按运行方式估计，不代表实时 CPU 占用。',
   pages:'排除页面',pagesHelp:'这些页面下的 TODO 不参与随机抽取；每行填写一个完整页面名。',defaults:'默认填入 SmartBlock 和 roam/templates，可自行修改或添加。',
   future:'排除带未来日期的 TODO',futureHelp:'默认开启；关闭后，明确带有未来日记日期的任务也可参与随机抽取。',policy:'排除规则仅影响随机抽取，不修改原任务。',
-  code:'限制代码块高度',sidebar:'固定显示原生侧栏开关',defaultLabel:'默认',height:'代码块最大高度（px）',heightHelp:'默认 420；0 表示不限制。长代码在块内滚动。',shortcuts:['跳转日期','今天','日记流','前一天','后一天'],shortcut:'导航快捷键',shortcutHelp:'默认 {key}。支持 Alt+G、Mod+Shift+J；留空停用。编辑文字时不触发，重复组合仅第一个生效。'
+  code:'限制代码块高度',sidebar:'固定显示原生侧栏开关',defaultLabel:'默认',height:'代码块最大高度（px）',heightHelp:'默认 420；0 表示不限制。长代码在块内滚动。',shortcuts:['跳转日期','今天','日记流'],shortcut:'导航快捷键',shortcutHelp:'默认 {key}。支持 Alt+G、Mod+Shift+J；留空停用。编辑文字时不触发，重复组合仅第一个生效。'
  },
  fr: {
   groups:['Interface et navigation','Étiquettes et contenu','Écriture et code','Journal et calendrier','Lecture et médias','Analyse des pages','Tâches et révision'],
   title:'Par fonction · impact indiqué par composant',impact:'Impact estimé sur les ressources',impactHelp:'Estimation selon le fonctionnement ; ce n’est pas une mesure CPU en direct.',
   pages:'Pages exclues',pagesHelp:'Les TODO de ces pages sont exclus. Un titre exact de page par ligne.',defaults:'Valeurs par défaut : SmartBlock et roam/templates. Modifiez ou ajoutez des titres.',
   future:'Exclure les TODO avec une date future',futureHelp:'Activé par défaut. Désactivez pour inclure les tâches portant une date explicite de journal future.',policy:'Ces règles filtrent uniquement le tirage aléatoire, sans modifier les tâches originales.',
-  code:'Limiter la hauteur du code',sidebar:'Garder visibles les boutons des barres latérales',defaultLabel:'Par défaut',height:'Hauteur maximale du code (px)',heightHelp:'420 par défaut ; 0 supprime la limite. Le code long défile dans le bloc.',shortcuts:['Aller à une date','Aujourd’hui','Journal','Jour précédent','Jour suivant'],shortcut:'Raccourci de navigation',shortcutHelp:'Par défaut : {key}. Exemples : Alt+G, Mod+Shift+J. Vide pour désactiver. Inactif pendant la saisie ; la première action correspondante prévaut.'
+  code:'Limiter la hauteur du code',sidebar:'Garder visibles les boutons des barres latérales',defaultLabel:'Par défaut',height:'Hauteur maximale du code (px)',heightHelp:'420 par défaut ; 0 supprime la limite. Le code long défile dans le bloc.',shortcuts:['Aller à une date','Aujourd’hui','Journal'],shortcut:'Raccourci de navigation',shortcutHelp:'Par défaut : {key}. Exemples : Alt+G, Mod+Shift+J. Vide pour désactiver. Inactif pendant la saisie ; la première action correspondante prévaut.'
  },
  de: {
   groups:['Oberfläche und Navigation','Tags und Inhalt','Schreiben und Code','Tagesnotizen und Kalender','Lesen und Medien','Seitenanalyse','Aufgaben und Rückblick'],
   title:'Nach Funktion · Ressourcenlast je Komponente',impact:'Geschätzte Ressourcenlast',impactHelp:'Schätzung anhand der Arbeitsweise, keine Echtzeit-CPU-Messung.',
   pages:'Ausgeschlossene Seiten',pagesHelp:'TODOs auf diesen Seiten werden ausgeschlossen. Ein exakter Seitentitel pro Zeile.',defaults:'Standard: SmartBlock und roam/templates. Titel können geändert oder ergänzt werden.',
   future:'TODOs mit zukünftigem Datum ausschließen',futureHelp:'Standardmäßig aktiviert. Deaktivieren, um Aufgaben mit einem ausdrücklich zukünftigen Tagesnotizdatum einzubeziehen.',policy:'Diese Regeln filtern nur die Zufallsauswahl und ändern keine ursprünglichen Aufgaben.',
-  code:'Codeblockhöhe begrenzen',sidebar:'Schalter der Seitenleisten sichtbar halten',defaultLabel:'Standard',height:'Maximale Codeblockhöhe (px)',heightHelp:'Standard 420; 0 hebt die Begrenzung auf. Langer Code scrollt innerhalb des Blocks.',shortcuts:['Zu Datum springen','Heute','Tagesnotizen','Vorheriger Tag','Nächster Tag'],shortcut:'Navigationstastenkürzel',shortcutHelp:'Standard: {key}. Beispiele: Alt+G, Mod+Shift+J. Leer deaktiviert. Bei Texteingabe inaktiv; die erste passende Aktion hat Vorrang.'
+  code:'Codeblockhöhe begrenzen',sidebar:'Schalter der Seitenleisten sichtbar halten',defaultLabel:'Standard',height:'Maximale Codeblockhöhe (px)',heightHelp:'Standard 420; 0 hebt die Begrenzung auf. Langer Code scrollt innerhalb des Blocks.',shortcuts:['Zu Datum springen','Heute','Tagesnotizen'],shortcut:'Navigationstastenkürzel',shortcutHelp:'Standard: {key}. Beispiele: Alt+G, Mod+Shift+J. Leer deaktiviert. Bei Texteingabe inaktiv; die erste passende Aktion hat Vorrang.'
  },
  es: {
   groups:['Interfaz y navegación','Etiquetas y contenido','Escritura y código','Diario y calendario','Lectura y medios','Análisis de páginas','Tareas y revisión'],
   title:'Por función · consumo indicado por componente',impact:'Consumo estimado de recursos',impactHelp:'Estimación según el funcionamiento; no mide la CPU en tiempo real.',
   pages:'Páginas excluidas',pagesHelp:'Los TODO de estas páginas se excluyen. Un título exacto de página por línea.',defaults:'Por defecto: SmartBlock y roam/templates. Puede modificar o añadir títulos.',
   future:'Excluir TODO con fechas futuras',futureHelp:'Activado por defecto. Desactive para incluir tareas con una fecha futura explícita de nota diaria.',policy:'Estas reglas solo filtran la selección aleatoria; no modifican las tareas originales.',
-  code:'Limitar la altura del código',sidebar:'Mantener visibles los controles laterales',defaultLabel:'Predeterminado',height:'Altura máxima del código (px)',heightHelp:'420 por defecto; 0 elimina el límite. El código largo se desplaza dentro del bloque.',shortcuts:['Ir a una fecha','Hoy','Notas diarias','Día anterior','Día siguiente'],shortcut:'Atajo de navegación',shortcutHelp:'Predeterminado: {key}. Ejemplos: Alt+G, Mod+Shift+J. Vacío para desactivar. Inactivo al editar; prevalece la primera acción coincidente.'
+  code:'Limitar la altura del código',sidebar:'Mantener visibles los controles laterales',defaultLabel:'Predeterminado',height:'Altura máxima del código (px)',heightHelp:'420 por defecto; 0 elimina el límite. El código largo se desplaza dentro del bloque.',shortcuts:['Ir a una fecha','Hoy','Notas diarias'],shortcut:'Atajo de navegación',shortcutHelp:'Predeterminado: {key}. Ejemplos: Alt+G, Mod+Shift+J. Vacío para desactivar. Inactivo al editar; prevalece la primera acción coincidente.'
  },
  it: {
   groups:['Interfaccia e navigazione','Tag e contenuti','Scrittura e codice','Diario e calendario','Lettura e media','Analisi delle pagine','Attività e revisione'],
   title:'Per funzione · consumo indicato per componente',impact:'Consumo stimato di risorse',impactHelp:'Stima basata sul funzionamento, non una misura della CPU in tempo reale.',
   pages:'Pagine escluse',pagesHelp:'I TODO in queste pagine sono esclusi. Un titolo esatto di pagina per riga.',defaults:'Valori iniziali: SmartBlock e roam/templates. Puoi modificare o aggiungere titoli.',
   future:'Escludi TODO con date future',futureHelp:'Attivo per impostazione predefinita. Disattiva per includere attività con una data futura esplicita di nota giornaliera.',policy:'Queste regole filtrano solo la selezione casuale e non modificano le attività originali.',
-  code:'Limita l’altezza del codice',sidebar:'Mantieni visibili i controlli delle barre laterali',defaultLabel:'Predefinito',height:'Altezza massima del codice (px)',heightHelp:'420 predefinito; 0 elimina il limite. Il codice lungo scorre dentro il blocco.',shortcuts:['Vai a una data','Oggi','Note giornaliere','Giorno precedente','Giorno successivo'],shortcut:'Scorciatoia di navigazione',shortcutHelp:'Predefinito: {key}. Esempi: Alt+G, Mod+Shift+J. Vuoto per disattivare. Inattivo durante la modifica; prevale la prima azione corrispondente.'
+  code:'Limita l’altezza del codice',sidebar:'Mantieni visibili i controlli delle barre laterali',defaultLabel:'Predefinito',height:'Altezza massima del codice (px)',heightHelp:'420 predefinito; 0 elimina il limite. Il codice lungo scorre dentro il blocco.',shortcuts:['Vai a una data','Oggi','Note giornaliere'],shortcut:'Scorciatoia di navigazione',shortcutHelp:'Predefinito: {key}. Esempi: Alt+G, Mod+Shift+J. Vuoto per disattivare. Inattivo durante la modifica; prevale la prima azione corrispondente.'
  }
 };
 const SETTINGS_DETAILS = {
@@ -5929,12 +5994,26 @@ function randomTodoSettings(runtime, React, copy) {
   e('p',{style:{fontSize:'11px',opacity:.7}},copy.futureHelp),
   e('p',{style:{fontSize:'11px',opacity:.7,marginBottom:0}},copy.policy));
 }
+const CALENDAR_SHORTCUT_COPY = {
+ en: ['Enable calendar keyboard shortcuts', 'Off by default. Enables G / T / D (or your custom keys). Arrow-key navigation has been removed.'],
+ zh: ['启用日历键盘快捷键', '默认关闭。开启后使用 G / T / D（或自定义按键）。方向键导航已移除。'],
+ fr: ['Activer les raccourcis du calendrier', 'Désactivés par défaut. Active G / T / D ou vos touches personnalisées. Navigation par flèches supprimée.'],
+ de: ['Kalender-Tastenkürzel aktivieren', 'Standardmäßig aus. Aktiviert G / T / D oder eigene Tasten. Pfeiltasten-Navigation wurde entfernt.'],
+ es: ['Activar atajos del calendario', 'Desactivados por defecto. Activa G / T / D o tus teclas. Se eliminó la navegación con flechas.'],
+ it: ['Attiva scorciatoie del calendario', 'Disattivate per impostazione predefinita. Abilita G / T / D o i tuoi tasti. Navigazione con frecce rimossa.']
+};
 function localizedExtraSettings(runtime) {
  const copy=SETTINGS_COPY[runtime.locale]||SETTINGS_COPY.en;
- return extraSettings(runtime).map((setting,index)=>({...setting,
+ const [name,description]=CALENDAR_SHORTCUT_COPY[runtime.locale]||CALENDAR_SHORTCUT_COPY.en;
+ const settings=extraSettings(runtime).map((setting,index)=>({...setting,
   name:index===0?copy.height:`${copy.shortcut} · ${copy.shortcuts[index-1]}`,
   description:index===0?copy.heightHelp:copy.shortcutHelp.replace('{key}',Object.values(SHORTCUT_DEFAULTS)[index-1])
  }));
+ settings.splice(1,0,{id:SETTING_PREFIX+'calendar-shortcuts-enabled',name,description,action:{type:'reactComponent',component:()=>window.React?.createElement('input',{
+  type:'checkbox',role:'switch',defaultChecked:runtime.calendarShortcutsEnabled,
+  onChange:event=>{runtime.calendarShortcutsEnabled=Boolean(event.target.checked);void runtime.extensionAPI.settings.set(SETTING_PREFIX+'calendar-shortcuts-enabled',runtime.calendarShortcutsEnabled);}
+ })}});
+ return settings;
 }
 function functionalSettings(runtime, accordion, appearanceGroup, widgetGroups, tagGroups) {
  const copy=SETTINGS_COPY[runtime.locale]||SETTINGS_COPY.en;
@@ -6280,8 +6359,8 @@ function templateSettings(runtime, React) {
 }
 
 
-const VERSION = "1.4.25";
-const BUILD_DATE = "2026-11-15";
+const VERSION = "1.4.28";
+const BUILD_DATE = "2026-11-18";
 const STYLE_ID = "folio-plugin-style";
 const SETTING_PREFIX = "folio-";
 const LEGACY_SETTING_PREFIX = "imprint-";
@@ -6928,6 +7007,7 @@ function createRuntime(extensionAPI) {
     settingsDefinitions: [],
     toolbarUi: null,
     shortcuts: {...SHORTCUT_DEFAULTS},
+    calendarShortcutsEnabled: false,
     randomExcludedPages: RANDOM_EXCLUDED_DEFAULT,
     randomExcludeFuture: true,
     templates: {weekday:"",weekend:"",plan:""},
@@ -7427,6 +7507,7 @@ function createRuntime(extensionAPI) {
             runtime.headingFont = "";
             runtime.codeMaxHeight = 420;
             runtime.shortcuts = {...SHORTCUT_DEFAULTS};
+            runtime.calendarShortcutsEnabled = false;
             runtime.randomExcludedPages = RANDOM_EXCLUDED_DEFAULT;
             runtime.randomExcludeFuture = true;
             for (const kind of Object.keys(runtime.templates)) {
@@ -7444,6 +7525,7 @@ function createRuntime(extensionAPI) {
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}body-font`, ""));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}heading-font`, ""));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}code-max-height`, 420));
+            writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}calendar-shortcuts-enabled`, false));
             for (const [key,value] of Object.entries(SHORTCUT_DEFAULTS)) writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}shortcut-${key}`, value));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}motto-line-1`, runtime.mottoLine1));
             writes.push(extensionAPI.settings.set(`${SETTING_PREFIX}motto-line-2`, runtime.mottoLine2));
@@ -7465,11 +7547,22 @@ function createRuntime(extensionAPI) {
     // upgrade and remove only generated DOM, never native comment blocks.
     window.__magNativeCommentRailCleanup?.();
     window.__magVideoTheaterCleanup?.();
-    document.querySelectorAll(".mag-native-comment,.mag-comment-fold-count,.mag-video-theater-notes,.folio-video-open").forEach(el => el.remove());
+    document.querySelectorAll(".mag-video-theater-notes,.folio-video-open").forEach(el => el.remove());
+    if (!window.__readingDeskFeatures?.comments && !window.__readingDeskCommentRail) {
+    document.querySelectorAll(".mag-native-comment,.mag-comment-fold-count").forEach(el => el.remove());
     document.querySelectorAll(".mag-comment-rail-host,.mag-comment-anchor-active,.mag-comment-anchor-rail").forEach(el => {
       el.classList.remove("mag-comment-rail-host", "mag-comment-anchor-active", "mag-comment-anchor-rail");
       el.style.removeProperty("--mag-comment-reserve");
     });
+    }
+    const yieldReadingFeatures = () => {
+      const active = window.__readingDeskFeatures || {};
+      if (active.comments) window.__magNativeCommentRailCleanup?.();
+      if (active.mark) { window.__magQuickMark?.cleanup?.(); window.__zenithQuickMark?.cleanup?.(); }
+    };
+    yieldReadingFeatures();
+    window.addEventListener("reading-desk-features-change", yieldReadingFeatures);
+    runtime.stopReadingCoexistence = () => window.removeEventListener("reading-desk-features-change", yieldReadingFeatures);
     const defaultWrites = [];
     const readDefault = (key, fallback) => {
       const stored = extensionAPI.settings.get(key);
@@ -7490,7 +7583,8 @@ function createRuntime(extensionAPI) {
     window.__folioTemplates = createTemplateService(runtime);
     runtime.codeMaxHeight = codeHeight(readDefault(`${SETTING_PREFIX}code-max-height`, 420));
     for (const [key, value] of Object.entries(SHORTCUT_DEFAULTS)) runtime.shortcuts[key] = String(readDefault(`${SETTING_PREFIX}shortcut-${key}`, value));
-    window.__folioMatchesShortcut = (event, key) => matchesShortcut(event, runtime.shortcuts[key]);
+    runtime.calendarShortcutsEnabled = Boolean(readDefault(`${SETTING_PREFIX}calendar-shortcuts-enabled`, false));
+    window.__folioMatchesShortcut = (event, key) => runtime.calendarShortcutsEnabled && Object.prototype.hasOwnProperty.call(SHORTCUT_DEFAULTS, key) && matchesShortcut(event, runtime.shortcuts[key]);
     runtime.languageChoice = readDefault(`${SETTING_PREFIX}language`, "Auto");
     runtime.themeEnabled = Boolean(readDefault(`${SETTING_PREFIX}theme-enabled`, true));
     runtime.paused = Boolean(readDefault(`${SETTING_PREFIX}pause-interactive`, false));
@@ -7524,6 +7618,7 @@ function createRuntime(extensionAPI) {
   runtime.destroy = () => {
     if (runtime.destroyed) return;
     runtime.destroyed = true;
+    runtime.stopReadingCoexistence?.();
     runtime.toolbarUi?.destroy();
     runtime.toolbarUi = null;
     runtime.cancelStarts();

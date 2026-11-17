@@ -75,3 +75,14 @@ html body .roam-app .rm-code-block__settings-bar {
 html body .roam-app .roam-body-main .roam-log-container > .roam-log-page:has(> .rm-title-display-container > .rm-title-display[data-mag-masthead]) {
  border-top-color:transparent!important;
 }
+
+/* A pin already has its own action slot. Empty native reference placeholders
+   need no additional width. Actual counters and comment rails remain intact. */
+html body .roam-app .roam-main :is(.roam-article,.roam-log-page) .rm-block-main:has(> button.folio-own-pin) > :is(.rm-block__input,.rm-autocomplete__wrapper) {
+ flex:1 1 0%!important;min-width:0!important;max-width:100%!important;
+}
+html body .roam-app .roam-main :is(.roam-article,.roam-log-page) .rm-block-main:has(> button.folio-own-pin) > .rm-block-separator:has(+ div:is([style*="min-width: 24px"],[style*="min-width:24px"]):empty),
+html body .roam-app .roam-main :is(.roam-article,.roam-log-page) .rm-block-main:has(> button.folio-own-pin) > .rm-block-separator + div:is([style*="min-width: 24px"],[style*="min-width:24px"]):empty {
+ flex:0 0 0!important;width:0!important;min-width:0!important;max-width:0!important;
+ margin-inline:0!important;padding-inline:0!important;
+}

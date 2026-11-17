@@ -1,4 +1,6 @@
-# Folio · 1.4.25
+# Folio · 1.4.28
+
+G / T / D están desactivados por defecto, también tras actualizar. Actívalos en ajustes de Folio → Navegación. Las flechas ya no cambian de día. Las tareas movidas conservan su jerarquía.
 
 [简体中文 · English · Français · Deutsch · Español · Italiano](../README.md#languages)
 

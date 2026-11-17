@@ -1,12 +1,14 @@
 <a id="languages"></a>
 
+日历 G / T / D 快捷键默认关闭（升级后同样关闭）；可在 Folio 设置 → 导航 → 启用日历键盘快捷键中开启。前后一天的方向键快捷键已移除。迁移未完成任务时保留嵌套 TODO 层级。
+
 **Languages / 语言**
 
 [简体中文](#zh) | [English](#en) | [Français](#fr) | [Deutsch](#de) | [Español](#es) | [Italiano](#it)
 
 # Folio · 书页集
 
-`v1.4.25`
+`v1.4.28`
 
 ---
 

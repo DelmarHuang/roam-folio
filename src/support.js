@@ -1,4 +1,4 @@
-const SHORTCUT_DEFAULTS = { jump: "g", today: "t", daily: "d", previous: "ArrowLeft", next: "ArrowRight" };
+const SHORTCUT_DEFAULTS = { jump: "g", today: "t", daily: "d" };
 const shortcutParts = (value) => String(value).trim().toLowerCase().split("+").map(x => x.trim()).filter(Boolean);
 function matchesShortcut(event, value) {
   const parts = shortcutParts(value);
@@ -52,7 +52,7 @@ function extraSettings(runtime) {
   return [textSetting("code-max-height", zh?"代码块最大高度（px）":"Code block maximum height (px)",zh?"默认 420；0 表示不限制。长代码在块内滚动。":"Default 420; 0 removes the limit. Long code scrolls inside the block.",runtime.codeMaxHeight, value=>{
     runtime.codeMaxHeight=codeHeight(value); void runtime.extensionAPI.settings.set(SETTING_PREFIX+"code-max-height",runtime.codeMaxHeight); runtime.rebuildCss();
   },"number"), ...Object.entries(SHORTCUT_DEFAULTS).map(([key,fallback])=>textSetting("shortcut-"+key,
-    (zh?"导航快捷键 · ":"Navigation shortcut · ")+({jump:zh?"跳转日期":"Jump to date",today:zh?"今天":"Today",daily:zh?"日记流":"Daily notes",previous:zh?"前一天":"Previous day",next:zh?"后一天":"Next day"}[key]),
+    (zh?"导航快捷键 · ":"Navigation shortcut · ")+({jump:zh?"跳转日期":"Jump to date",today:zh?"今天":"Today",daily:zh?"日记流":"Daily notes"}[key]),
     zh?`默认 ${fallback}。支持 Alt+G、Mod+Shift+J；留空停用。编辑文字时不触发。重复组合仅第一个生效。`:`Default ${fallback}. Examples: Alt+G, Mod+Shift+J. Empty disables. Never runs while editing. First matching action wins.`,
     runtime.shortcuts[key],value=>{runtime.shortcuts[key]=value.trim();void runtime.extensionAPI.settings.set(SETTING_PREFIX+"shortcut-"+key,value.trim());}
   ))];
