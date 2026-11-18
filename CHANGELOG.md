@@ -1,3 +1,7 @@
+# 1.4.31 · 2026-11-18
+
+- Align Desk preview bullets and task checkboxes with the first text line while preserving text line-height and multiline layout.
+
 # 1.4.30 · 2026-11-18
 
 - Ship the Outline view layout rules in the Desk component, so build-time isolation does not remove them. Block statistics are unchanged.

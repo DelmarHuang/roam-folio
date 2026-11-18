@@ -21,3 +21,12 @@ html body .roam-app .roam-main .rm-desk-page-toggle > .rm-desk-page-toggle__swit
  flex:0 0 auto!important;width:auto!important;height:auto!important;min-height:0!important;
  margin:0!important;font:inherit!important;white-space:nowrap!important;
 }
+
+/* Align markers with the first text line, not the top of its line box.
+   lh follows the native span line-height; multiline previews stay top-aligned. */
+html body .roam-app .rm-desk-tile__row > .rm-desk-tile__bullet {
+ margin-top:calc(0.5lh - 2px)!important;
+}
+html body .roam-app .rm-desk-tile__row > .rm-desk-tile__check {
+ margin-top:calc(0.5lh - 5.5px)!important;
+}

@@ -30,5 +30,7 @@ w.eval(bundle+';window.builtCss=MAGAZINE_CSS;');
 assert.match(w.builtCss['editorial-desk'], /\.roam-article > \.rm-desk-page-toggle \{/);
 assert.match(w.builtCss['editorial-desk'], /float:none!important/);
 assert.match(w.builtCss['editorial-desk'], /position:relative!important/);
+assert.match(w.builtCss['editorial-desk'], /margin-top:calc\(0\.5lh - 2px\)!important/);
+assert.match(w.builtCss['editorial-desk'], /margin-top:calc\(0\.5lh - 5\.5px\)!important/);
 console.log('PASS real Desk refs, nested page-link titles, ambiguous/missing pages, missing edit times, failed reads, descendant-only counts, scoped Outline switch styles');
 dom.window.close();
