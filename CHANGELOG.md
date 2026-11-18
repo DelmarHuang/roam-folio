@@ -1,3 +1,12 @@
+# 1.4.30 · 2026-11-18
+
+- Ship the Outline view layout rules in the Desk component, so build-time isolation does not remove them. Block statistics are unchanged.
+
+# 1.4.29 · 2026-11-18
+
+- Keep the native Outline view switch compact in the article flow.
+- Resolve Desk page statistics from actual page references, including nested page-link titles; count blocks without edit timestamps and avoid false zero counts on failed reads.
+
 # 1.4.28 · 2026-11-18
 
 - Carry Reference and Move preserve the original ancestor paths and sibling order. Ordinary ancestors are represented once as references; unrelated sibling blocks stay behind.

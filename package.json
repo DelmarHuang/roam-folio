@@ -1,6 +1,6 @@
 {
   "name": "folio-roam",
-  "version": "1.4.28",
+  "version": "1.4.30",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,8 @@
     "check:calendar-browser": "node calendar-browser-check.mjs",
     "check:toolbar": "node toolbar-dom-check.mjs",
     "check:review": "node review-check.mjs",
-    "check:carry": "node carry-context-check.mjs"
+    "check:carry": "node carry-context-check.mjs",
+    "check:desk": "node desk-compat-check.mjs"
   },
   "devDependencies": {
     "jsdom": "^31.0.1"

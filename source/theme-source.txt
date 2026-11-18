@@ -10500,14 +10500,14 @@
                     const DONE_RE = /\{\{\[?\[?DONE\]?\]?\}\}/;
 
                     const Q_PAGE =
-                      "[:find ?b ?s ?t :in $ ?title :where [?p :node/title ?title] [?b :block/page ?p] [?b :block/string ?s] [?b :edit/time ?t]]";
+                      "[:find ?b ?s ?t :in $ ?title :where [?p :node/title ?title] [?b :block/page ?p] [?b :block/string ?s] [(get-else $ ?b :edit/time 0) ?t]]";
                     const Q_FIRST =
                       "[:find ?s . :in $ ?title :where [?p :node/title ?title] [?p :block/children ?f] [?f :block/order 0] [?f :block/string ?s]]";
                     const Q_HEAT =
                       "[:find (count ?b) . :in $ ?title ?since :where [?p :node/title ?title] [?b :block/refs ?p] [?b :create/time ?t] [(> ?t ?since)]]";
 
                     const Q_BLOCK =
-                      "[:find ?d ?s ?t :in $ ?uid :where [?b :block/uid ?uid] [?d :block/parents ?b] [?d :block/string ?s] [?d :edit/time ?t]]";
+                      "[:find ?d ?s ?t :in $ ?uid :where [?b :block/uid ?uid] [?d :block/parents ?b] [?d :block/string ?s] [(get-else $ ?d :edit/time 0) ?t]]";
                     const Q_BLOCK_HEAT =
                       "[:find (count ?r) . :in $ ?uid ?since :where [?b :block/uid ?uid] [?r :block/refs ?b] [?r :create/time ?t] [(> ?t ?since)]]";
 
@@ -10582,8 +10582,8 @@
                         let self = null;
                         try { self = api.pull("[:block/string :edit/time]", [":block/uid", ref.uid]); } catch (_) {}
                         const [desc, h] = await Promise.all([query(Q_BLOCK, ref.uid), query(Q_BLOCK_HEAT, ref.uid, since)]);
-                        rows = (desc || []).slice();
-                        if (self) rows.push([ref.uid, self[":block/string"] || "", self[":edit/time"] || 0]);
+                        rows = Array.isArray(desc) && self ? desc.slice() : null;
+                        if (rows) rows.push([ref.uid, self[":block/string"] || "", self[":edit/time"] || 0]);
                         first = self ? self[":block/string"] : "";
                         heat = h;
                       } else {
@@ -10711,10 +10711,14 @@
 
                     const sigOf = (tile) => {
                       const label = titleOf(tile);
-                      if (/--page\b/.test(tile.className)) return { kind: "page", key: `page:${label}`, label };
+                      const page = tile.closest(".rm-desk-page");
+                      const owner = cleanText(page && page.querySelector(".rm-desk-page__owner"));
+                      const deskTitle = owner ? `roam/desk/${owner}` : null;
+                      const position = Number(tile.getAttribute("data-position"));
+                      if (/--page\b/.test(tile.className)) return { kind: "page", key: `page:${label}`, label, deskTitle, position };
                       const source = cleanText(tile.querySelector(".rm-desk-tile__source"));
                       const firstRow = cleanText(tile.querySelector(".rm-desk-tile__row .rm-desk-tile__text"));
-                      return { kind: "block", key: `block:${source}|${label}|${firstRow}`, label, source, firstRow };
+                      return { kind: "block", key: `block:${source}|${label}|${firstRow}`, label, source, firstRow, deskTitle, position };
                     };
                     const resolved = new Map(); // 卡片键 -> ref（null 表示找不到）
                     const resolving = new Set();
@@ -10745,8 +10749,41 @@
                       resolving.delete(sig.key);
                       core.scheduleSync();
                     };
+                    // Resolve rendered titles through the actual Desk references. A title such
+                    // as [[Book]]/Name is displayed as Book/Name and is not a database key.
+                    let deskSnapshot = null;
+                    const deskRef = (sig) => {
+                      if (!sig.deskTitle) return null;
+                      try {
+                        const api = window.roamAlphaAPI;
+                        if (!deskSnapshot || deskSnapshot.title !== sig.deskTitle || Date.now() - deskSnapshot.at > 10000) {
+                          const node = api.pull("[{:block/children [:block/uid :block/order :block/string {:block/refs [:block/uid :node/title]}]}]", [":node/title", sig.deskTitle]);
+                          if (!node) return null;
+                          deskSnapshot = { title: sig.deskTitle, at: Date.now(), children: node[":block/children"] || [] };
+                        }
+                        const children = deskSnapshot.children;
+                        if (sig.kind === "page") {
+                          const refs = children.flatMap(child => child[":block/refs"] || []);
+                          const matches = new Map(refs.filter(ref => typeof ref[":node/title"] === "string" && norm(ref[":node/title"]) === norm(sig.label)).map(ref => [ref[":block/uid"], ref]));
+                          if (matches.size !== 1) return null;
+                          const ref = [...matches.values()][0];
+                          return { key: sig.key, kind: "page", title: ref[":node/title"] };
+                        }
+                        const child = children.find(child => child[":block/order"] === sig.position - 1 && norm(child[":block/string"]) === norm(sig.label));
+                        return child ? { key: sig.key, kind: "block", uid: child[":block/uid"] } : null;
+                      } catch (_) { return null; }
+                    };
                     const refOf = (sig) => {
-                      if (sig.kind === "page") return sig.label ? { key: sig.key, kind: "page", title: sig.label } : null;
+                      const actual = deskRef(sig);
+                      if (actual) return actual;
+                      if (sig.kind === "page") {
+                        // A missing or ambiguous page must not appear as a valid zero count.
+                        if (sig.deskTitle) return null;
+                        try {
+                          const page = window.roamAlphaAPI.pull("[:block/uid]", [":node/title", sig.label]);
+                          return page ? { key: sig.key, kind: "page", title: sig.label } : null;
+                        } catch (_) { return null; }
+                      }
                       if (resolved.has(sig.key)) return resolved.get(sig.key);
                       if (!resolving.has(sig.key)) resolveBlock(sig);
                       return null;

@@ -9,7 +9,7 @@
 /*__CALENDAR_SUPPORT__*/
 /*__TEMPLATE_SUPPORT__*/
 
-const VERSION = "1.4.28";
+const VERSION = "1.4.30";
 const BUILD_DATE = "2026-11-18";
 const STYLE_ID = "folio-plugin-style";
 const SETTING_PREFIX = "folio-";
