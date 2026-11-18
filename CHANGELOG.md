@@ -1,3 +1,8 @@
+# 1.4.32 · 2026-11-18
+
+- Keep Desk controls left-aligned when Clear lead appears, with a flexible search field and natural wrapping on narrow screens.
+- Apply Folio theme colors and typography to native Desk card dialogs, including the header and keyboard hints.
+
 # 1.4.31 · 2026-11-18
 
 - Align Desk preview bullets and task checkboxes with the first text line while preserving text line-height and multiline layout.

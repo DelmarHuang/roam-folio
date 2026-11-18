@@ -30,3 +30,59 @@ html body .roam-app .rm-desk-tile__row > .rm-desk-tile__bullet {
 html body .roam-app .rm-desk-tile__row > .rm-desk-tile__check {
  margin-top:calc(0.5lh - 5.5px)!important;
 }
+
+/* Keep the control row anchored to the left when Clear lead appears.
+   Let the search field yield space before wrapping whole control groups. */
+html body .roam-app .rm-desk-page__tools {
+ flex:1 1 100%!important;width:100%!important;min-width:0!important;
+ justify-content:flex-start!important;
+}
+html body .roam-app .rm-desk-page__tools > .mag-desk-bar {
+ height:auto!important;min-height:30px!important;max-width:100%!important;
+ box-sizing:border-box!important;
+}
+html body .roam-app .rm-desk-page__tools > .bp3-input-group {
+ flex:0 1 160px!important;min-width:110px!important;
+}
+html body .roam-app .rm-desk-page__tools > .bp3-input-group > .bp3-input {
+ width:100%!important;min-width:0!important;
+}
+html body .roam-app .rm-desk-page__new-note {
+ flex-shrink:0!important;white-space:nowrap!important;
+}
+
+/* Native Desk dialogs are siblings of .roam-app. Scope their theme here,
+   without affecting other dialogs or changing the native carousel layout. */
+html body .rm-desk.rm-desk--dialog {
+ background:var(--mag-paper)!important;color:var(--mag-ink)!important;
+ font-family:var(--mag-body)!important;
+ border:1px solid var(--mag-border)!important;
+ border-top:2px solid var(--mag-ink)!important;
+ border-radius:6px!important;box-shadow:var(--mag-modal-shadow)!important;
+}
+html body .rm-desk--dialog .rm-desk__header {
+ background:var(--mag-shell)!important;
+ border-bottom:1px solid var(--mag-border)!important;
+}
+html body .rm-desk--dialog .rm-desk__title {
+ font-family:var(--mag-heading)!important;color:var(--mag-ink)!important;
+}
+html body .rm-desk--dialog :is(.rm-desk__body,.rm-desk-card) {
+ background:var(--mag-paper)!important;color:var(--mag-ink)!important;
+}
+html body .rm-desk--dialog .rm-desk__header :is(.bp3-button,.bp3-icon) {
+ color:var(--mag-muted)!important;
+}
+html body .rm-desk--dialog .rm-desk__header .bp3-button:hover:not(:disabled) {
+ background:var(--mag-active)!important;color:var(--mag-gold-ink)!important;
+}
+html body .rm-desk--dialog .rm-desk__keys {
+ background:var(--mag-paper)!important;border-top:1px solid var(--mag-border)!important;
+}
+html body .rm-desk--dialog :is(.rm-desk__keys,.rm-sidecar__key,.rm-zoom) {
+ color:var(--mag-muted)!important;
+}
+html body .rm-desk--dialog .rm-sidecar__key kbd {
+ background:var(--mag-shell)!important;color:var(--mag-muted)!important;
+ border-color:var(--mag-border)!important;
+}

@@ -10,7 +10,7 @@ const requireToken = (token, where = code) => {
 };
 
 for (const token of [
-  "export default", "Folio · 书页集", 'VERSION = "1.4.31"', 'BUILD_DATE = "2026-11-18"',
+  "export default", "Folio · 书页集", 'VERSION = "1.4.32"', 'BUILD_DATE = "2026-11-18"',
   'SETTING_PREFIX = "folio-"', "Enable Folio theme", "启用 Folio 主题",
   "Français", "Deutsch", "Español", "Italiano",
   "hide-left-sidebar-items", "隐藏左侧边栏项目", "hide-top-buttons",
